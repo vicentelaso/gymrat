@@ -109,7 +109,7 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .lhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .h3{font-weight:700;font-size:17px}
 .seg{display:inline-flex;background:#000;border-radius:13px;padding:3px}
-.seg button{padding:0 14px;border-radius:10px;font-weight:600;font-size:14px;color:var(--mu);min-height:36px}
+.seg button{text-align:center;padding:0 14px;border-radius:10px;font-weight:600;font-size:14px;color:var(--mu);min-height:36px}
 .seg button.on{background:var(--tx);color:#000}
 .seg.wide{display:flex}
 .seg.wide button{flex:1;min-height:44px}
@@ -208,6 +208,20 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .prrow{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
 .prrow b{color:var(--ac);white-space:nowrap}
 
+/* acceso */
+.login{display:flex;flex-direction:column;padding-top:9vh}
+.lg-logo{display:flex;justify-content:center;margin-bottom:14px}
+.login h1.title{text-align:center;margin:0 0 6px}
+.lg-sub{text-align:center;margin:0 0 22px}
+.lg-note{margin:12px 0 0}
+.check{display:flex;align-items:center;gap:12px;margin:16px 0 0;min-height:44px;font-size:16px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--ac);margin:0}
+.err{color:var(--red);margin:12px 0 0;font-size:15px;text-align:center}
+.cta:disabled{opacity:.6}
+.acct{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#000;border:1.5px solid var(--line);border-radius:16px;padding:12px 12px 12px 16px}
+.acct small{display:block;color:var(--mu);font-size:13px}
+.txtbtn.danger{color:var(--red);background:var(--s2);flex:none}
+
 /* avisos */
 #toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translate(-50%,-160%);background:var(--tx);color:#000;border-radius:16px;padding:12px 16px;font-weight:600;z-index:60;display:flex;gap:16px;align-items:center;width:max-content;max-width:calc(100% - 32px);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 #toast.on{transform:translate(-50%,0)}
@@ -225,6 +239,8 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 <div id="sheet" role="dialog" aria-modal="true"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script>
 'use strict';
 /* ---------- utilidades ---------- */
@@ -264,7 +280,7 @@ const I = {
   dl: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'
 };
 const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
-const LOGO = `<svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="23" fill="#FF6A1F"/><g transform="translate(6.5 6.5) scale(.87)"><g transform="rotate(-45 50 50)"><path d="M84 50 C 98 50, 100 62, 94 69 C 88 76, 80 74, 80 82" fill="none" stroke="#F2F3F5" stroke-width="6" stroke-linecap="round"/><rect x="12" y="26" width="12" height="48" rx="3" fill="#0B0C0E"/><rect x="24" y="34" width="7" height="32" rx="2" fill="#0B0C0E"/><rect x="31" y="45" width="38" height="10" fill="#0B0C0E"/><rect x="69" y="34" width="7" height="32" rx="2" fill="#0B0C0E"/><rect x="76" y="26" width="12" height="48" rx="3" fill="#0B0C0E"/></g></g></svg>`;
+const logo = (s) => `<svg width="${s}" height="${s}" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="23" fill="#FF6A1F"/><g transform="translate(6.5 6.5) scale(.87)"><g transform="rotate(-45 50 50)"><path d="M84 50 C 98 50, 100 62, 94 69 C 88 76, 80 74, 80 82" fill="none" stroke="#F2F3F5" stroke-width="6" stroke-linecap="round"/><rect x="12" y="26" width="12" height="48" rx="3" fill="#0B0C0E"/><rect x="24" y="34" width="7" height="32" rx="2" fill="#0B0C0E"/><rect x="31" y="45" width="38" height="10" fill="#0B0C0E"/><rect x="69" y="34" width="7" height="32" rx="2" fill="#0B0C0E"/><rect x="76" y="26" width="12" height="48" rx="3" fill="#0B0C0E"/></g></g></svg>`;
 
 /* ---------- catálogo inicial: parte -> músculos -> ejercicios ---------- */
 const CATALOG = [
@@ -355,13 +371,161 @@ function migrate(s) {
   s.v = 2;
   return s;
 }
-function load() {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.parts && s.routines && s.logs) return migrate(s); } catch (e) {}
-  return seed();
+/* ---------- cuenta y nube (Supabase) ---------- */
+const CFG = window.GR_CONFIG || window.MC_CONFIG || null;
+const TABLE = 'gymrat';
+const configured = !!(CFG && CFG.url && CFG.key && /^https:\/\//.test(CFG.url) && window.supabase);
+let sb = null, USER = null, S = null, booting = true, loadErr = '';
+let authMode = 'in', authErr = '', authBusy = false;
+const remembered = () => localStorage.getItem('gymrat:remember') !== '0';
+function makeClient(remember) {
+  sb = window.supabase.createClient(CFG.url, CFG.key, {
+    auth: { storage: remember ? window.localStorage : window.sessionStorage, storageKey: 'gymrat-auth', persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+  });
 }
-let S = load();
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('No se pudo guardar en el teléfono'); } }
-save();
+/* Supabase pide un correo: si escribes solo un usuario se arma uno interno (el mismo que usa Money Control) */
+const toEmail = (u) => (u.includes('@') ? u.toLowerCase() : u.toLowerCase().replace(/\s+/g, '') + '@money.control');
+const userName = () => { const e = USER?.email || ''; return e.endsWith('@money.control') ? e.split('@')[0] : e; };
+function authMsg(m = '') {
+  if (/invalid login credentials/i.test(m)) return 'Usuario o contraseña incorrectos.';
+  if (/already registered|already exists/i.test(m)) return 'Ese usuario ya existe. Entra con tu contraseña.';
+  if (/at least 6|password should be/i.test(m)) return 'La contraseña necesita al menos 6 caracteres.';
+  if (/valid email|invalid format/i.test(m)) return 'Ese usuario no sirve. Usa letras y números, sin espacios.';
+  if (/rate|too many/i.test(m)) return 'Demasiados intentos seguidos. Espera un momento.';
+  if (/fetch|network|failed/i.test(m)) return 'Sin conexión con el servidor. Revisa tu internet.';
+  return m || 'No se pudo completar.';
+}
+
+const cacheKey = () => 'gymrat:cache:' + USER.id;
+function readCache() { try { const s = JSON.parse(localStorage.getItem(cacheKey())); if (s && s.parts) return migrate(s); } catch (e) {} return null; }
+function legacyLocal() { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.parts && s.logs && s.logs.length) return migrate(s); } catch (e) {} return null; }
+
+let dirty = false, pushT = null, pushing = false, syncState = 'ok';
+function save() {
+  if (!S || !USER) return;
+  S.ts = Date.now();
+  try { localStorage.setItem(cacheKey(), JSON.stringify(S)); localStorage.setItem(cacheKey() + ':dirty', '1'); } catch (e) { toast('No se pudo guardar en el teléfono'); }
+  dirty = true; syncState = 'pend';
+  clearTimeout(pushT); pushT = setTimeout(push, 800);
+}
+async function push() {
+  if (!dirty || pushing || !USER || !sb) return;
+  pushing = true;
+  const snap = JSON.parse(JSON.stringify(S));
+  let ok = false;
+  try {
+    const { error } = await sb.from(TABLE).upsert({ user_id: USER.id, data: snap, ts: snap.ts || Date.now() });
+    ok = !error;
+    if (error) console.warn('GymRat sync', error);
+  } catch (e) {}
+  pushing = false;
+  if (ok && S && S.ts === snap.ts) { dirty = false; syncState = 'ok'; localStorage.removeItem(cacheKey() + ':dirty'); }
+  else if (ok) push();
+  else syncState = 'off';
+}
+window.addEventListener('online', push);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') push(); });
+setInterval(() => { if (dirty) push(); }, 30000);
+
+async function loadUserData() {
+  loadErr = '';
+  const local = readCache();
+  let remote = null, fetchOk = false;
+  try {
+    const { data, error } = await sb.from(TABLE).select('data, ts').eq('user_id', USER.id).maybeSingle();
+    if (!error) { fetchOk = true; if (data && data.data) { remote = migrate(data.data); remote.ts = remote.ts || data.ts || 0; } }
+    else console.warn('GymRat load', error);
+  } catch (e) {}
+  if (!fetchOk && !local) { S = null; loadErr = 'Necesitas internet la primera vez que entras con esta cuenta en este teléfono.'; return; }
+  let chosen, upload = false;
+  if (remote && local) { chosen = (local.ts || 0) > (remote.ts || 0) ? local : remote; upload = chosen === local; }
+  else if (remote) chosen = remote;
+  else if (local) { chosen = local; upload = true; }
+  else {
+    const old = legacyLocal();
+    chosen = old || seed(); upload = true;
+    if (old) { localStorage.removeItem(KEY); setTimeout(() => toast('Tus entrenamientos anteriores quedaron en tu cuenta'), 400); }
+  }
+  S = chosen;
+  S.settings = Object.assign({ name: '', unit: 'kg' }, S.settings);
+  S.settings.asked = true;
+  if (!S.settings.name) S.settings.name = cap(userName());
+  if (localStorage.getItem(cacheKey() + ':dirty')) upload = true;
+  if (upload) save();
+  else { localStorage.setItem(cacheKey(), JSON.stringify(S)); dirty = false; syncState = 'ok'; }
+}
+async function refreshFromCloud() {
+  if (!USER || !sb || dirty || pushing) return;
+  try {
+    const { data, error } = await sb.from(TABLE).select('data, ts').eq('user_id', USER.id).maybeSingle();
+    if (error || !data || !data.data) return;
+    if ((data.ts || 0) > (S?.ts || 0) && !dirty) {
+      S = migrate(data.data); S.ts = data.ts;
+      localStorage.setItem(cacheKey(), JSON.stringify(S));
+      if (!$('#sheet').classList.contains('on') && !['fw', 'fr', 'q'].includes(document.activeElement?.id)) render();
+    }
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshFromCloud(); });
+
+async function doAuth() {
+  if (authBusy) return;
+  const u = $('#lu').value.trim(), pw = $('#lp').value, rem = $('#lr').checked;
+  if (!u) { authErr = 'Falta el usuario.'; render(); $('#lu')?.focus(); return; }
+  if (!pw) { authErr = 'Falta la contraseña.'; render(); $('#lp')?.focus(); return; }
+  if (authMode === 'up' && pw.length < 6) { authErr = 'La contraseña necesita al menos 6 caracteres.'; render(); return; }
+  localStorage.setItem('gymrat:remember', rem ? '1' : '0');
+  if (rem) localStorage.setItem('gymrat:lastuser', u); else localStorage.removeItem('gymrat:lastuser');
+  loginDraft = { u, pw: '' };
+  makeClient(rem);
+  authBusy = true; authErr = ''; render();
+  let res;
+  try {
+    res = authMode === 'up'
+      ? await sb.auth.signUp({ email: toEmail(u), password: pw })
+      : await sb.auth.signInWithPassword({ email: toEmail(u), password: pw });
+  } catch (e) { res = { error: e }; }
+  authBusy = false;
+  if (res.error) { authErr = authMsg(res.error.message); render(); return; }
+  if (!res.data?.session) { authErr = 'La cuenta se creó, pero Supabase pide confirmar el correo. Desactiva "Confirm email" en Supabase.'; render(); return; }
+  USER = res.data.user;
+  await loadUserData();
+  history.replaceState({ d: 0 }, '', '#/');
+  lastPath = null;
+  render();
+}
+async function logout() {
+  clearTimeout(pushT);
+  await push();
+  try { await sb.auth.signOut(); } catch (e) {}
+  USER = null; S = null; authErr = ''; authMode = 'in';
+  loginDraft = { u: localStorage.getItem('gymrat:lastuser') || '', pw: '' };
+  history.replaceState({ d: 0 }, '', '#/');
+  lastPath = null;
+  render();
+}
+let loginDraft = { u: localStorage.getItem('gymrat:lastuser') || '', pw: '' };
+function vLogin() {
+  if (!configured) {
+    return `<div class="login"><div class="lg-logo">${logo(76)}</div><h1 class="title">GymRat</h1>
+      <p class="err">Falta conectar la app con Supabase. Sube el archivo <b>config.js</b> al repositorio, junto al index.html.</p></div>`;
+  }
+  const up = authMode === 'up';
+  return `<div class="login">
+    <div class="lg-logo">${logo(76)}</div>
+    <h1 class="title">GymRat</h1>
+    <p class="mu lg-sub">${up ? 'Crea tu cuenta. Tus entrenamientos quedan guardados en ella.' : 'Entra con tu usuario. Es el mismo de Money Control.'}</p>
+    <div class="seg wide" role="group" aria-label="Entrar o crear cuenta"><button data-act="amode" data-m="in" class="${up ? '' : 'on'}" aria-pressed="${!up}">Entrar</button><button data-act="amode" data-m="up" class="${up ? 'on' : ''}" aria-pressed="${up}">Crear cuenta</button></div>
+    <label class="lbl" for="lu">Usuario</label>
+    <input id="lu" class="inp" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" value="${esc(loginDraft.u)}" maxlength="60">
+    <label class="lbl" for="lp">Contraseña</label>
+    <input id="lp" class="inp" type="password" autocomplete="${up ? 'new-password' : 'current-password'}" enterkeyhint="go" value="${esc(loginDraft.pw)}">
+    <label class="check"><input id="lr" type="checkbox" ${remembered() ? 'checked' : ''}> Recordarme en este teléfono</label>
+    ${authErr ? `<p class="err" role="alert">${esc(authErr)}</p>` : ''}
+    <button class="cta" data-act="auth" ${authBusy ? 'disabled' : ''}>${authBusy ? 'Conectando…' : up ? 'Crear cuenta' : 'Entrar'}</button>
+    ${up ? '<p class="mu small lg-note">Usa al menos 6 caracteres y anótala: como el usuario no es un correo, la contraseña no se puede recuperar por mail.</p>' : ''}
+  </div>`;
+}
 
 const P = (id) => S.parts.find((p) => p.id === id);
 const R = (id) => S.routines.find((r) => r.id === id);
@@ -417,6 +581,17 @@ function goHome() {
 window.addEventListener('popstate', render);
 
 function render() {
+  const v0 = $('#view');
+  if (booting) { v0.innerHTML = `<div class="login"><div class="lg-logo">${logo(76)}</div><p class="mu" style="text-align:center">Cargando…</p></div>`; $('#dockwrap').innerHTML = ''; return; }
+  if (!USER || !S) {
+    v0.innerHTML = USER && loadErr
+      ? `<div class="login"><div class="lg-logo">${logo(76)}</div><h1 class="title">GymRat</h1><p class="err">${esc(loadErr)}</p><button class="cta" data-act="retry">Reintentar</button><button class="btn2" data-act="logout">Cambiar de cuenta</button></div>`
+      : vLogin();
+    $('#dockwrap').innerHTML = '';
+    lastPath = null;
+    wake(false);
+    return;
+  }
   const s = parse();
   const path = s.join('/');
   const changed = path !== lastPath;
@@ -474,7 +649,7 @@ function vHome() {
   const name = S.settings.name.trim();
   return `
   <div class="top">
-    <div class="brand">${LOGO}GymRat</div>
+    <div class="brand">${logo(34)}GymRat</div>
     <div class="tools">
       ${isStandalone() ? '' : `<button class="install" data-act="install">Instalar</button>`}
       <button class="iconbtn" data-act="cal" aria-label="Calendario">${ic('cal')}</button>
@@ -676,10 +851,6 @@ function confirmS({ title, text, cta, ok }) {
   PEND = ok;
   openSheet(`<h2 class="sh-t">${esc(title)}</h2><p class="mu">${text}</p><button class="cta dangerbg" data-act="cfok">${esc(cta)}</button><button class="btn2" data-act="close">Cancelar</button>`);
 }
-function askName() {
-  openSheet(`<h2 class="sh-t">¡Bienvenido a GymRat! ¿Cómo te llamas?</h2><input id="askv" class="inp" placeholder="Tu nombre" maxlength="30" enterkeyhint="done" aria-label="Tu nombre"><button class="cta" data-act="nameok">Empezar</button>`);
-  setTimeout(() => $('#askv')?.focus(), 320);
-}
 
 /* rutina: crear y editar */
 let ER = null, newPart = false;
@@ -784,11 +955,13 @@ function openSettings() {
   openSheet(`<h2 class="sh-t">Ajustes</h2>
     <label class="lbl" for="sn">Tu nombre</label>
     <input id="sn" class="inp" data-bind="sname" value="${esc(S.settings.name)}" placeholder="Para saludarte" maxlength="30">
+    <p class="lbl">Cuenta</p>
+    <div class="acct"><span>Conectado como <b>${esc(userName())}</b><small>${syncState === 'ok' ? 'Todo guardado en tu cuenta' : syncState === 'pend' ? 'Guardando cambios…' : 'Sin conexión: se subirá cuando vuelva internet'}</small></span><button class="txtbtn danger" data-act="logout">Cerrar sesión</button></div>
     <p class="lbl">Unidad por defecto</p>
     <div class="seg wide" role="group" aria-label="Unidad por defecto"><button data-act="sunit" data-u="kg" class="${u === 'kg' ? 'on' : ''}">Kilos</button><button data-act="sunit" data-u="lb" class="${u === 'lb' ? 'on' : ''}">Libras</button></div>
     ${isStandalone() ? '' : `<p class="lbl">App</p><button class="btn2" data-act="install" style="margin-top:0">Instalar GymRat en el teléfono</button>`}
     <p class="lbl">Respaldo</p>
-    <p class="mu small" style="margin:0 0 10px">Tus datos se guardan solo en este teléfono. Descarga un respaldo de vez en cuando por si cambias de celular.</p>
+    <p class="mu small" style="margin:0 0 10px">Tus datos ya se guardan en tu cuenta. Igual puedes descargar una copia en un archivo.</p>
     <div class="two"><button class="btn2" data-act="exp">Descargar</button><label class="btn2" for="imp">Restaurar</label></div>
     <input id="imp" type="file" accept="application/json,.json" hidden>`);
 }
@@ -861,7 +1034,13 @@ const A = {
   install: () => install(),
   close: () => closeSheet(),
   edit: () => { edit = !edit; render(); },
-  nameok: () => { S.settings.name = $('#askv').value.trim(); save(); closeSheet(); },
+  amode: (el) => { loginDraft = { u: $('#lu').value, pw: $('#lp').value }; authMode = el.dataset.m; authErr = ''; render(); },
+  auth: () => doAuth(),
+  logout: () => {
+    if (!S) { logout(); return; }
+    confirmS({ title: '¿Cerrar sesión?', text: 'Tus entrenamientos quedan guardados en tu cuenta.', cta: 'Cerrar sesión', ok: () => { sheetRender = null; $('#ov').classList.remove('on'); $('#sheet').classList.remove('on'); logout(); } });
+  },
+  retry: async () => { await loadUserData(); render(); },
 
   newR: () => editRoutine(null),
   editR: (el) => editRoutine(el.dataset.r),
@@ -918,7 +1097,7 @@ const A = {
     const p = P(EX.pid); const e = p.ex.find((x) => x.id === EX.id);
     confirmS({ title: '¿Eliminar ejercicio?', text: `Se borrará «${esc(e.name)}» de la lista. Las series ya registradas se mantienen en el calendario.`, cta: 'Eliminar', ok: () => { p.ex = p.ex.filter((x) => x.id !== e.id); save(); } });
   },
-  cfok: () => { const f = PEND; PEND = null; f?.(); closeSheet(); },
+  cfok: () => { const f = PEND; PEND = null; f?.(); if ($('#sheet').classList.contains('on')) closeSheet(); },
 
   fm: (el) => {
     const p = P(parse()[3]);
@@ -991,6 +1170,8 @@ document.addEventListener('input', (e) => {
   if (b === 'ername' && ER) ER.name = t.value;
   if (b === 'exname' && EX) EX.name = t.value;
   if (b === 'sname') { S.settings.name = t.value; save(); }
+  if (t.id === 'lu') loginDraft.u = t.value;
+  if (t.id === 'lp') loginDraft.pw = t.value;
   if (t.id === 'q') { const p = P(parse()[3]); if (p) { filt[p.id].q = t.value; applyFilter(); } }
   if (t.id === 'fw') t.value = t.value.replace(/[^0-9.,]/g, '');
   if (t.id === 'fr') t.value = t.value.replace(/[^0-9]/g, '');
@@ -999,7 +1180,8 @@ document.addEventListener('input', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return;
   const id = e.target.id;
-  if (id === 'askv') A.nameok();
+  if (id === 'lu') { e.preventDefault(); $('#lp').focus(); }
+  else if (id === 'lp') { e.preventDefault(); doAuth(); }
   else if (id === 'npn') A.ernpok();
   else if (id === 'nmn') A.exnmok();
   else if (id === 'fw') { e.preventDefault(); $('#fr').focus(); }
@@ -1022,9 +1204,20 @@ document.addEventListener('change', (e) => {
 });
 
 /* ---------- inicio ---------- */
-if (!history.state) history.replaceState({ d: 0 }, '', location.hash || '#/');
-render();
-if (!S.settings.asked) { S.settings.asked = true; save(); askName(); }
+async function boot() {
+  if (!history.state) history.replaceState({ d: 0 }, '', location.hash || '#/');
+  render();
+  if (configured) {
+    makeClient(remembered());
+    try {
+      const { data } = await sb.auth.getSession();
+      if (data?.session?.user) { USER = data.session.user; await loadUserData(); }
+    } catch (e) {}
+  }
+  booting = false;
+  render();
+}
+boot();
 if (navigator.storage?.persist) navigator.storage.persist().catch(() => {});
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 </script>
