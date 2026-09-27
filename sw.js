@@ -1,6 +1,6 @@
 // GymRat service worker
 // Sube el número de versión cada vez que cambies archivos, así el celular baja la versión nueva.
-const CACHE = 'gymrat-v2';
+const CACHE = 'gymrat-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -44,7 +44,8 @@ self.addEventListener('fetch', (e) => {
   // Íconos y tipografías: usa la copia guardada y la actualiza por detrás.
   const url = new URL(req.url);
   const cacheable = url.origin === self.location.origin ||
-    url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
+    url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com' ||
+    url.hostname === 'cdn.jsdelivr.net';
   if (!cacheable) return;
 
   e.respondWith(
