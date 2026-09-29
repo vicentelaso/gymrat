@@ -1321,7 +1321,7 @@ function vEx(r, xid) {
     const note = (label, s, cls = '') => {
       const [i, n] = setPos(s);
       const dd = cap(new Intl.DateTimeFormat('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }).format(pd(s.d)).replace(/\./g, ''));
-      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${nf(s.kg)} kg × ${s.reps}</b><span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>${s.kg > 0 ? `<span class="ns">1RM estimado ${nf(rm1(s), 0)} kg</span>` : ''}</div>`;
+      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${nf(s.kg)} kg × ${s.reps}</b><span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>${s.kg > 0 ? `<span class="ns">1RM estimado ${nf(rm1(s))} kg</span>` : ''}</div>`;
     };
     notes = Math.abs(score(lb) - score(hb)) < 1e-9
       ? `<div class="notes one">${note('Última vez', lb, 'best')}<p class="nbest">${ic('star', 18)} La última vez hiciste tu mejor serie histórica.</p></div>`
