@@ -142,14 +142,32 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .sets{display:flex;flex-direction:column;gap:6px;margin-top:14px}
 .set{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;border-radius:14px;background:#000;min-height:52px}
 .set .n{color:var(--mu);font-size:14px;width:56px;flex:none}
-.set .v{font-family:var(--cond);font-size:24px;font-weight:700}
+.set .v{font-family:var(--cond);font-size:24px;font-weight:700;white-space:nowrap}
 .set .lb{color:var(--mu);font-size:14px}
 .pr{color:var(--ac);font-size:12px;font-weight:700;border:1.5px solid var(--ac);border-radius:7px;padding:1px 6px}
 .del{margin-left:auto;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--mu);flex:none}
 .card{background:var(--s1);border-radius:26px;padding:16px 16px 14px;margin-top:12px}
 .chart svg{width:100%;height:auto;display:block;margin-top:6px}
 .cinfo{font-size:15px;text-align:center;min-height:22px;margin:2px 0 0}
+.cinfo{display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;margin-top:4px}
+.cinfo .cd{font-weight:600;font-size:15px}
+.cinfo .cv{font-size:15px}
+.cinfo .cx{font-size:13px;color:var(--mu)}
 .cinfo b{color:var(--ac)}
+.chelp{margin:0;font-size:13px;color:var(--mu)}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.notes.one{grid-template-columns:1fr}
+.note{background:var(--s1);border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.note .nl{font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--mu);text-transform:uppercase;line-height:1.25}
+.note .nd{font-size:13px;color:var(--mu)}
+.note .nv{font-family:var(--cond);font-weight:800;font-size:28px;line-height:1.1;margin:4px 0 2px;color:var(--tx);white-space:nowrap}
+.note .ns{font-size:13px;color:var(--mu)}
+.note.best{box-shadow:inset 0 0 0 1.5px #3f7a48}
+.note.best .nl{color:#7BE08A}
+.nbest{display:flex;align-items:center;gap:6px;margin:0;background:#12301a;color:#7BE08A;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
+.nfirst{margin:0;background:var(--s1);border-radius:20px;padding:16px 18px}
+.hnote{margin:0 0 6px;font-size:13px;color:var(--mu)}
+.hrow .hs .hb{color:#7BE08A;font-weight:700}
 .csum{margin:2px 0 0;font-size:14px;font-weight:600;color:var(--tx)}
 .csum.up{color:#7BE08A}
 .csum.down{color:var(--red)}
@@ -342,6 +360,7 @@ const I = {
   cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   set: '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
   edit: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+  star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
   search: '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
   dl: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
   eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
@@ -1070,7 +1089,12 @@ function byDay(logs) {
   logs.forEach((l) => (m[l.d] || (m[l.d] = [])).push(l));
   return Object.keys(m).sort().map((d) => ({ d, sets: m[d].sort(byTs) }));
 }
-const topSet = (sets) => sets.reduce((b, s) => (!b || s.kg > b.kg || (s.kg === b.kg && s.reps > b.reps) ? s : b), null);
+/* mejor serie: la de mayor 1RM estimado (fórmula de Epley: peso × (1 + reps / 30)); si empatan, la de más repeticiones */
+const rm1 = (s) => s.kg * (1 + s.reps / 30);
+const score = (s) => rm1(s) + s.reps * 1e-6;
+const topSet = (sets) => sets.reduce((b, s) => (!b || score(s) > score(b) + 1e-12 ? s : b), null);
+const isBest = (s, sets) => { const t = topSet(sets); return Math.abs(score(s) - score(t)) < 1e-9; };
+const setPos = (s) => { const ds = S.logs.filter((l) => l.x === s.x && l.d === s.d).sort(byTs); return [ds.indexOf(s) + 1, ds.length]; };
 function lastRoutine(rid) { let m = null; S.logs.forEach((l) => { if (l.r === rid && (!m || l.d > m)) m = l.d; }); return m; }
 const partsLabel = (r) => r.parts.map((id) => P(id)?.name).filter(Boolean).join(', ');
 const todayR = (rid) => S.logs.filter((l) => l.r === rid && l.d === today()).sort(byTs);
@@ -1290,21 +1314,27 @@ function vEx(r, xid) {
   const td = all.filter((l) => l.d === today()).sort(byTs);
   const prev = days.filter((x) => x.d !== today());
   const last = prev[prev.length - 1];
-  let lastTxt;
+  let notes;
   if (last) {
-    const b = topSet(last.sets);
-    const idx = last.sets.indexOf(b) + 1;
-    lastTxt = `El ${fLong(last.d)} hiciste <b>${kg(b.kg)} × ${b.reps} reps</b> en la ${idx}.ª serie${last.sets.length > 1 ? ` de ${last.sets.length}` : ''}.`;
-    const best = topSet(prev.flatMap((x) => x.sets));
-    if (best && best !== b) lastTxt += `<span class="rec">Tu récord: ${kg(best.kg)} × ${best.reps}, el ${fShort(best.d)}.</span>`;
+    const lb = topSet(last.sets);
+    const hb = topSet(prev.flatMap((x) => x.sets));
+    const note = (label, s, cls = '') => {
+      const [i, n] = setPos(s);
+      const dd = cap(new Intl.DateTimeFormat('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }).format(pd(s.d)).replace(/\./g, ''));
+      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${nf(s.kg)} kg × ${s.reps}</b><span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>${s.kg > 0 ? `<span class="ns">1RM estimado ${nf(rm1(s), 0)} kg</span>` : ''}</div>`;
+    };
+    notes = Math.abs(score(lb) - score(hb)) < 1e-9
+      ? `<div class="notes one">${note('Última vez', lb, 'best')}<p class="nbest">${ic('star', 18)} La última vez hiciste tu mejor serie histórica.</p></div>`
+      : `<div class="notes">${note('Última vez', lb)}${note('Mejor serie histórica', hb, 'best')}</div>`;
   } else {
-    lastTxt = 'Primera vez con este ejercicio. Registra tu primera serie.';
+    notes = `<div class="notes one"><p class="nfirst">Primera vez con este ejercicio. Registra tu primera serie.</p></div>`;
   }
   const u = S.settings.unit;
   const dr = (draft && draft.x === xid) ? draft : defaultDraft(xid);
   const sets = td.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${nf(s.kg)} kg × ${s.reps}</span>${s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}${s.pr ? '<span class="pr">Récord</span>' : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1}">${ic('x', 18)}</button></div>`).join('');
   const hist = days.length ? `<details class="hist"><summary>Historial <span class="mu small">${plural(days.length, 'día', 'días')}</span></summary>
-    ${days.slice().reverse().map((dd) => `<div class="hrow"><span class="hd">${fShort(dd.d)}</span><span class="hs">${dd.sets.map((s) => `<span>${nf(s.kg)} × ${s.reps}</span>`).join('')}</span></div>`).join('')}
+    <p class="hnote">En verde, la mejor serie de cada día.</p>
+    ${days.slice().reverse().map((dd) => `<div class="hrow"><span class="hd">${fShort(dd.d)}</span><span class="hs">${dd.sets.map((s) => `<span${isBest(s, dd.sets) ? ' class="hb"' : ''}>${nf(s.kg)} × ${s.reps}</span>`).join('')}</span></div>`).join('')}
   </details>` : '';
   return `${hdr(`/r/${r.id}/p/${p.id}`, p.name)}
     <h2 class="pt">${esc(e.name)}</h2>
@@ -1312,7 +1342,7 @@ function vEx(r, xid) {
       <span class="exic big">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 104)}</span>
       <div class="grow"><p class="crumb" style="margin:0 0 4px">${esc(p.name)}${e.m ? ' › ' + esc(e.m) : ''}</p>${e.desc ? `<p class="exdesc">${esc(e.desc)}</p>` : (() => { const md = p.muscles.find((m) => m.n === e.m); return md && md.d ? `<p class="exdesc">${esc(md.d)}</p>` : ''; })()}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}</div>
     </div>
-    <div class="last">${lastTxt}</div>
+    ${notes}
     <div class="logger">
       <div class="lhead"><span class="h3">Serie ${td.length + 1}</span>
         <div class="seg" role="group" aria-label="Unidad de peso"><button data-act="unit" data-u="kg" class="${u === 'kg' ? 'on' : ''}" aria-pressed="${u === 'kg'}">kg</button><button data-act="unit" data-u="lb" class="${u === 'lb' ? 'on' : ''}" aria-pressed="${u === 'lb'}">lb</button></div>
@@ -1328,6 +1358,7 @@ function vEx(r, xid) {
       <div class="lhead"><span class="h3">Progreso</span>
         <div class="seg" role="group" aria-label="Qué mostrar">${[['peso', 'Peso'], ['reps', 'Reps'], ['rm', '1RM']].map(([k, l]) => `<button data-act="cm" data-m="${k}" class="${chartM === k ? 'on' : ''}" aria-pressed="${chartM === k}">${l}</button>`).join('')}</div>
       </div>
+      <p class="chelp">Cada punto es la mejor serie del día. Toca uno para ver el detalle.</p>
       <div id="chart" class="chart">${chartHTML(xid)}</div>
     </div>
     ${hist}`;
@@ -1338,15 +1369,8 @@ function chartPoints(xid) {
   const days = byDay(S.logs.filter((l) => l.x === xid)).slice(-24);
   return days.map(({ d, sets }) => {
     const b = topSet(sets);
-    if (chartM === 'reps') {
-      const mr = Math.max(...sets.filter((s) => s.kg === b.kg).map((s) => s.reps));
-      return { d, v: mr, t: `${mr} reps con ${kg(b.kg)}` };
-    }
-    if (chartM === 'rm') {
-      const v = Math.max(...sets.map((s) => s.kg * (1 + s.reps / 30)));
-      return { d, v, t: `1RM estimado de ${kg(v)}` };
-    }
-    return { d, v: b.kg, t: `${kg(b.kg)} × ${b.reps} reps` };
+    const v = chartM === 'reps' ? b.reps : chartM === 'rm' ? rm1(b) : b.kg;
+    return { d, v, s: b, i: sets.indexOf(b) + 1, n: sets.length };
   });
 }
 function chartHTML(xid) {
@@ -1383,7 +1407,7 @@ function chartHTML(xid) {
     trend = `<p class="csum ${dv > 0 ? 'up' : dv < 0 ? 'down' : ''}">${dv > 0 ? `Subiste ${nf(dv)}${unit}` : dv < 0 ? `Bajaste ${nf(-dv)}${unit}` : 'Te mantienes igual'} desde el ${fShort(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
   }
   return `${trend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xl}${hits}</svg>
-    <p class="cinfo">${cap(fShort(sp.d))}: <b>${sp.t}</b></p>`;
+    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">Mejor serie: <b>${nf(sp.s.kg)} kg × ${sp.s.reps} reps</b></span><span class="cx">${sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}</span></div>`;
 }
 
 /* ---------- hojas inferiores ---------- */
@@ -1821,15 +1845,15 @@ const A = {
     const before = S.logs.filter((l) => l.x === xid);
     const nSet = before.filter((l) => l.d === today()).length + 1;
     const hadPast = before.some((l) => l.d !== today());
-    const prevMax = Math.max(0, ...before.map((l) => l.kg));
-    const pr = hadPast && kgv > prevMax + 1e-9;
+    const prevBest = before.length ? score(topSet(before)) : 0;
+    const pr = hadPast && score({ kg: kgv, reps }) > prevBest + 1e-9;
     const log = { id: uid(), d: today(), ts: Date.now(), x: xid, name: f.e.name, r: rid, rn: R(rid)?.name, kg: kgv, raw: w, u, reps, pr };
     S.logs.push(log);
     save();
     draft = null;
     document.activeElement?.blur();
     try { navigator.vibrate?.(pr ? [60, 60, 120] : 40); } catch (e) {}
-    const msg = pr ? `Nuevo récord: ${kg(kgv)} × ${reps}` : `Serie ${nSet} guardada: ${nf(kgv)} kg × ${reps}`;
+    const msg = pr ? `¡Nueva mejor serie histórica! ${nf(kgv)} kg × ${reps}` : `Serie ${nSet} guardada: ${nf(kgv)} kg × ${reps}`;
     back(`/r/${rid}/p/${f.p.id}`);
     setTimeout(() => toast(msg, { label: 'Deshacer', fn: () => { S.logs = S.logs.filter((l) => l.id !== log.id); save(); render(); } }), 60);
   },
