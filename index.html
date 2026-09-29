@@ -168,6 +168,12 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .nfirst{margin:0;background:var(--s1);border-radius:20px;padding:16px 18px}
 .hnote{margin:0 0 6px;font-size:13px;color:var(--mu)}
 .hrow .hs .hb{color:#7BE08A;font-weight:700}
+.fld.opt{background:#0b0b0b}
+.fld span i{font-style:normal;font-size:12px;color:#77726c}
+.bwhint{margin:10px 2px 0;font-size:13px;color:var(--mu);line-height:1.4}
+.stopw{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;margin-top:10px;border-radius:16px;background:var(--s2);font-weight:600;font-size:16px}
+.stopw.on{background:#12301a;color:#7BE08A}
+.stopw b{font-family:var(--cond);font-size:26px;font-weight:800;min-width:64px;text-align:left}
 .csum{margin:2px 0 0;font-size:14px;font-weight:600;color:var(--tx)}
 .csum.up{color:#7BE08A}
 .csum.down{color:var(--red)}
@@ -360,6 +366,7 @@ const I = {
   cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   set: '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
   edit: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+  clock: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/>',
   star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
   search: '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
   dl: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
@@ -679,6 +686,7 @@ const CATALOG = [
       ['Press declinado en máquina', 'decline', 'm', 'Sentado en la máquina, empuja las manillas hacia adelante y abajo.'],
       ['Fondos en paralelas', 'dip', 'n', 'Sostenido en las paralelas, inclina el torso adelante, baja doblando los codos y vuelve a subir.'],
       ['Fondos en máquina', 'dip', 'm', 'Sentado en la máquina, empuja las manillas hacia abajo hasta estirar los brazos.'],
+      ['Fondos asistidos en máquina', 'dip', 'm', 'Fondos con la plataforma de la máquina asistida bajo las rodillas. El peso es ayuda: mientras menos, mejor.'],
       ['Cruce de poleas de arriba hacia abajo', 'fly', 'c', 'Con las poleas arriba, baja las manos al frente hasta juntarlas a la altura de la cadera.']]]
   ] },
   { n: 'Espalda', muscles: [
@@ -691,7 +699,7 @@ const CATALOG = [
       ['Jalón unilateral en polea', 'pulldown', 'c', 'Con una manilla, tira hacia abajo un brazo a la vez para trabajar cada lado por separado.'],
       ['Dominadas', 'pullup', 'n', 'Colgado de la barra con agarre ancho, sube hasta pasar el mentón por sobre la barra.'],
       ['Dominadas supinas', 'pullup', 'n', 'Dominadas con las palmas hacia ti y las manos al ancho de los hombros; suman bíceps.'],
-      ['Dominadas asistidas en máquina', 'pullup', 'm', 'Dominadas con una plataforma que te empuja hacia arriba: más peso significa más ayuda.'],
+      ['Dominadas asistidas en máquina', 'pullup', 'm', 'Dominadas con una plataforma que te empuja hacia arriba. El peso que eliges es ayuda: mientras menos, mejor.'],
       ['Pullover en polea', 'cpull', 'c', 'También llamado jalón con brazos rectos: frente a la polea alta, baja la barra con los brazos estirados hasta los muslos.'],
       ['Pullover con mancuerna', 'pullover', 'd', 'Acostado, lleva una mancuerna desde arriba del pecho hacia atrás de la cabeza y vuelve.']]],
     ['Espalda media', 'Romboides y trapecio medio, entre los omóplatos. Dan grosor a la espalda y se trabajan con remos.', [
@@ -735,7 +743,8 @@ const CATALOG = [
     ['Trapecio superior', 'Entre el cuello y el hombro. Se trabaja subiendo los hombros hacia las orejas.', [
       ['Encogimientos con mancuernas', 'shrug', 'd', 'De pie con las mancuernas a los costados, sube los hombros hacia las orejas y baja lento.'],
       ['Encogimientos con barra', 'shrug', 'b', 'Encogimientos sosteniendo una barra frente a los muslos.'],
-      ['Encogimientos en máquina', 'shrug', 'm', 'Encogimientos en máquina o Smith, subiendo solo los hombros.']]]
+      ['Encogimientos en máquina', 'shrug', 'm', 'Encogimientos en máquina o Smith, subiendo solo los hombros.'],
+      ['Paseo del granjero', 'shrug', 'd', 'Camina sosteniendo mancuernas pesadas a los costados; se anota el tiempo y el peso de cada mancuerna.']]]
   ] },
   { n: 'Bíceps', muscles: [
     ['Bíceps', 'La parte delantera del brazo. Dobla el codo y gira la muñeca hacia arriba.', [
@@ -756,7 +765,8 @@ const CATALOG = [
       ['Curl martillo', 'curl', 'd', 'Curl con las palmas mirándose entre sí, como sosteniendo un martillo.'],
       ['Curl invertido', 'curl', 'b', 'Curl con las palmas hacia abajo; trabaja más el antebrazo.'],
       ['Curl martillo en polea con cuerda', 'curl', 'c', 'Curl martillo con la cuerda enganchada en la polea baja.'],
-      ['Curl de muñeca', 'curl', 'b', 'Sentado con los antebrazos sobre los muslos, sube la barra doblando solo las muñecas.']]]
+      ['Curl de muñeca', 'curl', 'b', 'Sentado con los antebrazos sobre los muslos, sube la barra doblando solo las muñecas.'],
+      ['Colgarse de la barra', 'pullup', 'n', 'Cuélgate de la barra con los brazos estirados el mayor tiempo posible; entrena el agarre.']]]
   ] },
   { n: 'Tríceps', muscles: [
     ['Cabeza larga', 'La parte interna y trasera del tríceps, la más grande. Se estira al llevar el brazo sobre la cabeza.', [
@@ -792,7 +802,8 @@ const CATALOG = [
       ['Estocadas', 'lunge', 'd', 'Da un paso largo al frente y baja hasta que ambas rodillas formen 90°; vuelve.'],
       ['Estocadas caminando', 'lunge', 'd', 'Estocadas avanzando, alternando las piernas en cada paso.'],
       ['Zancada inversa', 'lunge', 'd', 'Estocada dando el paso hacia atrás; es más amable con las rodillas.'],
-      ['Subida al cajón', 'lunge', 'd', 'Sube a un cajón o banco con una pierna, empujando con el talón.']]],
+      ['Subida al cajón', 'lunge', 'd', 'Sube a un cajón o banco con una pierna, empujando con el talón.'],
+      ['Sentadilla isométrica en pared', 'hack', 'n', 'Con la espalda apoyada en la pared, baja hasta que los muslos queden paralelos al suelo y mantén.']]],
     ['Isquiotibiales', 'La parte trasera del muslo. Dobla la rodilla y ayuda a extender la cadera.', [
       ['Curl femoral acostado', 'legcurl', 'm', 'Boca abajo en la máquina, lleva los talones hacia los glúteos.'],
       ['Curl femoral sentado', 'seatcurl', 'm', 'Sentado con el cojín sobre los muslos, lleva los talones hacia abajo y atrás.'],
@@ -827,7 +838,7 @@ const CATALOG = [
       ['Crunch en banco declinado', 'crunch', 'n', 'Crunch en banco declinado con los pies trabados; más difícil que en el suelo.'],
       ['Elevación de piernas', 'legraiseL', 'n', 'Acostado, sube las piernas estiradas hasta la vertical y bájalas sin tocar el suelo.'],
       ['Elevación de rodillas colgado', 'legraise', 'n', 'Colgado de la barra, sube las rodillas hacia el pecho sin balancearte.'],
-      ['Elevación de piernas en paralelas', 'legraise', 'm', 'Con los antebrazos apoyados en la silla romana, sube las rodillas o las piernas.']]],
+      ['Elevación de piernas en paralelas', 'legraise', 'n', 'Con los antebrazos apoyados en la silla romana, sube las rodillas o las piernas.']]],
     ['Oblicuos', 'Los costados del abdomen. Giran e inclinan el tronco.', [
       ['Giros rusos', 'russian', 'b', 'Sentado con el torso inclinado atrás y los pies elevados, gira el tronco de lado a lado.'],
       ['Crunch oblicuo', 'crunch', 'n', 'Crunch llevando el hombro hacia la rodilla contraria.'],
@@ -837,16 +848,23 @@ const CATALOG = [
       ['Leñador en polea', 'sidebend', 'c', 'Tira la polea en diagonal cruzando el cuerpo, girando el tronco.'],
       ['Inclinación lateral con mancuerna', 'sidebend', 'd', 'De pie con una mancuerna en una mano, inclínate hacia ese lado y vuelve.']]],
     ['Core profundo', 'La faja interna que estabiliza la columna.', [
-      ['Plancha', 'plank', 'n', 'Apoyado en los antebrazos y las puntas de los pies, mantén el cuerpo recto.'],
-      ['Plancha lateral', 'plank', 'n', 'Apoyado de lado en un antebrazo, mantén la cadera arriba y el cuerpo recto.'],
+      ['Plancha', 'plank', 'n', 'Apoyado en los antebrazos y las puntas de los pies, mantén el cuerpo recto el mayor tiempo posible.'],
+      ['Plancha lateral', 'plank', 'n', 'Apoyado de lado en un antebrazo, mantén la cadera arriba y el cuerpo recto. Anota el tiempo de un lado.'],
+      ['Hollow hold', 'legraiseL', 'n', 'Boca arriba, despega hombros y piernas del suelo formando una "banana" y mantén la posición.'],
       ['Rueda abdominal', 'wheel', 'n', 'De rodillas, rueda hacia adelante estirando el cuerpo y vuelve sin arquear la espalda.'],
       ['Pallof press', 'twist', 'c', 'De lado a la polea, empuja la manilla al frente y resiste que te haga girar.'],
       ['Mountain climbers', 'plank', 'n', 'En posición de flexión, lleva las rodillas al pecho alternando rápido.']]]
   ] }
 ];
-const CATALOG_V = 5;
+const CATALOG_V = 7;
+/* ejercicios que no se miden por peso × repeticiones */
+const MODES = {
+  'Plancha': 'time', 'Plancha lateral': 'time', 'Colgarse de la barra': 'time', 'Sentadilla isométrica en pared': 'time', 'Hollow hold': 'time', 'Paseo del granjero': 'time',
+  'Dominadas asistidas en máquina': 'assist', 'Fondos asistidos en máquina': 'assist'
+};
 /* nombres o dibujos del catálogo que cambiaron: se actualizan solo si el usuario no los había cambiado */
 const RENAMED = { 'biceps_curl-con-dos-poleas': 'Curl con dos poleas' };
+const TOOL_FIX = { 'abdominales_elevacion-de-piernas-en-paralelas': ['m', 'n'] };
 const POSE_FIX = { 'biceps_curl-con-dos-poleas': ['curl2c', 'curl2low'], 'abdominales_elevacion-de-piernas': ['legraise', 'legraiseL'] };
 function seedParts() {
   return CATALOG.map((p) => {
@@ -854,7 +872,7 @@ function seedParts() {
     return {
       id: pid, name: p.n,
       muscles: p.muscles.map(([n, d]) => ({ n, d })),
-      ex: p.muscles.flatMap(([m, , exs]) => exs.map(([e, pose, tool, desc, fid]) => ({ id: fid || pid + '_' + slug(e), name: e, m, pose, tool, desc })))
+      ex: p.muscles.flatMap(([m, , exs]) => exs.map(([e, pose, tool, desc, fid]) => { const o = { id: fid || pid + '_' + slug(e), name: e, m, pose, tool, desc }; if (MODES[e]) o.mode = MODES[e]; return o; }))
     };
   });
 }
@@ -913,6 +931,8 @@ function mergeCatalog(s) {
         if (ue) {
           if (ue.id === fe.id && RENAMED[fe.id] && norm(ue.name) === norm(RENAMED[fe.id])) { const old = ue.name; ue.name = fe.name; s.logs.forEach((l) => { if (l.x === ue.id && l.name === old) l.name = fe.name; }); }
           if (POSE_FIX[fe.id] && ue.id === fe.id && (!ue.pose || ue.pose === POSE_FIX[fe.id][0])) ue.pose = POSE_FIX[fe.id][1];
+          if (TOOL_FIX[fe.id] && ue.id === fe.id && ue.tool === TOOL_FIX[fe.id][0]) ue.tool = TOOL_FIX[fe.id][1];
+          if (fe.mode && !ue.mode) ue.mode = fe.mode;
           ue.pose = ue.pose || fe.pose; ue.tool = ue.tool || fe.tool; ue.m = ue.m || fe.m; ue.desc = ue.desc || fe.desc; ue.custom = false; known.add(ue.id);
         }
         else { if (s.removed.includes(fe.id)) fe.hidden = true; up.ex.push(fe); known.add(fe.id); }
@@ -955,6 +975,7 @@ function legacyLocal() { try { const s = JSON.parse(localStorage.getItem(KEY)); 
 
 let dirty = false, pushT = null, pushing = false, syncState = 'ok';
 function save() {
+  bwCache = null;
   if (!S || !USER) return;
   S.ts = Date.now();
   try { localStorage.setItem(cacheKey(), JSON.stringify(S)); localStorage.setItem(cacheKey() + ':dirty', '1'); } catch (e) { toast('No se pudo guardar en el teléfono'); }
@@ -1091,7 +1112,44 @@ function byDay(logs) {
 }
 /* mejor serie: la de mayor 1RM estimado (fórmula de Epley: peso × (1 + reps / 30)); si empatan, la de más repeticiones */
 const rm1 = (s) => s.kg * (1 + s.reps / 30);
-const score = (s) => rm1(s) + s.reps * 1e-6;
+/* cómo se mide cada ejercicio:
+   kg     peso × repeticiones (lo normal)
+   bw     peso corporal: repeticiones + lastre opcional (implemento "n")
+   time   por tiempo: segundos (se guardan en "reps") + peso extra opcional
+   assist asistido en máquina: el peso es ayuda, menos es mejor */
+let bwCache = null;
+const kindOf = (xid) => {
+  if (!bwCache) {
+    bwCache = new Map();
+    (S?.parts || []).forEach((p) => p.ex.forEach((e) => bwCache.set(e.id, e.mode === 'time' ? 'time' : e.mode === 'assist' ? 'assist' : e.tool === 'n' ? 'bw' : 'kg')));
+  }
+  return bwCache.get(xid) || 'kg';
+};
+const isBW = (xid) => kindOf(xid) === 'bw';
+const bodyKg = () => { const b = parseNum(S?.settings?.bw); return b > 20 && b < 300 ? b : 70; };
+const fmtT = (sec) => sec < 60 ? `${sec} s` : `${Math.floor(sec / 60)}:${pad(sec % 60)} min`;
+/* puntaje para decidir la mejor serie:
+   kg     1RM estimado
+   bw     (tu peso + lastre) × (1 + reps/30)
+   assist (tu peso − ayuda) × (1 + reps/30)
+   time   segundos × (tu peso + peso extra) / tu peso */
+const score = (s) => {
+  const k = s.x ? kindOf(s.x) : 'kg', B = bodyKg();
+  const v = k === 'bw' ? (B + s.kg) * (1 + s.reps / 30)
+    : k === 'assist' ? Math.max(B - s.kg, 1) * (1 + s.reps / 30)
+    : k === 'time' ? s.reps * (B + s.kg) / B
+    : rm1(s);
+  return v + s.reps * 1e-6;
+};
+const setTxt = (s, short = false) => {
+  const k = kindOf(s.x);
+  if (k === 'bw') return s.kg > 0 ? `${s.reps} reps + ${nf(s.kg)} kg` : `${s.reps} reps`;
+  if (k === 'time') return s.kg > 0 ? `${fmtT(s.reps)} + ${nf(s.kg)} kg` : fmtT(s.reps);
+  if (k === 'assist') return s.kg > 0 ? (short ? `${s.reps} (ayuda ${nf(s.kg)})` : `${s.reps} reps, ayuda ${nf(s.kg)} kg`) : `${s.reps} reps sin ayuda`;
+  return short ? `${nf(s.kg)} × ${s.reps}` : `${nf(s.kg)} kg × ${s.reps}`;
+};
+/* kilos levantados: no cuentan la ayuda de las máquinas asistidas ni los ejercicios por tiempo */
+const volKg = (l) => { const k = kindOf(l.x); return k === 'kg' || k === 'bw' ? l.kg * l.reps : 0; };
 const topSet = (sets) => sets.reduce((b, s) => (!b || score(s) > score(b) + 1e-12 ? s : b), null);
 const isBest = (s, sets) => { const t = topSet(sets); return Math.abs(score(s) - score(t)) < 1e-9; };
 const setPos = (s) => { const ds = S.logs.filter((l) => l.x === s.x && l.d === s.d).sort(byTs); return [ds.indexOf(s) + 1, ds.length]; };
@@ -1144,6 +1202,7 @@ window.addEventListener('popstate', () => {
 });
 
 function render() {
+  bwCache = null;
   const v0 = $('#view');
   if (booting) { v0.innerHTML = `<div class="login"><div class="lg-logo">${logo(76)}</div><p class="mu" style="text-align:center">Cargando…</p></div>`; $('#dockwrap').innerHTML = ''; return; }
   if (!USER || !S) {
@@ -1158,7 +1217,7 @@ function render() {
   const s = parse();
   const path = s.join('/');
   const changed = path !== lastPath;
-  if (changed) { edit = false; chartSel = null; }
+  if (changed) { edit = false; chartSel = null; if (s[2] === 'x') chartM = null; }
   lastPath = path;
   let html = null, rid = null;
   if (!s.length) html = vHome();
@@ -1265,7 +1324,7 @@ function vPart(r, p) {
     const right = edit
       ? `<button class="iconbtn sm" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${ic('edit', 18)}</button>`
       : nT ? `<span class="badge" aria-label="${nT} series hoy">${nT}</span>`
-      : l ? `<span class="meta">${nf(l.kg)} kg × ${l.reps}</span>` : `<span class="chev">${ic('chev')}</span>`;
+      : l ? `<span class="meta">${setTxt(l)}</span>` : `<span class="chev">${ic('chev')}</span>`;
     const inner = `<span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 58)}</span><span class="grow"><span class="nm">${esc(e.name)}</span><span class="sub">${esc(e.m || '')}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}${e.hidden ? '<span class="ptag">Oculto</span>' : ''}</span></span>`;
     return `<div class="item ex${e.hidden ? ' hid' : ''}" data-n="${esc(norm(e.name))}" data-m="${esc(e.m || '')}" data-h="${e.hidden ? 1 : 0}">${edit
       ? `<button class="main" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${inner}</button><button class="iconbtn sm" data-act="exhide" data-id="${e.id}" aria-label="${e.hidden ? 'Mostrar' : 'Ocultar'} ${esc(e.name)}" aria-pressed="${!!e.hidden}">${ic(e.hidden ? 'eyeoff' : 'eye', 18)}</button><button class="iconbtn sm" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${ic('edit', 18)}</button>`
@@ -1302,9 +1361,10 @@ function defaultDraft(xid) {
   let w;
   if (u === 'kg') w = s.u === 'kg' ? s.raw : Math.round(s.kg * 2) / 2;
   else w = s.u === 'lb' ? s.raw : Math.round((s.kg / LB) * 2) / 2;
-  return { w: inNum(w), reps: String(s.reps) };
+  const k = kindOf(xid);
+  return { w: s.kg > 0 || k === 'kg' || k === 'assist' ? inNum(w) : '', reps: String(s.reps) };
 }
-let draft = null;
+let draft = null, curFirst = 'fw';
 function vEx(r, xid) {
   const f = X(xid);
   if (!f) return null;
@@ -1314,6 +1374,8 @@ function vEx(r, xid) {
   const td = all.filter((l) => l.d === today()).sort(byTs);
   const prev = days.filter((x) => x.d !== today());
   const last = prev[prev.length - 1];
+  const kd = kindOf(xid), bw = kd === 'bw';
+  curFirst = kd === 'bw' || kd === 'time' ? 'fr' : 'fw';
   let notes;
   if (last) {
     const lb = topSet(last.sets);
@@ -1321,7 +1383,11 @@ function vEx(r, xid) {
     const note = (label, s, cls = '') => {
       const [i, n] = setPos(s);
       const dd = cap(new Intl.DateTimeFormat('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }).format(pd(s.d)).replace(/\./g, ''));
-      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${nf(s.kg)} kg × ${s.reps}</b><span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>${s.kg > 0 ? `<span class="ns">1RM estimado ${nf(rm1(s))} kg</span>` : ''}</div>`;
+      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${kd === 'kg' ? `${nf(s.kg)} kg × ${s.reps}` : kd === 'time' ? fmtT(s.reps) : `${s.reps} reps`}</b><span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>${
+        kd === 'bw' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de lastre</span>` : '<span class="ns">sin lastre</span>')
+        : kd === 'time' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg extra</span>` : '<span class="ns">sin peso extra</span>')
+        : kd === 'assist' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de ayuda</span>` : '<span class="ns">¡sin ayuda!</span>')
+        : s.kg > 0 ? `<span class="ns">1RM estimado ${nf(rm1(s))} kg</span>` : ''}</div>`;
     };
     notes = Math.abs(score(lb) - score(hb)) < 1e-9
       ? `<div class="notes one">${note('Última vez', lb, 'best')}<p class="nbest">${ic('star', 18)} La última vez hiciste tu mejor serie histórica.</p></div>`
@@ -1331,16 +1397,16 @@ function vEx(r, xid) {
   }
   const u = S.settings.unit;
   const dr = (draft && draft.x === xid) ? draft : defaultDraft(xid);
-  const sets = td.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${nf(s.kg)} kg × ${s.reps}</span>${s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}${s.pr ? '<span class="pr">Récord</span>' : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1}">${ic('x', 18)}</button></div>`).join('');
+  const sets = td.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${setTxt(s)}</span>${s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}${s.pr ? '<span class="pr">Récord</span>' : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1}">${ic('x', 18)}</button></div>`).join('');
   const hist = days.length ? `<details class="hist"><summary>Historial <span class="mu small">${plural(days.length, 'día', 'días')}</span></summary>
     <p class="hnote">En verde, la mejor serie de cada día.</p>
-    ${days.slice().reverse().map((dd) => `<div class="hrow"><span class="hd">${fShort(dd.d)}</span><span class="hs">${dd.sets.map((s) => `<span${isBest(s, dd.sets) ? ' class="hb"' : ''}>${nf(s.kg)} × ${s.reps}</span>`).join('')}</span></div>`).join('')}
+    ${days.slice().reverse().map((dd) => `<div class="hrow"><span class="hd">${fShort(dd.d)}</span><span class="hs">${dd.sets.map((s) => `<span${isBest(s, dd.sets) ? ' class="hb"' : ''}>${setTxt(s, true)}</span>`).join('')}</span></div>`).join('')}
   </details>` : '';
   return `${hdr(`/r/${r.id}/p/${p.id}`, p.name)}
     <h2 class="pt">${esc(e.name)}</h2>
     <div class="exhead">
       <span class="exic big">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 104)}</span>
-      <div class="grow"><p class="crumb" style="margin:0 0 4px">${esc(p.name)}${e.m ? ' › ' + esc(e.m) : ''}</p>${e.desc ? `<p class="exdesc">${esc(e.desc)}</p>` : (() => { const md = p.muscles.find((m) => m.n === e.m); return md && md.d ? `<p class="exdesc">${esc(md.d)}</p>` : ''; })()}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}</div>
+      <div class="grow"><p class="crumb" style="margin:0 0 4px">${esc(p.name)}${e.m ? ' › ' + esc(e.m) : ''}</p>${e.desc ? `<p class="exdesc">${esc(e.desc)}</p>` : (() => { const md = p.muscles.find((m) => m.n === e.m); return md && md.d ? `<p class="exdesc">${esc(md.d)}</p>` : ''; })()}${{ bw: '<span class="ptag">Peso corporal</span>', time: '<span class="ptag">Por tiempo</span>', assist: '<span class="ptag">Asistido</span>' }[kd] || ''}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}</div>
     </div>
     ${notes}
     <div class="logger">
@@ -1348,28 +1414,48 @@ function vEx(r, xid) {
         <div class="seg" role="group" aria-label="Unidad de peso"><button data-act="unit" data-u="kg" class="${u === 'kg' ? 'on' : ''}" aria-pressed="${u === 'kg'}">kg</button><button data-act="unit" data-u="lb" class="${u === 'lb' ? 'on' : ''}" aria-pressed="${u === 'lb'}">lb</button></div>
       </div>
       <div class="fields">
-        <label class="fld"><span>Peso (${u})</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>
-        <label class="fld"><span>Repeticiones</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" autocomplete="off" placeholder="0" value="${esc(dr.reps)}"></label>
+        ${(() => {
+          const W = (label, opt, first) => `<label class="fld${opt ? ' opt' : ''}"><span>${label}</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>`;
+          const Rr = (label, first) => `<label class="fld"><span>${label}</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.reps)}"></label>`;
+          if (kd === 'bw') return Rr('Repeticiones', true) + W(`Lastre (${u})`, true, false);
+          if (kd === 'time') return Rr('Segundos', true) + W(`Peso extra (${u})`, true, false);
+          if (kd === 'assist') return W(`Ayuda (${u})`, false, true) + Rr('Repeticiones', false);
+          return W(`Peso (${u})`, false, true) + Rr('Repeticiones', false);
+        })()}
       </div>
+      ${kd === 'time' ? `<button class="stopw${swOn ? ' on' : ''}" data-act="stopw" id="stopw">${swOn ? `Detener <b id="swt">${fmtClock(swSec())}</b>` : `${ic('clock', 18)} Usar cronómetro`}</button>` : ''}
+      ${{ bw: '<p class="bwhint">Peso corporal: basta con las repeticiones. El lastre es opcional: anótalo solo si usas disco, cinturón con peso o chaleco.</p>',
+          time: '<p class="bwhint">Anota cuántos segundos aguantaste, o usa el cronómetro y se llena solo. El peso extra es opcional (por ejemplo, un disco en la espalda).</p>',
+          assist: '<p class="bwhint">En la máquina asistida el peso te ayuda: mientras menos ayuda uses, mejor. Pon 0 si lo hiciste sin ayuda.</p>' }[kd] || ''}
       <button class="cta" data-act="add">Guardar serie</button>
       ${sets ? `<div class="sets">${sets}</div>` : ''}
     </div>
     <div class="card">
       <div class="lhead"><span class="h3">Progreso</span>
-        <div class="seg" role="group" aria-label="Qué mostrar">${[['peso', 'Peso'], ['reps', 'Reps'], ['rm', '1RM']].map(([k, l]) => `<button data-act="cm" data-m="${k}" class="${chartM === k ? 'on' : ''}" aria-pressed="${chartM === k}">${l}</button>`).join('')}</div>
+        ${(() => { const md = chartModes(xid); const cm = md.includes(chartM) ? chartM : md[0];
+          return md.length > 1 ? `<div class="seg" role="group" aria-label="Qué mostrar">${md.map((k) => `<button data-act="cm" data-m="${k}" class="${cm === k ? 'on' : ''}" aria-pressed="${cm === k}">${modeLabel(xid, k)}</button>`).join('')}</div>` : ''; })()}
       </div>
-      <p class="chelp">Cada punto es la mejor serie del día. Toca uno para ver el detalle.</p>
+      <p class="chelp">Cada punto es la mejor serie del día. Toca uno para ver el detalle.${kd === 'assist' ? ' En Ayuda, que la línea baje es avanzar.' : ''}</p>
       <div id="chart" class="chart">${chartHTML(xid)}</div>
     </div>
     ${hist}`;
 }
 
 /* ---------- gráfico ---------- */
+function chartModes(xid) {
+  const k = kindOf(xid);
+  if (k === 'kg') return ['peso', 'reps', 'rm'];
+  if (k === 'assist') return ['peso', 'reps'];
+  return S.logs.some((l) => l.x === xid && l.kg > 0) ? ['reps', 'peso'] : ['reps'];
+}
+const modeLabel = (xid, m) => { const k = kindOf(xid); return m === 'peso' ? ({ bw: 'Lastre', time: 'Peso extra', assist: 'Ayuda' }[k] || 'Peso') : m === 'reps' ? (k === 'time' ? 'Tiempo' : 'Reps') : '1RM'; };
+const modeOf = (xid) => { const md = chartModes(xid); return md.includes(chartM) ? chartM : md[0]; };
 function chartPoints(xid) {
   const days = byDay(S.logs.filter((l) => l.x === xid)).slice(-24);
+  const M = modeOf(xid);
   return days.map(({ d, sets }) => {
     const b = topSet(sets);
-    const v = chartM === 'reps' ? b.reps : chartM === 'rm' ? rm1(b) : b.kg;
+    const v = M === 'reps' ? b.reps : M === 'rm' ? rm1(b) : b.kg;
     return { d, v, s: b, i: sets.indexOf(b) + 1, n: sets.length };
   });
 }
@@ -1379,8 +1465,9 @@ function chartHTML(xid) {
   const n = pts.length, W = 340, H = 180, l = 38, r = 14, tp = 14, b = 26;
   const vs = pts.map((p) => p.v);
   let mn = Math.min(...vs), mx = Math.max(...vs);
+  const M = modeOf(xid);
   // escala con números redondos (2,5 · 5 · 10 …)
-  const span = Math.max(mx - mn, chartM === 'reps' ? 2 : 2.5);
+  const span = Math.max(mx - mn, M === 'reps' ? 2 : 2.5);
   const step = [1, 2, 2.5, 5, 10, 20, 25, 50, 100].find((s) => span / s <= 4) || 100;
   mn = Math.floor((mn - step * 0.3) / step) * step; mx = Math.ceil((mx + step * 0.3) / step) * step;
   if (mn < 0) mn = 0;
@@ -1403,11 +1490,15 @@ function chartHTML(xid) {
   const sp = pts[sel];
   let trend = '';
   if (n > 1) {
-    const dv = pts[n - 1].v - pts[0].v, unit = chartM === 'reps' ? ' reps' : ' kg';
-    trend = `<p class="csum ${dv > 0 ? 'up' : dv < 0 ? 'down' : ''}">${dv > 0 ? `Subiste ${nf(dv)}${unit}` : dv < 0 ? `Bajaste ${nf(-dv)}${unit}` : 'Te mantienes igual'} desde el ${fShort(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
+    const k = kindOf(xid), dv = pts[n - 1].v - pts[0].v;
+    const unit = M === 'reps' ? (k === 'time' ? ' s' : ' reps') : ' kg';
+    const lessIsBetter = k === 'assist' && M === 'peso';
+    const good = lessIsBetter ? dv < 0 : dv > 0, bad = lessIsBetter ? dv > 0 : dv < 0;
+    const what = lessIsBetter ? `${nf(Math.abs(dv))} kg de ayuda` : `${nf(Math.abs(dv))}${unit}`;
+    trend = `<p class="csum ${good ? 'up' : bad ? 'down' : ''}">${dv > 0 ? `Subiste ${what}` : dv < 0 ? `Bajaste ${what}` : 'Te mantienes igual'} desde el ${fShort(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
   }
   return `${trend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xl}${hits}</svg>
-    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">Mejor serie: <b>${nf(sp.s.kg)} kg × ${sp.s.reps} reps</b></span><span class="cx">${sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}</span></div>`;
+    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">Mejor serie: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}</span></div>`;
 }
 
 /* ---------- hojas inferiores ---------- */
@@ -1501,7 +1592,10 @@ function suggestEx(name, pid) {
     pick(/martillo|invertido|muneca|antebrazo/, 'braquial') || pick(/frances|nuca|cabeza|sobre la cabeza/, 'larga') ||
     pick(/femoral|rumano|isquio/, 'isquio') || pick(/aduc|sumo/, 'aductor') || pick(/glute|hip|puente|patada|abduc/, 'glute') || pick(/talon|pantorr|gemel/, 'pantorr') ||
     pick(/oblicu|giro|lenador|lateral|rotacion|bicicleta/, 'oblicu') || pick(/plancha|rueda|pallof|core/, 'core') || null;
-  return { pose, tool, m };
+  const mode = has(/asistid/) ? 'assist' : has(/plancha|plank|isometric|colgarse|colgado en (la )?barra|dead hang|hold|granjero|farmer|wall sit/) ? 'time' : null;
+  if (mode === 'assist' && !tool) tool = 'm';
+  if (mode === 'time' && !tool) tool = 'n';
+  return { pose, tool, m, mode };
 }
 let SEEDPOSES = null;
 function partPoses(pid) {
@@ -1513,14 +1607,14 @@ function partPoses(pid) {
 
 /* ejercicio: crear y editar */
 let EX = null, exT = null;
-const TOOLS = [['b', 'Barra'], ['d', 'Mancuerna'], ['c', 'Polea'], ['m', 'Máquina'], ['n', 'Sin peso']];
+const TOOLS = [['b', 'Barra'], ['d', 'Mancuerna'], ['c', 'Polea'], ['m', 'Máquina'], ['n', 'Peso corporal']];
 function editEx(pid, xid) {
   const p = P(pid);
   const e = xid && p.ex.find((x) => x.id === xid);
   const fm = filt[pid]?.m || '';
   EX = e
-    ? { pid, id: e.id, name: e.name, m: e.m || '', pose: e.pose || 'gen', tool: e.tool || 'n', desc: e.desc || '', newM: false, open: false, all: false, auto: {} }
-    : { pid, id: null, name: filt[pid]?.q || '', m: fm || p.muscles[0]?.n || '', pose: 'gen', tool: 'n', desc: '', newM: false, open: true, all: false, auto: { pose: true, tool: true, m: !fm } };
+    ? { pid, id: e.id, name: e.name, m: e.m || '', pose: e.pose || 'gen', tool: e.tool || 'n', mode: e.mode || 'reps', desc: e.desc || '', newM: false, open: false, all: false, auto: {} }
+    : { pid, id: null, name: filt[pid]?.q || '', m: fm || p.muscles[0]?.n || '', pose: 'gen', tool: 'n', mode: 'reps', desc: '', newM: false, open: true, all: false, auto: { pose: true, tool: true, m: !fm, mode: true } };
   if (!EX.id && EX.name) applySuggest();
   renderEX();
 }
@@ -1529,6 +1623,7 @@ function applySuggest() {
   if (EX.auto.pose && s.pose) EX.pose = s.pose;
   if (EX.auto.tool && s.tool) EX.tool = s.tool;
   if (EX.auto.m && s.m) EX.m = s.m;
+  if (EX.auto.mode) EX.mode = s.mode || 'reps';
   EX.sug = !!(s.pose || s.tool || s.m);
 }
 const exParts = {
@@ -1537,6 +1632,8 @@ const exParts = {
     ? (EX.sug ? `Sugerido por el nombre: <b>${esc(POSE_NAMES[EX.pose] || EX.pose)}</b>, ${esc(TOOLS.find((t) => t[0] === EX.tool)[1].toLowerCase())}${EX.m ? ', ' + esc(EX.m.toLowerCase()) : ''}. Puedes cambiarlo abajo.` : 'No reconocí el movimiento: elige el dibujo que más se parezca.')
     : 'Escribe el nombre y te sugiero el dibujo, el músculo y con qué se hace.',
   mus: () => P(EX.pid).muscles.map((m) => `<button class="chip${EX.m === m.n ? ' on' : ''}" data-act="exm" data-m="${esc(m.n)}" aria-pressed="${EX.m === m.n}">${esc(m.n)}</button>`).join('') + `<button class="chip add" data-act="exnm">${ic('plus', 16)} Otro</button>`,
+  mode: () => [['reps', 'Repeticiones'], ['time', 'Tiempo'], ['assist', 'Asistida']].map(([k, l]) => `<button class="chip${(EX.mode || 'reps') === k ? ' on' : ''}" data-act="exmd" data-k="${k}" aria-pressed="${(EX.mode || 'reps') === k}">${l}</button>`).join(''),
+  modeh: () => ({ reps: 'Lo normal: peso y repeticiones (o solo repeticiones si es peso corporal).', time: 'Se anota cuántos segundos aguantas, con cronómetro incluido. Ej: plancha.', assist: 'Máquinas donde el peso te ayuda, como las dominadas asistidas: mientras menos ayuda, mejor.' })[EX.mode || 'reps'],
   tools: () => TOOLS.map(([k, l]) => `<button class="chip${EX.tool === k ? ' on' : ''}" data-act="ext" data-t="${k}" aria-pressed="${EX.tool === k}">${l}</button>`).join(''),
   grid: () => {
     if (!EX.open) return '';
@@ -1550,7 +1647,7 @@ const exParts = {
 };
 function refreshEX() {
   const set = (id, k) => { const el = $('#' + id); if (el) el.innerHTML = exParts[k](); };
-  set('expv', 'pv'); set('exhint', 'hint'); set('exmus', 'mus'); set('extools', 'tools'); set('exgrid', 'grid');
+  set('expv', 'pv'); set('exhint', 'hint'); set('exmus', 'mus'); set('extools', 'tools'); set('exgrid', 'grid'); set('exmode', 'mode'); set('exmodeh', 'modeh');
   const b = $('#exopen'); if (b) b.textContent = EX.open ? 'Ocultar' : 'Cambiar';
 }
 function renderEX() {
@@ -1564,6 +1661,10 @@ function renderEX() {
     ${EX.newM ? `<div class="inrow"><input id="nmn" class="inp" placeholder="Ej: Serrato" maxlength="30" aria-label="Nuevo músculo"><button class="btn2" data-act="exnmok">Agregar</button></div>` : ''}
     <p class="lbl">Con qué se hace</p>
     <div class="chips" id="extools">${exParts.tools()}</div>
+    <p class="exhint">Peso corporal = calistenia: se anotan repeticiones y el lastre es opcional.</p>
+    <p class="lbl">Cómo se mide</p>
+    <div class="chips" id="exmode">${exParts.mode()}</div>
+    <p class="exhint" id="exmodeh">${exParts.modeh()}</p>
     <div class="lbl pickh"><span>Dibujo del movimiento</span><button class="txtbtn sm" id="exopen" data-act="expick">${EX.open ? 'Ocultar' : 'Cambiar'}</button></div>
     <div id="exgrid">${exParts.grid()}</div>
     <label class="lbl" for="exd">Cómo se hace <span class="mu">(opcional)</span></label>
@@ -1583,7 +1684,7 @@ function openToday(rid) {
   td.forEach((l) => { let g = groups.find((x) => x.x === l.x); if (!g) groups.push((g = { x: l.x, name: X(l.x)?.e.name || l.name, sets: [] })); g.sets.push(l); });
   openSheet(`<h2 class="sh-t">Hoy</h2>
     <p class="mu" style="margin:-6px 0 14px">${esc(r.name)}, ${plural(td.length, 'serie', 'series')}. Toca la × para borrar una serie mal anotada.</p>
-    ${groups.map((g) => `<div class="tx"><div class="tn">${esc(g.name)}</div>${g.sets.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${nf(s.kg)} kg × ${s.reps}</span>${s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1} de ${esc(g.name)}">${ic('x', 18)}</button></div>`).join('')}</div>`).join('')}
+    ${groups.map((g) => `<div class="tx"><div class="tn">${esc(g.name)}</div>${g.sets.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${setTxt(s)}</span>${s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1} de ${esc(g.name)}">${ic('x', 18)}</button></div>`).join('')}</div>`).join('')}
     <button class="cta" data-act="finish" data-r="${rid}">Terminar entrenamiento</button>`, () => openToday(rid));
 }
 
@@ -1621,11 +1722,11 @@ function daySummary(d) {
   ls.forEach((l) => (byR[l.r] || (byR[l.r] = [])).push(l));
   let h = `<div class="sum"><h3 class="sum-d">${cap(fLong(d))}</h3>`;
   for (const [rid, arr] of Object.entries(byR)) {
-    const vol = arr.reduce((a, l) => a + l.kg * l.reps, 0);
+    const vol = arr.reduce((a, l) => a + volKg(l), 0);
     const byX = [];
     arr.forEach((l) => { let g = byX.find((x) => x.x === l.x); if (!g) byX.push((g = { x: l.x, name: X(l.x)?.e.name || l.name, sets: [] })); g.sets.push(l); });
     h += `<div class="sum-r"><div class="sum-h"><span class="rn">${esc(R(rid)?.name || arr[0].rn || 'Rutina')}</span><span class="mu small">${plural(arr.length, 'serie', 'series')}, ${nf(vol, 0)} kg</span></div>
-      ${byX.map((g) => `<div class="sum-x">${esc(g.name)}<div class="sx">${g.sets.map((s) => `<span>${nf(s.kg)} kg × ${s.reps}</span>`).join('')}</div></div>`).join('')}</div>`;
+      ${byX.map((g) => `<div class="sum-x">${esc(g.name)}<div class="sx">${g.sets.map((s) => `<span>${setTxt(s)}</span>`).join('')}</div></div>`).join('')}</div>`;
   }
   return h + `<button class="btn2 danger" data-act="delday" data-d="${d}">Borrar este día</button></div>`;
 }
@@ -1638,6 +1739,9 @@ function openSettings() {
     <input id="sn" class="inp" data-bind="sname" value="${esc(S.settings.name)}" placeholder="Para saludarte" maxlength="30">
     <p class="lbl">Cuenta</p>
     <div class="acct"><span>Conectado como <b>${esc(userName())}</b><small>${syncState === 'ok' ? 'Todo guardado en tu cuenta' : syncState === 'pend' ? 'Guardando cambios…' : 'Sin conexión: se subirá cuando vuelva internet'}</small></span><button class="txtbtn danger" data-act="logout">Cerrar sesión</button></div>
+    <label class="lbl" for="sbw">Tu peso corporal en kg <span class="mu">(opcional)</span></label>
+    <input id="sbw" class="inp" data-bind="sbw" inputmode="decimal" value="${esc(S.settings.bw || '')}" placeholder="Ej: 75">
+    <p class="mu small" style="margin:6px 0 0">Sirve para comparar series de calistenia con y sin lastre. Si lo dejas vacío se usan 70 kg.</p>
     <p class="lbl">Unidad por defecto</p>
     <div class="seg wide" role="group" aria-label="Unidad por defecto"><button data-act="sunit" data-u="kg" class="${u === 'kg' ? 'on' : ''}">Kilos</button><button data-act="sunit" data-u="lb" class="${u === 'lb' ? 'on' : ''}">Libras</button></div>
     ${isStandalone() ? '' : `<p class="lbl">App</p><button class="btn2" data-act="install" style="margin-top:0">Instalar GymRat en el teléfono</button>`}
@@ -1657,7 +1761,7 @@ function finish(rid) {
   const r = R(rid);
   const td = todayR(rid);
   if (!td.length) return;
-  const vol = td.reduce((a, l) => a + l.kg * l.reps, 0);
+  const vol = td.reduce((a, l) => a + volKg(l), 0);
   const exs = new Set(td.map((l) => l.x)).size;
   const dur = (td[td.length - 1].ts - td[0].ts) / 60000;
   const prs = td.filter((l) => l.pr);
@@ -1669,8 +1773,23 @@ function finish(rid) {
       <div class="stat"><b>${nf(vol, 0)}</b><span>Kilos levantados</span></div>
       <div class="stat"><b>${fmtDur(dur)}</b><span>Duración</span></div>
     </div>
-    ${prs.length ? `<p class="lbl">Récords de hoy</p>${prs.map((l) => `<div class="prrow"><span>${esc(X(l.x)?.e.name || l.name)}</span><b>${kg(l.kg)} × ${l.reps}</b></div>`).join('')}` : ''}
+    ${prs.length ? `<p class="lbl">Récords de hoy</p>${prs.map((l) => `<div class="prrow"><span>${esc(X(l.x)?.e.name || l.name)}</span><b>${setTxt(l)}</b></div>`).join('')}` : ''}
     <button class="cta" data-act="done">Listo</button>`);
+}
+
+/* ---------- cronómetro para ejercicios por tiempo ---------- */
+let swOn = false, swStart = 0, swIv = null;
+const swSec = () => Math.floor((Date.now() - swStart) / 1000);
+const fmtClock = (s) => `${Math.floor(s / 60)}:${pad(s % 60)}`;
+function stopSW(fill) {
+  if (!swOn) return;
+  clearInterval(swIv); swOn = false;
+  if (fill) {
+    const s = Math.max(1, swSec());
+    const f = $('#fr'); if (f) f.value = String(s);
+    draft = { x: curX(), w: $('#fw')?.value || '', reps: String(s) };
+    try { navigator.vibrate?.(60); } catch (e) {}
+  }
 }
 
 /* ---------- avisos ---------- */
@@ -1701,7 +1820,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 const curX = () => parse()[3];
 function removeSet(id) {
   const l = S.logs.find((x) => x.id === id); if (!l) return;
-  confirmS({ title: '¿Borrar esta serie?', text: `${esc(X(l.x)?.e.name || l.name)}: ${nf(l.kg)} kg × ${l.reps} reps.`, cta: 'Borrar', ok: () => doRemoveSet(id) });
+  confirmS({ title: '¿Borrar esta serie?', text: `${esc(X(l.x)?.e.name || l.name)}: ${setTxt(l)}${kindOf(l.x) === 'kg' ? ' reps' : ''}.`, cta: 'Borrar', ok: () => doRemoveSet(id) });
 }
 function doRemoveSet(id) {
   const i = S.logs.findIndex((l) => l.id === id); if (i < 0) return;
@@ -1766,6 +1885,7 @@ const A = {
   ext: (el) => { EX.tool = el.dataset.t; EX.auto.tool = false; refreshEX(); },
   expose: (el) => { EX.pose = el.dataset.k; EX.auto.pose = false; refreshEX(); },
   expick: () => { EX.open = !EX.open; refreshEX(); },
+  exmd: (el) => { EX.mode = el.dataset.k; EX.auto.mode = false; if (EX.mode === 'assist' && EX.auto.tool !== false) EX.tool = 'm'; if (EX.mode === 'time' && EX.auto.tool !== false && EX.tool !== 'd') EX.tool = 'n'; refreshEX(); },
   exall: () => { EX.all = !EX.all; refreshEX(); },
   exhide: (el) => {
     const f = X(el.dataset.id); if (!f) return;
@@ -1793,14 +1913,15 @@ const A = {
     const p = P(EX.pid);
     if (EX.id) {
       const e = p.ex.find((x) => x.id === EX.id);
-      confirmS({ title: '¿Guardar los cambios?', text: `Se actualizará el ejercicio «${esc(e.name)}». Su historial se mantiene.`, cta: 'Guardar', danger: false, ok: () => {
-        e.name = name; e.m = EX.m; e.pose = EX.pose; e.tool = EX.tool; e.desc = EX.desc.trim();
+      const modeChanged = (e.mode || 'reps') !== (EX.mode || 'reps') && S.logs.some((l) => l.x === e.id);
+      confirmS({ title: '¿Guardar los cambios?', text: `Se actualizará el ejercicio «${esc(e.name)}». Su historial se mantiene.${modeChanged ? ' Ojo: cambiaste cómo se mide; tus series anteriores se leerán con la nueva forma.' : ''}`, cta: 'Guardar', danger: false, ok: () => {
+        e.name = name; e.m = EX.m; e.pose = EX.pose; e.tool = EX.tool; e.desc = EX.desc.trim(); e.mode = EX.mode === 'reps' ? undefined : EX.mode;
         S.logs.forEach((l) => { if (l.x === e.id) l.name = name; });
         save(); closeSheet(); toast('Cambios guardados');
       } });
       return;
     }
-    p.ex.push({ id: p.id + '_' + slug(name) + '-' + uid().slice(0, 4), name, m: EX.m, pose: EX.pose, tool: EX.tool, desc: EX.desc.trim(), custom: true });
+    p.ex.push({ id: p.id + '_' + slug(name) + '-' + uid().slice(0, 4), name, m: EX.m, pose: EX.pose, tool: EX.tool, desc: EX.desc.trim(), mode: EX.mode === 'reps' ? undefined : EX.mode, custom: true });
     filt[p.id] = { q: '', m: '' };
     save(); closeSheet(); toast('Ejercicio agregado');
   },
@@ -1839,25 +1960,34 @@ const A = {
     const w = $('#fw').value.trim() === '' ? 0 : parseNum($('#fw').value);
     const reps = parseInt($('#fr').value, 10);
     if (isNaN(w) || w < 0) { toast('Revisa el peso'); $('#fw').focus(); return; }
-    if (!reps || reps < 1) { toast('Anota las repeticiones'); $('#fr').focus(); return; }
+    if (!reps || reps < 1) { toast(kindOf(xid) === 'time' ? 'Anota los segundos' : 'Anota las repeticiones'); $('#fr').focus(); return; }
+    stopSW(false);
     const u = S.settings.unit;
     const kgv = u === 'lb' ? w * LB : w;
     const before = S.logs.filter((l) => l.x === xid);
     const nSet = before.filter((l) => l.d === today()).length + 1;
     const hadPast = before.some((l) => l.d !== today());
     const prevBest = before.length ? score(topSet(before)) : 0;
-    const pr = hadPast && score({ kg: kgv, reps }) > prevBest + 1e-9;
+    const pr = hadPast && score({ kg: kgv, reps, x: xid }) > prevBest + 1e-9;
     const log = { id: uid(), d: today(), ts: Date.now(), x: xid, name: f.e.name, r: rid, rn: R(rid)?.name, kg: kgv, raw: w, u, reps, pr };
     S.logs.push(log);
     save();
     draft = null;
     document.activeElement?.blur();
     try { navigator.vibrate?.(pr ? [60, 60, 120] : 40); } catch (e) {}
-    const msg = pr ? `¡Nueva mejor serie histórica! ${nf(kgv)} kg × ${reps}` : `Serie ${nSet} guardada: ${nf(kgv)} kg × ${reps}`;
+    const st = setTxt({ kg: kgv, reps, x: xid });
+    const msg = pr ? `¡Nueva mejor serie histórica! ${st}` : `Serie ${nSet} guardada: ${st}`;
     back(`/r/${rid}/p/${f.p.id}`);
     setTimeout(() => toast(msg, { label: 'Deshacer', fn: () => { S.logs = S.logs.filter((l) => l.id !== log.id); save(); render(); } }), 60);
   },
   delset: (el) => removeSet(el.dataset.id),
+  stopw: () => {
+    if (swOn) { stopSW(true); render(); toast(`Tiempo: ${fmtT(parseInt($('#fr').value, 10) || 0)}. Revisa y guarda la serie.`); return; }
+    swOn = true; swStart = Date.now();
+    draft = { x: curX(), w: $('#fw')?.value || '', reps: $('#fr')?.value || '' };
+    render();
+    swIv = setInterval(() => { const t = $('#swt'), f = $('#fr'); if (!t) { stopSW(false); return; } t.textContent = fmtClock(swSec()); if (f) f.value = String(swSec()); }, 250);
+  },
   tact: () => { const f = TA; TA = null; $('#toast').classList.remove('on'); f?.(); },
   cm: (el) => { chartM = el.dataset.m; chartSel = null; draft = { x: curX(), w: $('#fw').value, reps: $('#fr').value }; render(); },
   pt: (el) => { chartSel = Number(el.dataset.i); $('#chart').innerHTML = chartHTML(curX()); },
@@ -1892,6 +2022,7 @@ document.addEventListener('input', (e) => {
   if (b === 'exname' && EX) { EX.name = t.value; if (!EX.id) { clearTimeout(exT); exT = setTimeout(() => { applySuggest(); refreshEX(); }, 250); } }
   if (b === 'exdesc' && EX) EX.desc = t.value;
   if (b === 'sname') { S.settings.name = t.value; save(); }
+  if (b === 'sbw') { S.settings.bw = t.value.replace(/[^0-9.,]/g, ''); save(); }
   if (t.id === 'lu') loginDraft.u = t.value;
   if (t.id === 'lp') loginDraft.pw = t.value;
   if (t.id === 'q') { const p = P(parse()[3]); if (p) { filt[p.id].q = t.value; applyFilter(); } }
@@ -1906,8 +2037,8 @@ document.addEventListener('keydown', (e) => {
   else if (id === 'lp') { e.preventDefault(); doAuth(); }
   else if (id === 'npn') A.ernpok();
   else if (id === 'nmn') A.exnmok();
-  else if (id === 'fw') { e.preventDefault(); $('#fr').focus(); }
-  else if (id === 'fr') { e.preventDefault(); A.add(); }
+  else if (id === 'fw') { e.preventDefault(); if (curFirst === 'fr') A.add(); else $('#fr').focus(); }
+  else if (id === 'fr') { e.preventDefault(); if (curFirst === 'fr') $('#fw').focus(); else A.add(); }
   else if (id === 'q') e.target.blur();
 });
 document.addEventListener('focusin', (e) => { if (e.target.classList?.contains('num')) setTimeout(() => e.target.select(), 0); });
