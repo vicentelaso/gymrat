@@ -262,6 +262,8 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .dst.big em{font-style:normal;display:inline-flex;align-items:center;gap:5px;background:#12301a;color:#7BE08A;font-weight:700;font-size:14px;border-radius:999px;padding:6px 12px;white-space:nowrap}
 .dst.big b{font-size:42px;color:var(--ac)}
 .dst.pr b{color:#7BE08A}
+.dst.cardio{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between}
+.dst.cardio b{color:#FF5A5F}
 .dnote{color:var(--mu);font-size:13px;margin:12px 2px 4px;line-height:1.4}
 .dblock{margin-top:14px}
 .dbh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:0 2px 8px;border-bottom:1px solid var(--line);margin-bottom:8px}
@@ -431,9 +433,11 @@ const FIG = {
     M('abs', 'M24.3 58.5 L35.7 58.5 L32.5 67 L27.5 67 Z'),
     ...FIG_LIMBS('bi'),
     ...pair((x) => E('quads', x, 84, 6, 14), 24),
+    ...pair((x) => E('add', x, 77, 2.3, 8.5), 28.4),
     ...pair((x) => ['base', 'circle', { cx: x, cy: 99.5, r: 3 }], 24),
     ...pair((x) => E('calves', x, 110, 3.8, 9), 24),
-    ...pair((x) => E('base', x, 121, 3.5, 2), 24)
+    ...pair((x) => E('base', x, 121, 3.5, 2), 24),
+    M('heart', 'M34 34.5 C29 31 30.5 26.5 34 29 C37.5 26.5 39 31 34 34.5 Z')
   ],
   b: [
     ...FIG_COMMON_TOP,
@@ -444,6 +448,7 @@ const FIG = {
     ['lower', 'rect', { x: 25.5, y: 53, width: 9, height: 6.5, rx: 2 }],
     ...FIG_LIMBS('tri'),
     ...pair((x) => E('glutes', x, 66, 5.6, 6.5), 25),
+    ...pair((x) => E('abd', x, 63, 2.4, 5.5), 19.6),
     ...pair((x) => E('hams', x, 86, 5.8, 12.5), 24),
     ...pair((x) => ['base', 'circle', { cx: x, cy: 99.5, r: 3 }], 24),
     ...pair((x) => E('calves', x, 108, 4.3, 9), 24),
@@ -458,8 +463,8 @@ const TH = {
 const REG_RULES = [
   [/pech/, ['chest']], [/espald|dorsal/, ['lats', 'lower', 'traps']], [/hombr|deltoid/, ['delt', 'traps']],
   [/trapec/, ['traps']], [/bicep/, ['bi']], [/tricep/, ['tri']], [/antebraz/, ['fore']], [/brazo/, ['bi', 'tri', 'fore']],
-  [/pierna/, ['quads', 'hams', 'glutes', 'calves']], [/cuadric/, ['quads']], [/isquio|femoral/, ['hams']],
-  [/glute/, ['glutes']], [/pantorr|gemel/, ['calves']], [/abdom|\babs\b|core/, ['abs', 'obl']], [/oblicu/, ['obl']], [/lumbar/, ['lower']]
+  [/pierna/, ['quads', 'hams', 'glutes', 'calves', 'add', 'abd']], [/cuadric/, ['quads']], [/isquio|femoral/, ['hams']],
+  [/glute/, ['glutes', 'abd']], [/aductor/, ['add']], [/abductor/, ['abd']], [/cardio/, ['heart']], [/pantorr|gemel/, ['calves']], [/abdom|\babs\b|core/, ['abs', 'obl']], [/oblicu/, ['obl']], [/lumbar/, ['lower']]
 ];
 function regsFor(pids) {
   const s = new Set();
@@ -470,6 +475,7 @@ function body(regs, th, h, labels = false) {
   const w = Math.round((h * 60) / 124);
   const one = (arr, lab) => {
     const svg = `<svg viewBox="0 0 60 124" width="${w}" height="${h}" aria-hidden="true">${arr.map(([k, t, a]) => {
+      if (k === 'heart' && !regs.has('heart')) return '';
       const fill = k === 'base' ? th.base : regs.has(k) ? th.hi : th.mus;
       return `<${t} ${Object.entries(a).map(([n, v]) => `${n}="${v}"`).join(' ')} fill="${fill}" stroke="${th.gap}" stroke-width="0.9"/>`;
     }).join('')}</svg>`;
@@ -683,6 +689,49 @@ Object.assign(POSE_NAMES, {
 });
 POSE_LIST.length = 0; Object.keys(PO).forEach((k) => POSE_LIST.push(k));
 
+/* ---------- antebrazos y cardio ---------- */
+Object.assign(PO, {
+  // antebrazos
+  wristback: { h: [52, 13], t: [50, 54, 51, 24], L: [['U', 51, 24, 47, 40], ['F', 47, 40, 44, 54], ...STAND], hands: [[43, 57]], eq: [['f', 96], ['ca', 34, 62, 30, 54, 36, 48]] },
+  wristrev: { h: [46, 22], t: [40, 60, 44, 32], L: [['Th', 40, 60, 62, 60], ['S', 62, 60, 62, 86], ['U', 44, 32, 47, 50], ['F', 47, 50, 64, 54]], hands: [[68, 58]], eq: [['l', 30, 64, 50, 64, 4], ['l', 36, 65, 36, 92, 3], ['ca', 76, 62, 80, 52, 72, 44], ['t', 70, 28, 'inv']] },
+  wristrot: { h: [46, 22], t: [40, 60, 44, 32], L: [['Th', 40, 60, 62, 60], ['S', 62, 60, 62, 86], ['U', 44, 32, 47, 50], ['F', 47, 50, 64, 54]], hands: [[67, 51]], dbv: true, eq: [['l', 30, 64, 50, 64, 4], ['l', 36, 65, 36, 92, 3], ['rot', 67, 38]] },
+  roller: { h: [49, 13], t: [50, 54, 51, 24], L: [['U', 51, 24, 63, 27], ['F', 63, 27, 76, 28], ...STAND], hands: [], eq: [['l', 76, 24, 76, 33, 5], ['l', 76, 33, 76, 70, 1.3], ['o', 76, 76, 6], ['rot', 76, 18], ['f', 96]] },
+  hammercross: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 39, 40], ['F', 39, 40, 53, 32], ['U', 60, 25, 62, 40], ['F', 62, 40, 63, 54], ...LEGS()], hands: [[54, 31], [63, 56]], dbv: true, eq: [] },
+  curlrevZ: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 38, 40], ['F', 38, 40, 45, 31], ['U', 60, 25, 62, 40], ['F', 62, 40, 55, 31], ...LEGS()], hands: [[45, 31], [55, 31]], zbar: true, eq: [['t', 50, 50, 'inv']] },
+  pinch: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 38, 40], ['F', 38, 40, 37, 54], ['U', 60, 25, 62, 40], ['F', 62, 40, 63, 54], ...LEGS()], hands: [], eq: [['r', 32, 52, 4, 18], ['r', 37, 52, 4, 18], ['r', 59, 52, 4, 18], ['r', 64, 52, 4, 18]] },
+  gripper: { h: [49, 13], t: [50, 54, 51, 24], L: [['U', 51, 24, 53, 40], ['F', 53, 40, 66, 36], ...STAND], hands: [], eq: [['l', 67, 36, 76, 28, 2.4], ['l', 67, 36, 77, 40, 2.4], ['c', 67, 36, 2.6], ['a', 84, 26, 80, 32], ['a', 84, 44, 80, 38], ['f', 96]] },
+  hangtowel: { h: [50, 28], tf: [39, 71], L: [['U', 40, 40, 35, 29], ['F', 35, 29, 32, 17], ['U', 60, 40, 65, 29], ['F', 65, 29, 68, 17], ['Th', 45, 71, 45, 84], ['S', 45, 84, 45, 96], ['Th', 55, 71, 55, 84], ['S', 55, 84, 55, 96]], hands: [], eq: [['l', 12, 6, 88, 6, 3.5], ['r', 29, 6, 5, 14], ['r', 66, 6, 5, 14]] },
+
+  // cardio
+  run: { h: [57, 14], t: [48, 52, 53, 24], L: [['U2', 53, 24, 45, 35], ['F2', 45, 35, 41, 45], ['Th2', 48, 52, 40, 69], ['S2', 40, 69, 27, 77], ['U', 53, 24, 61, 34], ['F', 61, 34, 68, 27], ['Th', 48, 52, 62, 60], ['S', 62, 60, 58, 77]], hands: [], eq: [['f', 94], ['l', 6, 34, 20, 34, 1.6], ['l', 10, 42, 24, 42, 1.6], ['l', 4, 50, 16, 50, 1.6]] },
+  walk: { h: [52, 13], t: [50, 54, 51, 24], L: [['U2', 51, 24, 46, 39], ['F2', 46, 39, 43, 52], ['Th2', 50, 54, 44, 73], ['S2', 44, 73, 38, 91], ['U', 51, 24, 56, 39], ['F', 56, 39, 60, 51], ['Th', 50, 54, 57, 72], ['S', 57, 72, 58, 92]], hands: [], eq: [['f', 95]] },
+  treadmill: { h: [53, 14], t: [44, 52, 49, 24], L: [['U2', 49, 24, 41, 35], ['F2', 41, 35, 37, 45], ['Th2', 44, 52, 36, 68], ['S2', 36, 68, 26, 80], ['U', 49, 24, 57, 34], ['F', 57, 34, 64, 27], ['Th', 44, 52, 57, 60], ['S', 57, 60, 55, 78]], hands: [], eq: [['l', 10, 86, 80, 82, 5], ['l', 78, 82, 74, 40, 3.5], ['l', 64, 42, 82, 36, 3], ['l', 14, 87, 14, 94, 3], ['l', 74, 84, 74, 94, 3]] },
+  treadincline: { h: [48, 12], t: [46, 52, 48, 23], L: [['U2', 48, 23, 44, 37], ['F2', 44, 37, 42, 50], ['Th2', 46, 52, 40, 70], ['S2', 40, 70, 34, 86], ['U', 48, 23, 55, 36], ['F', 55, 36, 64, 34], ['Th', 46, 52, 54, 68], ['S', 54, 68, 56, 80]], hands: [], eq: [['l', 12, 94, 82, 76, 5], ['l', 80, 77, 76, 34, 3.5], ['l', 64, 36, 82, 30, 3], ['t', 22, 22, '%']] },
+  bike: { h: [62, 22], t: [38, 50, 56, 30], L: [['Th2', 38, 50, 49, 63], ['S2', 49, 63, 52, 84], ['U', 56, 30, 61, 37], ['F', 61, 37, 66, 42], ['Th', 38, 50, 57, 56], ['S', 57, 56, 54, 75]], hands: [], eq: [['l', 38, 53, 46, 84, 3], ['l', 32, 52, 44, 52, 4], ['l', 66, 42, 64, 78, 3], ['l', 62, 40, 70, 42, 3.5], ['o', 72, 76, 10], ['o', 52, 80, 5], ['l', 28, 93, 84, 93, 3.5]] },
+  spin: { h: [69, 32], t: [40, 46, 61, 36], L: [['Th2', 40, 46, 50, 60], ['S2', 50, 60, 53, 82], ['U', 61, 36, 66, 44], ['F', 66, 44, 72, 46], ['Th', 40, 46, 58, 54], ['S', 58, 54, 55, 74]], hands: [], eq: [['l', 40, 49, 47, 84, 3], ['l', 34, 48, 46, 48, 4], ['l', 72, 46, 70, 70, 3], ['l', 68, 45, 78, 46, 3.5], ['o', 76, 76, 12], ['o', 53, 79, 5], ['l', 26, 93, 88, 93, 3.5]] },
+  recumbent: { h: [26, 31], t: [40, 64, 30, 40], L: [['U', 30, 40, 36, 54], ['F', 36, 54, 44, 62], ['Th2', 40, 64, 56, 66], ['S2', 56, 66, 70, 72], ['Th', 40, 64, 58, 56], ['S', 58, 56, 72, 64]], hands: [], eq: [['l', 23, 38, 33, 70, 5], ['l', 33, 70, 52, 70, 4.5], ['o', 72, 68, 6], ['l', 72, 74, 74, 92, 3], ['l', 40, 72, 40, 92, 3], ['l', 30, 93, 84, 93, 3.5]] },
+  elliptical: { h: [52, 12], t: [48, 50, 50, 22], L: [['U2', 50, 22, 44, 33], ['F2', 44, 33, 40, 24], ['Th2', 48, 50, 44, 68], ['S2', 44, 68, 38, 84], ['U', 50, 22, 58, 33], ['F', 58, 33, 64, 25], ['Th', 48, 50, 56, 64], ['S', 56, 64, 58, 78]], hands: [], eq: [['l', 64, 20, 60, 76, 3], ['l', 40, 20, 46, 76, 3], ['l', 34, 82, 70, 82, 1.2], ['o', 52, 82, 3], ['l', 22, 93, 84, 93, 3.5], ['l', 74, 93, 72, 50, 4]] },
+  stairs: { h: [51, 12], t: [48, 50, 50, 22], L: [['Th2', 48, 50, 46, 70], ['S2', 46, 70, 44, 86], ['U', 50, 22, 58, 32], ['F', 58, 32, 68, 34], ['Th', 48, 50, 60, 56], ['S', 60, 56, 60, 70]], hands: [], eq: [['r', 56, 72, 30, 6], ['r', 42, 80, 44, 6], ['r', 30, 88, 56, 6], ['l', 68, 34, 84, 26, 3], ['l', 84, 26, 84, 94, 3.5]] },
+  erg: { h: [33, 35], t: [40, 68, 36, 44], L: [['U', 36, 44, 27, 52], ['F', 27, 52, 45, 54], ['Th', 40, 68, 60, 66], ['S', 60, 66, 78, 72]], hands: [[46, 54]], eq: [['l', 46, 54, 84, 62, 1.3], ['l', 16, 78, 90, 78, 3], ['r', 32, 70, 16, 5], ['o', 86, 64, 8], ['l', 80, 72, 80, 82, 3], ['l', 20, 79, 20, 90, 3], ['l', 86, 73, 86, 90, 3]] },
+  airbike: { h: [60, 22], t: [38, 50, 55, 30], L: [['Th2', 38, 50, 49, 63], ['S2', 49, 63, 52, 84], ['U2', 55, 30, 58, 40], ['F2', 58, 40, 62, 30], ['U', 55, 30, 62, 38], ['F', 62, 38, 70, 34], ['Th', 38, 50, 57, 56], ['S', 57, 56, 54, 75]], hands: [], eq: [['l', 38, 53, 46, 84, 3], ['l', 32, 52, 44, 52, 4], ['l', 70, 34, 60, 78, 2.6], ['o', 76, 70, 14], ['l', 76, 56, 76, 84, 1], ['l', 62, 70, 90, 70, 1], ['l', 66, 60, 86, 80, 1], ['l', 66, 80, 86, 60, 1], ['o', 52, 80, 5], ['l', 26, 93, 92, 93, 3.5]] },
+  skierg: { h: [64, 26], t: [46, 54, 58, 34], L: [['U', 58, 34, 63, 48], ['F', 63, 48, 66, 60], ['Th', 46, 54, 52, 73], ['S', 52, 73, 48, 93]], hands: [[66, 62]], an: [[78, 8]], eq: [['l', 82, 4, 82, 94, 5], ['l', 72, 94, 92, 94, 4], ['f', 96]] },
+  jumprope: { h: [50, 14], tf: [25, 55], L: [['U', 40, 26, 34, 40], ['F', 34, 40, 29, 52], ['U', 60, 26, 66, 40], ['F', 66, 40, 71, 52], ['Th', 45, 55, 45, 72], ['S', 45, 72, 46, 88], ['Th', 55, 55, 55, 72], ['S', 55, 72, 54, 88]], hands: [], eq: [['q', 28, 54, 50, -46, 72, 54], ['q', 28, 54, 50, 130, 72, 54], ['c', 28, 54, 2.2], ['c', 72, 54, 2.2]] },
+  burpee: { h: [50, 20], tf: [31, 60], L: [['U', 40, 32, 36, 19], ['F', 36, 19, 34, 6], ['U', 60, 32, 64, 19], ['F', 64, 19, 66, 6], ['Th', 45, 60, 45, 74], ['S', 45, 74, 44, 86], ['Th', 55, 60, 55, 74], ['S', 55, 74, 56, 86]], hands: [], eq: [['a', 18, 88, 18, 72], ['a', 82, 88, 82, 72], ['f', 96]] },
+  jacks: { h: [50, 16], tf: [27, 58], L: [['U', 40, 28, 30, 17], ['F', 30, 17, 22, 6], ['U', 60, 28, 70, 17], ['F', 70, 17, 78, 6], ['Th', 45, 58, 36, 75], ['S', 36, 75, 28, 92], ['Th', 55, 58, 64, 75], ['S', 64, 75, 72, 92]], hands: [], eq: [['f', 96]] },
+  swim: { h: [74, 48], t: [40, 51, 64, 49], fl: -1, L: [['U2', 64, 49, 54, 55], ['F2', 54, 55, 42, 57], ['Th2', 40, 51, 25, 55], ['S2', 25, 55, 11, 57], ['U', 64, 49, 76, 42], ['F', 76, 42, 89, 42], ['Th', 40, 51, 25, 49], ['S', 25, 49, 11, 47]], hands: [], eq: [['w', 58], ['w', 70]] },
+  ropes: { h: [52, 26], t: [44, 60, 50, 36], L: [['U', 50, 36, 58, 46], ['F', 58, 46, 66, 48], ['Th', 44, 60, 56, 70], ['S', 56, 70, 52, 90], ['Th2', 44, 60, 36, 74], ['S2', 36, 74, 34, 92]], hands: [[67, 48]], eq: [['cb', 67, 48, 76, 36, 80, 72, 94, 80], ['cb', 67, 50, 72, 64, 84, 52, 94, 86], ['c', 94, 83, 3], ['f', 95]] },
+  boxjump: { h: [55, 12], t: [46, 46, 52, 22], L: [['U', 52, 22, 44, 32], ['F', 44, 32, 38, 40], ['Th2', 46, 46, 58, 52], ['S2', 58, 52, 56, 66], ['Th', 46, 46, 62, 48], ['S', 62, 48, 62, 64]], hands: [], eq: [['r', 54, 68, 34, 27], ['ca', 16, 92, 20, 40, 40, 30], ['f', 96]] },
+  boxing: { h: [52, 15], t: [46, 54, 49, 26], L: [['U2', 49, 26, 46, 38], ['F2', 46, 38, 52, 29], ['Th2', 46, 54, 40, 72], ['S2', 40, 72, 34, 92], ['U', 49, 26, 60, 28], ['F', 60, 28, 72, 28], ['Th', 46, 54, 55, 72], ['S', 55, 72, 58, 92]], hands: [], eq: [['l', 84, 2, 84, 12, 1.4], ['r', 77, 12, 15, 42], ['c', 73, 28, 3.4], ['f', 95]] },
+  sled: { h: [66, 32], t: [40, 56, 59, 40], L: [['Th2', 40, 56, 34, 70], ['S2', 34, 70, 22, 84], ['U', 59, 40, 67, 45], ['F', 67, 45, 75, 45], ['Th', 40, 56, 50, 72], ['S', 50, 72, 42, 90]], hands: [], eq: [['l', 76, 40, 78, 86, 3.5], ['l', 70, 88, 96, 88, 4], ['o', 86, 80, 6], ['f', 94]] }
+});
+Object.assign(POSE_NAMES, {
+  wristback: 'Muñeca por detrás', wristrev: 'Muñeca invertida', wristrot: 'Rotación de muñeca', roller: 'Rodillo', hammercross: 'Martillo cruzado', curlrevZ: 'Curl invertido Z',
+  pinch: 'Pinza de discos', gripper: 'Handgrip', hangtowel: 'Colgado con toalla', run: 'Correr', walk: 'Caminar', treadmill: 'Trotadora', treadincline: 'Trotadora inclinada',
+  bike: 'Bici estática', spin: 'Spinning', recumbent: 'Bici reclinada', elliptical: 'Elíptica', stairs: 'Escaladora', erg: 'Remo ergómetro', airbike: 'Air bike', skierg: 'Ski erg',
+  jumprope: 'Saltar la cuerda', burpee: 'Burpee', jacks: 'Jumping jacks', swim: 'Nadar', ropes: 'Cuerdas de batalla', boxjump: 'Salto al cajón', boxing: 'Boxeo', sled: 'Trineo'
+});
+POSE_LIST.length = 0; Object.keys(PO).forEach((k) => POSE_LIST.push(k));
+
 /* músculo del ejercicio -> zonas que se pintan en rojo */
 function regsForMuscle(m, pid) {
   const n = norm(m || '');
@@ -694,13 +743,16 @@ function regsForMuscle(m, pid) {
   if (/deltoide|hombro/.test(n)) add('delt');
   if (/trapecio/.test(n)) add('traps');
   if (/bicep/.test(n)) add('bi');
-  if (/braquial|antebrazo/.test(n)) add('fore', 'bi');
+  if (/braquial |braquial$|y antebrazo/.test(n)) add('fore', 'bi');
+  if (/flexores|extensores|braquiorradial|agarre|antebrazo/.test(n)) add('fore');
   if (/cabeza|tricep/.test(n)) add('tri');
-  if (/cuadricep|aductor/.test(n)) add('quads');
+  if (/cuadricep/.test(n)) add('quads');
+  if (/aductor/.test(n)) add('add');
   if (/isquio|femoral/.test(n)) add('hams');
   if (/glute|abductor/.test(n)) add('glutes');
   if (/pantorr|gemel/.test(n)) add('calves');
   if (/recto|core|abdom/.test(n)) add('abs');
+  if (/cardio|aire libre|intervalos|hiit/.test(n)) add('heart');
   if (/oblicu/.test(n)) add('obl');
   if (!s.size && pid) return regsFor([pid]);
   return s;
@@ -736,6 +788,9 @@ function exIcon(key, tool, regs, size, mode) {
     else if (k === 'o') back += `<circle cx="${e[1]}" cy="${e[2]}" r="${e[3]}" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="2.4"/>` + C(e[1], e[2], 1.4, IC.eq);
     else if (k === 'r') back += `<rect x="${e[1]}" y="${e[2]}" width="${e[3]}" height="${e[4]}" rx="1.8" fill="${IC.pad}"/>`;
     else if (k === 'a') front += arrow(e[1], e[2], e[3], e[4]);
+    else if (k === 'q') back += `<path d="M${e[1]} ${e[2]} Q${e[3]} ${e[4]} ${e[5]} ${e[6]}" fill="none" stroke="${IC.mark}" stroke-width="1.6"/>`;
+    else if (k === 'cb') front += `<path d="M${e[1]} ${e[2]} C${e[3]} ${e[4]} ${e[5]} ${e[6]} ${e[7]} ${e[8]}" fill="none" stroke="${IC.eq}" stroke-width="2.4" stroke-linecap="round"/>`;
+    else if (k === 'w') { let d = `M2 ${e[1]}`; for (let x = 2; x < 98; x += 12) d += ` q3 -4 6 0 t6 0`; front += `<path d="${d}" fill="none" stroke="#4f86b5" stroke-width="2" opacity=".85"/>`; }
     else if (k === 'rails') back += [e[1], e[2]].map((x) => L(x, 4, x, 94, 1.6, '#57524c') + L(x - 2.5, 4, x + 2.5, 4, 2, '#57524c')).join('');
     else if (k === 't') front += `<text x="${e[1]}" y="${e[2]}" text-anchor="middle" font-size="${String(e[3]).length > 2 ? 10 : 13}" font-weight="800" font-family="Arial,sans-serif" fill="${IC.mark}">${e[3]}</text>`;
     else if (k === 'dia') front += `<path d="M${e[1]} ${e[2] - 5} L${e[1] + 5} ${e[2]} L${e[1]} ${e[2] + 5} L${e[1] - 5} ${e[2]} Z" fill="none" stroke="${IC.mark}" stroke-width="1.8"/>`;
@@ -760,7 +815,7 @@ function exIcon(key, tool, regs, size, mode) {
   (p.L || []).forEach(([k0, x1, y1, x2, y2]) => {
     if (!k0.endsWith('2')) return;
     const k = k0.slice(0, -1), [r1, r2] = RAD[k];
-    const on = (k === 'U' && (regs.has('bi') || regs.has('tri'))) || (k === 'F' && regs.has('fore')) || (k === 'Th' && (regs.has('quads') || regs.has('hams'))) || (k === 'S' && regs.has('calves'));
+    const on = (k === 'U' && (regs.has('bi') || regs.has('tri'))) || (k === 'F' && regs.has('fore')) || (k === 'Th' && (regs.has('quads') || regs.has('hams') || regs.has('add'))) || (k === 'S' && regs.has('calves'));
     back += capsule(x1, y1, x2, y2, r1 * 0.95, r2 * 0.95, on ? '#9e2a22' : '#8a837a');
     if (k === 'F') back += C(x2, y2, 2.3, '#77706a');
     if (k === 'S') { const l = Math.hypot(x2 - x1, y2 - y1) || 1; back += capsule(x2, y2, x2 + ((y2 - y1) / l) * 5.4, y2 - ((x2 - x1) / l) * 5.4, 2.3, 1.6, '#77706a'); }
@@ -795,12 +850,19 @@ function exIcon(key, tool, regs, size, mode) {
     if (regs.has('lower')) R(46, y2 - 6, 8, 4);
     if (regs.has('glutes')) red += C(45, y2, 4.4, IC.hi) + C(55, y2, 4.4, IC.hi);
   }
+  if (regs.has('heart')) {
+    let hx, hy;
+    if (p.t) { const [px, py, sx, sy] = p.t; hx = px + (sx - px) * 0.72; hy = py + (sy - py) * 0.72; }
+    else { hx = 50; hy = p.tf[0] + 8; }
+    const hp = (s) => `<path d="M${fx(hx)} ${fx(hy + 3.2 * s)} C${fx(hx - 6 * s)} ${fx(hy - 1 * s)} ${fx(hx - 3 * s)} ${fx(hy - 5.5 * s)} ${fx(hx)} ${fx(hy - 2.4 * s)} C${fx(hx + 3 * s)} ${fx(hy - 5.5 * s)} ${fx(hx + 6 * s)} ${fx(hy - 1 * s)} ${fx(hx)} ${fx(hy + 3.2 * s)} Z" fill="${IC.hi}"/>`;
+    red += hp(1.25);
+  }
   body += C(p.h[0], p.h[1], 6.4, IC.body);
   // extremidades con forma, manos y pies
   (p.L || []).forEach(([k, x1, y1, x2, y2]) => {
     if (k.endsWith('2')) return;
     const on = (k === 'U' && (regs.has('bi') || regs.has('tri'))) || (k === 'F' && regs.has('fore')) ||
-      (k === 'Th' && (regs.has('quads') || regs.has('hams'))) || (k === 'S' && regs.has('calves'));
+      (k === 'Th' && (regs.has('quads') || regs.has('hams') || regs.has('add'))) || (k === 'S' && regs.has('calves'));
     const [r1, r2] = RAD[k];
     body += capsule(x1, y1, x2, y2, r1, r2, IC.body);
     if (on) muscle(x1, y1, x2, y2, r1 - 0.2, r2 - 0.2);
@@ -1042,13 +1104,60 @@ const CATALOG = [
       ['Rueda abdominal', 'wheel', 'n', 'De rodillas, rueda hacia adelante estirando el cuerpo y vuelve sin arquear la espalda. Clave: avanza solo hasta donde controlas la zona lumbar.'],
       ['Pallof press', 'pallof', 'c', 'De lado a la polea, empuja la manilla al frente y resiste que te haga girar. Clave: el ejercicio es no moverse; el core trabaja resistiendo.'],
       ['Mountain climbers', 'climber', 'n', 'En posición de flexión, lleva las rodillas al pecho alternando rápido. Clave: la cadera se mantiene baja.']]]
+  ] },
+  { n: 'Antebrazos', muscles: [
+    ['Flexores del antebrazo', 'La cara interna del antebrazo, del lado de la palma. Doblan la muñeca y cierran la mano; son la base del agarre.', [
+      ['Curl de muñeca con mancuerna', 'wrist', 'd', 'Sentado con el antebrazo sobre el muslo y la palma hacia arriba, deja rodar la mancuerna hasta la punta de los dedos y súbela doblando la muñeca. Clave: el antebrazo no se despega del muslo.'],
+      ['Curl de muñeca detrás de la espalda', 'wristback', 'b', 'De pie con la barra detrás de los muslos y las palmas mirando hacia atrás, sube la barra doblando solo las muñecas. Clave: permite más peso que sentado; recorrido corto y controlado.'],
+      ['Curl de muñeca en polea', 'wrist', 'c', 'Sentado frente a la polea baja con el antebrazo apoyado en el muslo, dobla la muñeca hacia arriba. Clave: la polea mantiene la tensión en todo el recorrido.']]],
+    ['Extensores del antebrazo', 'La cara externa del antebrazo, del lado del dorso de la mano. Estiran la muñeca, equilibran a los flexores y ayudan a prevenir el codo de tenista.', [
+      ['Curl de muñeca invertido', 'wristrev', 'b', 'Sentado con los antebrazos sobre los muslos y las palmas hacia abajo, sube la barra doblando la muñeca hacia arriba. Clave: usa poco peso; estos músculos son más débiles que los flexores.'],
+      ['Extensión de muñeca con mancuerna', 'wristrev', 'd', 'Como el curl de muñeca invertido, pero con una mancuerna y un brazo a la vez. Clave: controla la bajada, sin dejar caer el peso.'],
+      ['Rodillo de muñeca', 'roller', 'b', 'Con los brazos estirados al frente, gira el rodillo para enrollar la cuerda hasta subir el peso, y desenróllala lento. Clave: gira hacia ti y hacia afuera para trabajar ambos lados del antebrazo.']]],
+    ['Braquiorradial', 'El músculo grande en la parte alta del antebrazo, cerca del codo. Dobla el codo con agarre neutro o con las palmas hacia abajo.', [
+      ['Curl martillo cruzado', 'hammercross', 'd', 'Curl martillo llevando la mancuerna en diagonal hacia el hombro contrario. Clave: el codo queda pegado al cuerpo mientras cruzas.'],
+      ['Curl invertido con barra Z', 'curlrevZ', 'b', 'Curl con las palmas hacia abajo usando la barra Z. Clave: más cómodo para las muñecas que con barra recta; baja lento.'],
+      ['Rotación de muñeca con mancuerna', 'wristrot', 'd', 'Con el antebrazo apoyado y la mancuerna vertical, gira la palma hacia arriba y hacia abajo lentamente. Clave: trabaja la rotación del antebrazo; tomarla de un extremo la hace más difícil.']]],
+    ['Agarre', 'La fuerza de la mano para sostener, apretar y aguantar. Se entrena con tiempo o con repeticiones.', [
+      ['Pinza de discos', 'pinch', 'n', 'Sostén dos discos lisos juntos con los dedos y el pulgar, uno a cada costado, el mayor tiempo posible. Clave: anota los segundos y el peso de cada lado como peso extra.'],
+      ['Handgrip', 'gripper', 'n', 'Aprieta el handgrip hasta cerrarlo por completo y ábrelo lento. Clave: anota las repeticiones de una mano y alterna.'],
+      ['Colgarse con toalla', 'hangtowel', 'n', 'Pasa dos toallas por la barra y cuélgate de ellas el mayor tiempo posible. Clave: es mucho más difícil que colgarse de la barra y entrena el agarre de fuerza.'],
+      ['Sostén estático de barra', 'shrug', 'b', 'Toma una barra pesada como en el peso muerto y sostenla de pie el mayor tiempo posible. Clave: anota segundos y peso; aprieta la barra con fuerza.']]]
+  ] },
+  { n: 'Cardio', muscles: [
+    ['Máquinas de cardio', 'Trotadora, bicicletas, elíptica, escaladora y remo. Se anota el tiempo y, si la máquina la muestra, la distancia.', [
+      ['Trotadora', 'treadmill', 'n', 'Corre o trota en la cinta a un ritmo que puedas sostener. Clave: anota los minutos y los km que marca la máquina.'],
+      ['Caminata inclinada en trotadora', 'treadincline', 'n', 'Camina rápido con la cinta inclinada, por ejemplo al 10–12 % y 5 km/h. Clave: no te sujetes de las manillas; ahí está el trabajo.'],
+      ['Bicicleta estática', 'bike', 'n', 'Pedalea sentado con una resistencia moderada. Clave: ajusta el asiento para que la rodilla quede apenas doblada con el pedal abajo.'],
+      ['Bicicleta reclinada', 'recumbent', 'n', 'Pedalea sentado con la espalda apoyada. Clave: más cómoda para la espalda baja; sube la resistencia para que cueste.'],
+      ['Spinning', 'spin', 'n', 'Bicicleta de spinning con cambios de ritmo, sentado y de pie. Clave: nunca pedalees sin resistencia, para proteger las rodillas.'],
+      ['Elíptica', 'elliptical', 'n', 'Movimiento de pedaleo de pie moviendo también los brazos. Clave: es de bajo impacto; empuja y tira de las manillas para sumar el tren superior.'],
+      ['Escaladora', 'stairs', 'n', 'Sube escalones sin parar en la máquina. Clave: pisa con todo el pie y apóyate lo mínimo en las barandas.'],
+      ['Remo ergómetro', 'erg', 'n', 'Empuja primero con las piernas, luego inclina el torso atrás y tira la manilla al pecho; vuelve en el orden inverso. Clave: la mayor parte de la fuerza viene de las piernas.'],
+      ['Air bike', 'airbike', 'n', 'Bicicleta con ventilador que mueve brazos y piernas: mientras más fuerte vas, más resistencia. Clave: ideal para intervalos cortos e intensos.'],
+      ['Ski erg', 'skierg', 'c', 'De pie, tira las manillas desde arriba hacia abajo doblando cadera y rodillas, como al esquiar con bastones. Clave: el movimiento sale de la cadera, no solo de los brazos.']]],
+    ['Al aire libre y deportes', 'Correr, caminar, nadar o boxear. Se anota el tiempo y la distancia si la mides.', [
+      ['Correr', 'run', 'n', 'Carrera continua al aire libre. Clave: si puedes hablar en frases cortas, vas a buen ritmo aeróbico.'],
+      ['Caminar', 'walk', 'n', 'Caminata a paso rápido. Clave: brazos activos y pasos largos; suma mucho gasto sin cansarte tanto.'],
+      ['Nadar', 'swim', 'n', 'Natación continua en el estilo que prefieras. Clave: anota los minutos y la distancia en km (por ejemplo, 1 km son 40 largos de 25 m).'],
+      ['Saco de boxeo', 'boxing', 'n', 'Golpea el saco en rounds, por ejemplo 3 minutos de trabajo y 1 de descanso. Clave: guardia arriba y gira la cadera en cada golpe.']]],
+    ['Intervalos (HIIT)', 'Esfuerzos cortos e intensos con pausas. Suben mucho las pulsaciones en poco tiempo.', [
+      ['Saltar la cuerda', 'jumprope', 'n', 'Salta con saltos cortos, girando la cuerda con las muñecas. Clave: aterriza en la punta de los pies con las rodillas algo dobladas.'],
+      ['Burpees', 'burpee', 'n', 'Desde de pie, baja a plancha, vuelve a pararte y termina con un salto con los brazos arriba. Clave: se anotan repeticiones; mantén un ritmo parejo.'],
+      ['Jumping jacks', 'jacks', 'n', 'Salta abriendo piernas y brazos a la vez, y vuelve a cerrarlos. Clave: buen calentamiento; se anotan repeticiones.'],
+      ['Cuerdas de batalla', 'ropes', 'n', 'En media sentadilla, agita las cuerdas con ondas rápidas y continuas. Clave: se anotan los segundos; trabaja hombros, brazos y core.'],
+      ['Salto al cajón', 'boxjump', 'n', 'Salta desde el suelo hasta caer suave sobre el cajón y baja caminando. Clave: aterriza con las rodillas dobladas y baja sin saltar para cuidar los tendones.'],
+      ['Empuje de trineo', 'sled', 'm', 'Empuja el trineo con los brazos estirados y el cuerpo inclinado, dando pasos cortos y fuertes. Clave: se anota el tiempo y el peso cargado en el trineo.']]]
   ] }
 ];
-const CATALOG_V = 8;
+const CATALOG_V = 9;
 /* ejercicios que no se miden por peso × repeticiones */
 const MODES = {
   'Plancha': 'time', 'Plancha lateral': 'time', 'Colgarse de la barra': 'time', 'Sentadilla isométrica en pared': 'time', 'Hollow hold': 'time', 'Paseo del granjero': 'time',
-  'Dominadas asistidas en máquina': 'assist', 'Fondos asistidos en máquina': 'assist'
+  'Dominadas asistidas en máquina': 'assist', 'Fondos asistidos en máquina': 'assist',
+  'Pinza de discos': 'time', 'Colgarse con toalla': 'time', 'Sostén estático de barra': 'time', 'Cuerdas de batalla': 'time', 'Empuje de trineo': 'time',
+  'Trotadora': 'cardio', 'Caminata inclinada en trotadora': 'cardio', 'Bicicleta estática': 'cardio', 'Bicicleta reclinada': 'cardio', 'Spinning': 'cardio', 'Elíptica': 'cardio',
+  'Escaladora': 'cardio', 'Remo ergómetro': 'cardio', 'Air bike': 'cardio', 'Ski erg': 'cardio', 'Correr': 'cardio', 'Caminar': 'cardio', 'Nadar': 'cardio', 'Saco de boxeo': 'cardio', 'Saltar la cuerda': 'cardio'
 };
 /* nombres o dibujos del catálogo que cambiaron: se actualizan solo si el usuario no los había cambiado */
 const RENAMED = { 'biceps_curl-con-dos-poleas': 'Curl con dos poleas' };
@@ -1072,7 +1181,8 @@ function seed() {
       { id: 'r2', name: 'Hombro y tríceps', parts: ['hombros', 'triceps'], fav: true },
       { id: 'r3', name: 'Piernas', parts: ['piernas'], fav: true },
       { id: 'r4', name: 'Pecho y abs', parts: ['pecho', 'abdominales'], fav: true },
-      { id: 'r5', name: 'Full body', parts: ['pecho', 'espalda', 'piernas', 'hombros'], fav: false }
+      { id: 'r5', name: 'Full body', parts: ['pecho', 'espalda', 'piernas', 'hombros'], fav: false },
+      { id: 'rcardio', name: 'Cardio', parts: ['cardio'], fav: false }
     ],
     logs: [],
     settings: { name: '', unit: 'kg', asked: false }
@@ -1128,6 +1238,7 @@ function mergeCatalog(s) {
       });
     });
     s.parts.forEach((p) => p.ex.forEach((e) => { if (!known.has(e.id) && e.custom === undefined) e.custom = true; }));
+    if ((s.cv || 0) < 9 && !s.routines.some((r) => r.id === 'rcardio' || norm(r.name) === 'cardio')) s.routines.push({ id: 'rcardio', name: 'Cardio', parts: ['cardio'], fav: false });
     s.removed = [];
     s.cv = CATALOG_V;
   }
@@ -1310,12 +1421,13 @@ let bwCache = null;
 const kindOf = (xid) => {
   if (!bwCache) {
     bwCache = new Map();
-    (S?.parts || []).forEach((p) => p.ex.forEach((e) => bwCache.set(e.id, e.mode === 'time' ? 'time' : e.mode === 'assist' ? 'assist' : e.tool === 'n' ? 'bw' : 'kg')));
+    (S?.parts || []).forEach((p) => p.ex.forEach((e) => bwCache.set(e.id, e.mode === 'cardio' ? 'cardio' : e.mode === 'time' ? 'time' : e.mode === 'assist' ? 'assist' : e.tool === 'n' ? 'bw' : 'kg')));
   }
   return bwCache.get(xid) || 'kg';
 };
 const isBW = (xid) => kindOf(xid) === 'bw';
 const bodyKg = () => { const b = parseNum(S?.settings?.bw); return b > 20 && b < 300 ? b : 70; };
+const kmh = (s) => (s.km > 0 && s.reps > 0 ? s.km / (s.reps / 60) : 0);
 const fmtT = (sec) => sec < 60 ? `${sec} s` : `${Math.floor(sec / 60)}:${pad(sec % 60)} min`;
 /* puntaje para decidir la mejor serie:
    kg     1RM estimado
@@ -1327,6 +1439,7 @@ const score = (s) => {
   const v = k === 'bw' ? (B + s.kg) * (1 + s.reps / 30)
     : k === 'assist' ? Math.max(B - s.kg, 1) * (1 + s.reps / 30)
     : k === 'time' ? s.reps * (B + s.kg) / B
+    : k === 'cardio' ? ((s.km || 0) > 0 ? 1000 + (s.km * 100) : 0) + s.reps / 1000
     : rm1(s);
   return v + s.reps * 1e-6;
 };
@@ -1334,6 +1447,7 @@ const setTxt = (s, short = false) => {
   const k = kindOf(s.x);
   if (k === 'bw') return s.kg > 0 ? `${s.reps} reps + ${nf(s.kg)} kg` : `${s.reps} reps`;
   if (k === 'time') return s.kg > 0 ? `${fmtT(s.reps)} + ${nf(s.kg)} kg` : fmtT(s.reps);
+  if (k === 'cardio') return s.km > 0 ? `${s.reps} min · ${nf(s.km, 2)} km` : `${s.reps} min`;
   if (k === 'assist') return s.kg > 0 ? (short ? `${s.reps} (ayuda ${nf(s.kg)})` : `${s.reps} reps, ayuda ${nf(s.kg)} kg`) : `${s.reps} reps sin ayuda`;
   return short ? `${nf(s.kg)} × ${s.reps}` : `${nf(s.kg)} kg × ${s.reps}`;
 };
@@ -1571,6 +1685,7 @@ function defaultDraft(xid) {
   if (u === 'kg') w = s.u === 'kg' ? s.raw : Math.round(s.kg * 2) / 2;
   else w = s.u === 'lb' ? s.raw : Math.round((s.kg / LB) * 2) / 2;
   const k = kindOf(xid);
+  if (k === 'cardio') return { w: s.km > 0 ? inNum(s.km) : '', reps: String(s.reps) };
   return { w: s.kg > 0 || k === 'kg' || k === 'assist' ? inNum(w) : '', reps: String(s.reps) };
 }
 let draft = null, curFirst = 'fw';
@@ -1584,7 +1699,7 @@ function vEx(r, xid) {
   const prev = days.filter((x) => x.d !== today());
   const last = prev[prev.length - 1];
   const kd = kindOf(xid), bw = kd === 'bw';
-  curFirst = kd === 'bw' || kd === 'time' ? 'fr' : 'fw';
+  curFirst = kd === 'bw' || kd === 'time' || kd === 'cardio' ? 'fr' : 'fw';
   let notes;
   if (last) {
     const lb = topSet(last.sets);
@@ -1592,15 +1707,16 @@ function vEx(r, xid) {
     const note = (label, s, cls = '') => {
       const [i, n] = setPos(s);
       const dd = cap(new Intl.DateTimeFormat('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }).format(pd(s.d)).replace(/\./g, ''));
-      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${kd === 'kg' ? `${nf(s.kg)} kg × ${s.reps}` : kd === 'time' ? fmtT(s.reps) : `${s.reps} reps`}</b><span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>${
+      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${kd === 'kg' ? `${nf(s.kg)} kg × ${s.reps}` : kd === 'time' ? fmtT(s.reps) : kd === 'cardio' ? `${s.reps} min` : `${s.reps} reps`}</b>${kd === 'cardio' ? (n > 1 ? `<span class="ns">${i}.º registro de ${n}</span>` : '') : `<span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>`}${
         kd === 'bw' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de lastre</span>` : '<span class="ns">sin lastre</span>')
         : kd === 'time' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg extra</span>` : '<span class="ns">sin peso extra</span>')
         : kd === 'assist' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de ayuda</span>` : '<span class="ns">¡sin ayuda!</span>')
+        : kd === 'cardio' ? (s.km > 0 ? `<span class="ns">${nf(s.km, 2)} km · ${nf(kmh(s))} km/h</span>` : '<span class="ns">sin distancia</span>')
         : s.kg > 0 ? `<span class="ns">1RM estimado ${nf(rm1(s))} kg</span>` : ''}</div>`;
     };
     notes = Math.abs(score(lb) - score(hb)) < 1e-9
-      ? `<div class="notes one">${note('Última vez', lb, 'best')}<p class="nbest">${ic('star', 18)} La última vez hiciste tu mejor serie histórica.</p></div>`
-      : `<div class="notes">${note('Última vez', lb)}${note('Mejor serie histórica', hb, 'best')}</div>`;
+      ? `<div class="notes one">${note('Última vez', lb, 'best')}<p class="nbest">${ic('star', 18)} La última vez hiciste tu ${kd === 'cardio' ? 'mejor marca' : 'mejor serie histórica'}.</p></div>`
+      : `<div class="notes">${note('Última vez', lb)}${note(kd === 'cardio' ? 'Mejor marca' : 'Mejor serie histórica', hb, 'best')}</div>`;
   } else {
     notes = `<div class="notes one"><p class="nfirst">Primera vez con este ejercicio. Registra tu primera serie.</p></div>`;
   }
@@ -1619,14 +1735,15 @@ function vEx(r, xid) {
     </div>
     ${notes}
     <div class="logger">
-      <div class="lhead"><span class="h3">Serie ${td.length + 1}</span>
-        <div class="seg" role="group" aria-label="Unidad de peso"><button data-act="unit" data-u="kg" class="${u === 'kg' ? 'on' : ''}" aria-pressed="${u === 'kg'}">kg</button><button data-act="unit" data-u="lb" class="${u === 'lb' ? 'on' : ''}" aria-pressed="${u === 'lb'}">lb</button></div>
+      <div class="lhead"><span class="h3">${kd === 'cardio' ? 'Registro' : 'Serie'} ${td.length + 1}</span>
+        ${kd === 'cardio' ? '' : `<div class="seg" role="group" aria-label="Unidad de peso"><button data-act="unit" data-u="kg" class="${u === 'kg' ? 'on' : ''}" aria-pressed="${u === 'kg'}">kg</button><button data-act="unit" data-u="lb" class="${u === 'lb' ? 'on' : ''}" aria-pressed="${u === 'lb'}">lb</button></div>`}
       </div>
       <div class="fields">
         ${(() => {
           const W = (label, opt, first) => `<label class="fld${opt ? ' opt' : ''}"><span>${label}</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>`;
           const Rr = (label, first) => `<label class="fld"><span>${label}</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.reps)}"></label>`;
           if (kd === 'bw') return Rr('Repeticiones', true) + W(`Lastre (${u})`, true, false);
+          if (kd === 'cardio') return Rr('Minutos', true) + `<label class="fld opt"><span>Distancia (km)</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>`;
           if (kd === 'time') return Rr('Segundos', true) + W(`Peso extra (${u})`, true, false);
           if (kd === 'assist') return W(`Ayuda (${u})`, false, true) + Rr('Repeticiones', false);
           return W(`Peso (${u})`, false, true) + Rr('Repeticiones', false);
@@ -1635,8 +1752,9 @@ function vEx(r, xid) {
       ${kd === 'time' ? `<button class="stopw${swOn ? ' on' : ''}" data-act="stopw" id="stopw">${swOn ? `Detener <b id="swt">${fmtClock(swSec())}</b>` : `${ic('clock', 18)} Usar cronómetro`}</button>` : ''}
       ${{ bw: '<p class="bwhint">Peso corporal: basta con las repeticiones. El lastre es opcional: anótalo solo si usas disco, cinturón con peso o chaleco.</p>',
           time: '<p class="bwhint">Anota cuántos segundos aguantaste, o usa el cronómetro y se llena solo. El peso extra es opcional (por ejemplo, un disco en la espalda).</p>',
+          cardio: '<p class="bwhint">Anota los minutos y, si la máquina o tu reloj la muestra, la distancia en km. Con distancia se calcula tu velocidad.</p>',
           assist: '<p class="bwhint">En la máquina asistida el peso te ayuda: mientras menos ayuda uses, mejor. Pon 0 si lo hiciste sin ayuda.</p>' }[kd] || ''}
-      <button class="cta" data-act="add">Guardar serie</button>
+      <button class="cta" data-act="add">${kd === 'cardio' ? 'Guardar registro' : 'Guardar serie'}</button>
       ${sets ? `<div class="sets">${sets}</div>` : ''}
     </div>
     <div class="card">
@@ -1644,7 +1762,7 @@ function vEx(r, xid) {
         ${(() => { const md = chartModes(xid); const cm = md.includes(chartM) ? chartM : md[0];
           return md.length > 1 ? `<div class="seg" role="group" aria-label="Qué mostrar">${md.map((k) => `<button data-act="cm" data-m="${k}" class="${cm === k ? 'on' : ''}" aria-pressed="${cm === k}">${modeLabel(xid, k)}</button>`).join('')}</div>` : ''; })()}
       </div>
-      <p class="chelp">Cada punto es la mejor serie del día. Toca uno para ver el detalle.${kd === 'assist' ? ' En Ayuda, que la línea baje es avanzar.' : ''}</p>
+      <p class="chelp">Cada punto es ${kd === 'cardio' ? 'la mejor marca' : 'la mejor serie'} del día.${kd === 'cardio' ? ' Km y Km/h solo muestran los días con distancia.' : ''} Toca uno para ver el detalle.${kd === 'assist' ? ' En Ayuda, que la línea baje es avanzar.' : ''}</p>
       <div id="chart" class="chart">${chartHTML(xid)}</div>
     </div>
     ${hist}`;
@@ -1655,18 +1773,19 @@ function chartModes(xid) {
   const k = kindOf(xid);
   if (k === 'kg') return ['peso', 'reps', 'rm'];
   if (k === 'assist') return ['peso', 'reps'];
+  if (k === 'cardio') return S.logs.some((l) => l.x === xid && l.km > 0) ? ['reps', 'km', 'spd'] : ['reps'];
   return S.logs.some((l) => l.x === xid && l.kg > 0) ? ['reps', 'peso'] : ['reps'];
 }
-const modeLabel = (xid, m) => { const k = kindOf(xid); return m === 'peso' ? ({ bw: 'Lastre', time: 'Peso extra', assist: 'Ayuda' }[k] || 'Peso') : m === 'reps' ? (k === 'time' ? 'Tiempo' : 'Reps') : '1RM'; };
+const modeLabel = (xid, m) => { const k = kindOf(xid); if (m === 'km') return 'Km'; if (m === 'spd') return 'Km/h'; if (k === 'cardio' && m === 'reps') return 'Min'; return m === 'peso' ? ({ bw: 'Lastre', time: 'Peso extra', assist: 'Ayuda' }[k] || 'Peso') : m === 'reps' ? (k === 'time' ? 'Tiempo' : 'Reps') : '1RM'; };
 const modeOf = (xid) => { const md = chartModes(xid); return md.includes(chartM) ? chartM : md[0]; };
 function chartPoints(xid) {
   const days = byDay(S.logs.filter((l) => l.x === xid)).slice(-24);
   const M = modeOf(xid);
   return days.map(({ d, sets }) => {
     const b = topSet(sets);
-    const v = M === 'reps' ? b.reps : M === 'rm' ? rm1(b) : b.kg;
+    const v = M === 'reps' ? b.reps : M === 'rm' ? rm1(b) : M === 'km' ? (b.km || 0) : M === 'spd' ? kmh(b) : b.kg;
     return { d, v, s: b, i: sets.indexOf(b) + 1, n: sets.length };
-  });
+  }).filter((pt) => !((M === 'km' || M === 'spd') && !(pt.s.km > 0)));
 }
 function chartHTML(xid) {
   const pts = chartPoints(xid);
@@ -1700,14 +1819,14 @@ function chartHTML(xid) {
   let trend = '';
   if (n > 1) {
     const k = kindOf(xid), dv = pts[n - 1].v - pts[0].v;
-    const unit = M === 'reps' ? (k === 'time' ? ' s' : ' reps') : ' kg';
+    const unit = M === 'reps' ? (k === 'time' ? ' s' : k === 'cardio' ? ' min' : ' reps') : M === 'km' ? ' km' : M === 'spd' ? ' km/h' : ' kg';
     const lessIsBetter = k === 'assist' && M === 'peso';
     const good = lessIsBetter ? dv < 0 : dv > 0, bad = lessIsBetter ? dv > 0 : dv < 0;
     const what = lessIsBetter ? `${nf(Math.abs(dv))} kg de ayuda` : `${nf(Math.abs(dv))}${unit}`;
     trend = `<p class="csum ${good ? 'up' : bad ? 'down' : ''}">${dv > 0 ? `Subiste ${what}` : dv < 0 ? `Bajaste ${what}` : 'Te mantienes igual'} desde el ${fShort(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
   }
   return `${trend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xl}${hits}</svg>
-    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">Mejor serie: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}</span></div>`;
+    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">${kindOf(xid) === 'cardio' ? 'Mejor marca' : 'Mejor serie'}: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${kindOf(xid) === 'cardio' ? (sp.n > 1 ? `${sp.i}.º registro de ${sp.n}` : 'Único registro del día') : sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}${kindOf(xid) === 'cardio' && sp.s.km > 0 ? ` · ${nf(kmh(sp.s))} km/h` : ''}</span></div>`;
 }
 
 /* ---------- hojas inferiores ---------- */
@@ -1801,9 +1920,11 @@ function suggestEx(name, pid) {
     pick(/martillo|invertido|muneca|antebrazo/, 'braquial') || pick(/frances|nuca|cabeza|sobre la cabeza/, 'larga') ||
     pick(/femoral|rumano|isquio/, 'isquio') || pick(/aduc|sumo/, 'aductor') || pick(/glute|hip|puente|patada|abduc/, 'glute') || pick(/talon|pantorr|gemel/, 'pantorr') ||
     pick(/oblicu|giro|lenador|lateral|rotacion|bicicleta/, 'oblicu') || pick(/plancha|rueda|pallof|core/, 'core') || null;
-  const mode = has(/asistid/) ? 'assist' : has(/plancha|plank|isometric|colgarse|colgado en (la )?barra|dead hang|hold|granjero|farmer|wall sit/) ? 'time' : null;
+  const mode = has(/asistid/) ? 'assist' : has(/trotadora|cinta|correr|trote|caminar|caminata|bici|spinning|eliptic|escaladora|ergometro|air bike|ski erg|nadar|natacion|boxeo|saco|cuerda para saltar|saltar la cuerda|patinar|remo de agua/) ? 'cardio' : has(/plancha|plank|isometric|colgarse|colgado en (la )?barra|dead hang|hold|granjero|farmer|wall sit/) ? 'time' : null;
   if (mode === 'assist' && !tool) tool = 'm';
-  if (mode === 'time' && !tool) tool = 'n';
+  let pose2 = pose;
+  if ((mode === 'time' || mode === 'cardio') && !tool) tool = 'n';
+  if (mode === 'cardio' && !pose) pose = has(/bici|spinning/) ? 'bike' : has(/eliptic/) ? 'elliptical' : has(/nadar|natacion/) ? 'swim' : has(/caminar|caminata/) ? 'walk' : has(/escaladora/) ? 'stairs' : has(/boxeo|saco/) ? 'boxing' : 'run';
   return { pose, tool, m, mode };
 }
 let SEEDPOSES = null;
@@ -1841,8 +1962,8 @@ const exParts = {
     ? (EX.sug ? `Sugerido por el nombre: <b>${esc(POSE_NAMES[EX.pose] || EX.pose)}</b>, ${esc(TOOLS.find((t) => t[0] === EX.tool)[1].toLowerCase())}${EX.m ? ', ' + esc(EX.m.toLowerCase()) : ''}. Puedes cambiarlo abajo.` : 'No reconocí el movimiento: elige el dibujo que más se parezca.')
     : 'Escribe el nombre y te sugiero el dibujo, el músculo y con qué se hace.',
   mus: () => P(EX.pid).muscles.map((m) => `<button class="chip${EX.m === m.n ? ' on' : ''}" data-act="exm" data-m="${esc(m.n)}" aria-pressed="${EX.m === m.n}">${esc(m.n)}</button>`).join('') + `<button class="chip add" data-act="exnm">${ic('plus', 16)} Otro</button>`,
-  mode: () => [['reps', 'Repeticiones'], ['time', 'Tiempo'], ['assist', 'Asistida']].map(([k, l]) => `<button class="chip${(EX.mode || 'reps') === k ? ' on' : ''}" data-act="exmd" data-k="${k}" aria-pressed="${(EX.mode || 'reps') === k}">${l}</button>`).join(''),
-  modeh: () => ({ reps: 'Lo normal: peso y repeticiones (o solo repeticiones si es peso corporal).', time: 'Se anota cuántos segundos aguantas, con cronómetro incluido. Ej: plancha.', assist: 'Máquinas donde el peso te ayuda, como las dominadas asistidas: mientras menos ayuda, mejor.' })[EX.mode || 'reps'],
+  mode: () => [['reps', 'Repeticiones'], ['time', 'Tiempo'], ['assist', 'Asistida'], ['cardio', 'Cardio']].map(([k, l]) => `<button class="chip${(EX.mode || 'reps') === k ? ' on' : ''}" data-act="exmd" data-k="${k}" aria-pressed="${(EX.mode || 'reps') === k}">${l}</button>`).join(''),
+  modeh: () => ({ reps: 'Lo normal: peso y repeticiones (o solo repeticiones si es peso corporal).', time: 'Se anota cuántos segundos aguantas, con cronómetro incluido. Ej: plancha.', assist: 'Máquinas donde el peso te ayuda, como las dominadas asistidas: mientras menos ayuda, mejor.', cardio: 'Se anotan minutos y distancia opcional (km); la app calcula tu velocidad.' })[EX.mode || 'reps'],
   tools: () => TOOLS.map(([k, l]) => `<button class="chip${EX.tool === k ? ' on' : ''}" data-act="ext" data-t="${k}" aria-pressed="${EX.tool === k}">${l}</button>`).join(''),
   grid: () => {
     if (!EX.open) return '';
@@ -1960,6 +2081,7 @@ function renderDay(d) {
       <div class="dst"><b>${ls.length}</b><span>Series</span></div>
       <div class="dst"><b>${nEx}</b><span>${nEx === 1 ? 'Ejercicio' : 'Ejercicios'}</span></div>
       <div class="dst"><b>${nf(vol, 0)}</b><span>Kilos levantados</span></div>
+      ${(() => { const cm = ls.filter((l) => kindOf(l.x) === 'cardio').reduce((a, l) => a + l.reps, 0); const ck = ls.filter((l) => kindOf(l.x) === 'cardio').reduce((a, l) => a + (l.km || 0), 0); return cm ? `<div class="dst cardio"><b>${cm} min</b><span>De cardio${ck ? `, ${nf(ck, 2)} km` : ''}</span></div>` : ''; })()}
     </div>
     <p class="dnote">En verde, la mejor serie de cada ejercicio.${approx ? ' El tiempo con ≈ es aproximado: va de la primera a la última serie, porque ese día no tocaste "Terminar".' : ''}</p>
     ${blocks}
@@ -2205,23 +2327,26 @@ const A = {
     const w = $('#fw').value.trim() === '' ? 0 : parseNum($('#fw').value);
     const reps = parseInt($('#fr').value, 10);
     if (isNaN(w) || w < 0) { toast('Revisa el peso'); $('#fw').focus(); return; }
-    if (!reps || reps < 1) { toast(kindOf(xid) === 'time' ? 'Anota los segundos' : 'Anota las repeticiones'); $('#fr').focus(); return; }
+    if (!reps || reps < 1) { toast({ time: 'Anota los segundos', cardio: 'Anota los minutos' }[kindOf(xid)] || 'Anota las repeticiones'); $('#fr').focus(); return; }
     stopSW(false);
     const u = S.settings.unit;
-    const kgv = u === 'lb' ? w * LB : w;
+    const cardio = kindOf(xid) === 'cardio';
+    const kgv = cardio ? 0 : u === 'lb' ? w * LB : w;
     const before = S.logs.filter((l) => l.x === xid);
     const nSet = before.filter((l) => l.d === today()).length + 1;
     const hadPast = before.some((l) => l.d !== today());
     const prevBest = before.length ? score(topSet(before)) : 0;
-    const pr = hadPast && score({ kg: kgv, reps, x: xid }) > prevBest + 1e-9;
-    const log = { id: uid(), d: today(), ts: Date.now(), x: xid, name: f.e.name, r: rid, rn: R(rid)?.name, kg: kgv, raw: w, u, reps, pr };
+    const km = cardio ? (w > 0 ? w : 0) : undefined;
+    const pr = hadPast && score({ kg: kgv, reps, x: xid, km }) > prevBest + 1e-9;
+    const log = { id: uid(), d: today(), ts: Date.now(), x: xid, name: f.e.name, r: rid, rn: R(rid)?.name, kg: kgv, raw: cardio ? 0 : w, u, reps, pr };
+    if (cardio && km) log.km = km;
     S.logs.push(log);
     save();
     draft = null;
     document.activeElement?.blur();
     try { navigator.vibrate?.(pr ? [60, 60, 120] : 40); } catch (e) {}
-    const st = setTxt({ kg: kgv, reps, x: xid });
-    const msg = pr ? `¡Nueva mejor serie histórica! ${st}` : `Serie ${nSet} guardada: ${st}`;
+    const st = setTxt({ kg: kgv, reps, x: xid, km });
+    const msg = pr ? `¡Nueva ${cardio ? 'mejor marca' : 'mejor serie histórica'}! ${st}` : `${cardio ? 'Registro' : 'Serie'} ${nSet} guardad${cardio ? 'o' : 'a'}: ${st}`;
     back(`/r/${rid}/p/${f.p.id}`);
     setTimeout(() => toast(msg, { label: 'Deshacer', fn: () => { S.logs = S.logs.filter((l) => l.id !== log.id); save(); render(); } }), 60);
   },
