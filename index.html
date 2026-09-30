@@ -250,6 +250,38 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .sum-x{padding:8px 0;border-top:1px solid #1f1f1f;font-size:15px}
 .sum-x .sx{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--mu);margin-top:2px}
 
+/* resumen de un día */
+.backlink{display:inline-flex;align-items:center;gap:4px;color:var(--mu);font-weight:600;font-size:15px;min-height:40px;margin:-4px 0 4px}
+.dtitle{font-family:var(--cond);font-weight:800;font-size:40px;line-height:1;margin:2px 0 6px}
+.dsub{margin:0 0 14px;color:var(--ac);font-weight:600}
+.dstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dst{background:#000;border-radius:18px;padding:12px 14px}
+.dst b{display:block;font-family:var(--cond);font-weight:800;font-size:30px;line-height:1.05}
+.dst span{color:var(--mu);font-size:13px}
+.dst.big{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#2a1307,#000 70%);border:1.5px solid #4a2610;padding:14px 16px}
+.dst.big em{font-style:normal;display:inline-flex;align-items:center;gap:5px;background:#12301a;color:#7BE08A;font-weight:700;font-size:14px;border-radius:999px;padding:6px 12px;white-space:nowrap}
+.dst.big b{font-size:42px;color:var(--ac)}
+.dst.pr b{color:#7BE08A}
+.dnote{color:var(--mu);font-size:13px;margin:12px 2px 4px;line-height:1.4}
+.dblock{margin-top:14px}
+.dbh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:0 2px 8px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.dbn{font-family:var(--cond);font-weight:800;font-size:24px}
+.dbt{color:var(--mu);font-size:13px;white-space:nowrap}
+.dx{display:flex;gap:12px;align-items:flex-start;background:#000;border-radius:18px;padding:10px;margin-bottom:8px}
+.dx .exic{width:56px;height:56px}
+.dxn{font-weight:700;font-size:16px;line-height:1.25}
+.dxm{color:var(--mu);font-size:13px;margin-top:1px}
+.dxs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cs{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:10px;background:var(--s1);font-size:14px;font-weight:600;white-space:nowrap}
+.cs i{font-style:normal;font-size:11px;color:var(--mu);background:#000;border-radius:6px;padding:1px 5px}
+.cs.best{background:#12301a;color:#7BE08A;box-shadow:inset 0 0 0 1.5px #3f7a48}
+.cs.best i{background:#0b1f11;color:#7BE08A}
+.cs b{font-size:10px;color:#000;background:#7BE08A;border-radius:5px;padding:1px 5px}
+.rord{display:flex;flex-direction:column;gap:6px}
+.rrow{display:flex;align-items:center;gap:10px;background:#000;border:1.5px solid var(--line);border-radius:14px;padding:6px 6px 6px 12px;font-weight:600}
+.rnum{width:24px;height:24px;border-radius:50%;background:var(--yl);color:#000;display:grid;place-items:center;font-size:13px;font-weight:800;flex:none}
+.rrow .iconbtn:disabled{opacity:.3}
+
 /* resumen final */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
 .stat{background:#000;border-radius:18px;padding:14px 16px}
@@ -524,6 +556,133 @@ const POSE_NAMES = {
   crunchmach: 'Crunch máquina', legraise: 'Piernas colgado', legraiseL: 'Piernas acostado', russian: 'Giro ruso', sidebend: 'Inclinación lateral',
   twist: 'Rotación', plank: 'Plancha', wheel: 'Rueda'
 };
+/* ---------- variantes: cada ejercicio con su propio dibujo ---------- */
+const RAILS = (a, b) => [['rails', a, b]];
+Object.assign(PO, {
+  // pecho
+  benchsmith: { ...PO.bench, eq: [...RAILS(58, 71), ...BENCH] },
+  benchmach: { ...PO.bench, eq: [...BENCH, ['l', 64, 31, 86, 18, 3], ['c', 86, 18, 3]] },
+  squeeze: { ...PO.bench, hands: [[60.5, 31], [67.8, 31]], eq: [...BENCH, ['a', 52, 22, 58, 26], ['a', 76, 22, 70, 26]] },
+  benchclose: { ...PO.bench, eq: [...BENCH, ['t', 84, 20, '||']] },
+  flybench: { h: [73, 60], t: [36, 62, 64, 62], fl: -1, L: [['U', 64, 62, 67, 48], ['F', 67, 48, 69, 34], ['Th', 36, 62, 24, 58], ['S', 24, 58, 21, 86]], hands: [[69, 32]], eq: [...BENCH, ['ca', 88, 60, 90, 36, 74, 28]] },
+  flyinc: { h: [35, 31], t: [56, 66, 41, 41], L: [['U', 41, 41, 50, 30], ['F', 50, 30, 54, 17], ['Th', 56, 66, 73, 66], ['S', 73, 66, 75, 90]], hands: [[55, 15]], eq: [['l', 49, 71, 34, 46, 4], ['l', 49, 72, 68, 72, 4], ['l', 58, 72, 58, 92, 3], ['ca', 78, 40, 76, 18, 60, 10]] },
+  benchmachcp: { ...PO.cpress, eq: [...PO.cpress.eq, ['a', 78, 44, 90, 44]] },
+  peck: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 28, 27], ['F', 28, 27, 28, 13], ['U', 60, 25, 72, 27], ['F', 72, 27, 72, 13], ...SEATL(56)], hands: [], eq: [['l', 24, 10, 24, 30, 4.5], ['l', 76, 10, 76, 30, 4.5], ['a', 16, 20, 21, 20], ['a', 84, 20, 79, 20]] },
+  revpeck: { h: [50, 13], tf: [24, 56], back: true, L: [['U', 40, 25, 27, 26], ['F', 27, 26, 14, 26], ['U', 60, 25, 73, 26], ['F', 73, 26, 86, 26], ...SEATL(56)], hands: [[13, 26], [87, 26]], eq: [['a', 10, 38, 3, 38], ['a', 90, 38, 97, 38]] },
+  flyseatc: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 30, 32], ['F', 30, 32, 22, 26], ['U', 60, 25, 70, 32], ['F', 70, 32, 78, 26], ...SEATL(56)], hands: [[21, 26], [79, 26]], an: [[3, 26], [97, 26]], eq: [['l', 38, 57, 62, 57, 3]] },
+  cross: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 33, 35], ['F', 33, 35, 46, 40], ['U', 60, 25, 67, 35], ['F', 67, 35, 54, 40], ...LEGS()], hands: [[47, 41], [53, 41]], an: [[3, 18], [97, 18]], eq: [] },
+  crossup: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 34, 33], ['F', 34, 33, 46, 22], ['U', 60, 25, 66, 33], ['F', 66, 33, 54, 22], ...LEGS()], hands: [[47, 21], [53, 21]], an: [[3, 95], [97, 95]], eq: [] },
+  crossdown: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 36, 39], ['F', 36, 39, 46, 54], ['U', 60, 25, 64, 39], ['F', 64, 39, 54, 54], ...LEGS()], hands: [[47, 55], [53, 55]], an: [[3, 4], [97, 4]], eq: [] },
+  pushinc: { h: [72, 50], t: [40, 70, 64, 56], L: [['U', 64, 56, 67, 64], ['F', 67, 64, 67, 72], ['Th', 40, 70, 27, 78], ['S', 27, 78, 14, 86]], hands: [], eq: [['l', 58, 74, 84, 74, 4], ['l', 62, 75, 62, 90, 3], ['l', 80, 75, 80, 90, 3], ['f', 90]] },
+  pushdec: { h: [76, 76], t: [40, 66, 67, 73], L: [['U', 67, 73, 69, 82], ['F', 69, 82, 67, 90], ['Th', 40, 66, 26, 63], ['S', 26, 63, 13, 60]], hands: [], eq: [['l', 4, 64, 24, 64, 4], ['l', 14, 65, 14, 90, 3], ['f', 92]] },
+  pushdia: { ...PO.pushup, eq: [['f', 87], ['dia', 72, 87]] },
+  dipbench: { h: [49, 25], t: [46, 60, 48, 35], L: [['U', 48, 35, 38, 43], ['F', 38, 43, 36, 54], ['Th', 46, 60, 66, 66], ['S', 66, 66, 86, 84]], hands: [], eq: [['l', 26, 56, 44, 56, 4], ['l', 30, 57, 30, 90, 3], ['f', 90]] },
+  dipmach: { h: [48, 23], t: [44, 62, 46, 33], L: [['U', 46, 33, 44, 47], ['F', 44, 47, 44, 60], ['Th', 44, 62, 63, 64], ['S', 63, 64, 63, 87]], hands: [[44, 61]], eq: [['l', 33, 66, 58, 66, 4], ['l', 31, 32, 33, 66, 4], ['l', 44, 67, 44, 92, 3], ['a', 54, 44, 54, 56]] },
+  dipassist: { h: [54, 19], t: [48, 58, 51, 30], L: [['U', 51, 30, 41, 37], ['F', 41, 37, 46, 48], ['Th', 48, 58, 49, 75], ['S', 49, 75, 36, 78]], hands: [[46, 48]], eq: [['l', 34, 48, 68, 48, 3.5], ['l', 34, 81, 58, 81, 4.5], ['l', 46, 82, 46, 94, 3], ['a', 62, 90, 62, 82]] },
+
+  // espalda
+  pdclose: { h: [50, 14], tf: [25, 57], L: [['U', 40, 26, 37, 40], ['F', 37, 40, 47, 30], ['U', 60, 26, 63, 40], ['F', 63, 40, 53, 30], ...SEATL(57)], hands: [[47, 29], [53, 29]], an: [[50, 0]], eq: [['l', 34, 64, 66, 64, 4.5], ['l', 47, 29, 50, 24, 2], ['l', 53, 29, 50, 24, 2]] },
+  pdmid: { h: [50, 14], tf: [25, 57], L: [['U', 40, 26, 36, 15], ['F', 36, 15, 37, 5], ['U', 60, 26, 64, 15], ['F', 64, 15, 63, 5], ...SEATL(57)], hands: [[37, 5], [63, 5]], an: [[50, 0]], bar: true, eq: [['l', 34, 64, 66, 64, 4.5]] },
+  pdsup: { h: [45, 25], t: [44, 64, 43, 35], L: [['U', 43, 35, 49, 49], ['F', 49, 49, 55, 35], ['Th', 44, 64, 64, 62], ['S', 64, 62, 64, 86]], hands: [[56, 34]], an: [[56, 0]], eq: [['l', 58, 56, 72, 56, 4.5], ['l', 34, 68, 56, 68, 4], ['l', 44, 69, 44, 92, 3], ['t', 80, 22, 'sup']] },
+  pduni: { h: [50, 14], tf: [25, 57], L: [['U', 40, 26, 33, 15], ['F', 33, 15, 31, 4], ['U', 60, 26, 63, 40], ['F', 63, 40, 59, 53], ...SEATL(57)], hands: [[31, 4]], an: [[31, 0]], eq: [['l', 34, 64, 66, 64, 4.5]] },
+  chinup: { h: [50, 19], tf: [30, 62], L: [['U', 40, 31, 37, 20], ['F', 37, 20, 38, 8], ['U', 60, 31, 63, 20], ['F', 63, 20, 62, 8], ['Th', 45, 62, 45, 78], ['S', 45, 78, 45, 94], ['Th', 55, 62, 55, 78], ['S', 55, 78, 55, 94]], hands: [[38, 8], [62, 8]], eq: [['l', 12, 8, 88, 8, 3.5], ['t', 84, 30, 'sup']] },
+  hang: { h: [50, 22], tf: [33, 65], L: [['U', 40, 34, 35, 21], ['F', 35, 21, 31, 8], ['U', 60, 34, 65, 21], ['F', 65, 21, 69, 8], ['Th', 45, 65, 45, 80], ['S', 45, 80, 45, 94], ['Th', 55, 65, 55, 80], ['S', 55, 80, 55, 94]], hands: [[31, 8], [69, 8]], eq: [['l', 12, 8, 88, 8, 3.5]] },
+  pullupa: { ...PO.pullup, L: [['U', 40, 31, 30, 20], ['F', 30, 20, 28, 8], ['U', 60, 31, 70, 20], ['F', 70, 20, 72, 8], ['Th', 45, 62, 44, 76], ['S', 44, 76, 44, 88], ['Th', 55, 62, 56, 76], ['S', 56, 76, 56, 88]], eq: [['l', 12, 8, 88, 8, 3.5], ['l', 34, 79, 66, 79, 5], ['l', 50, 81, 50, 96, 3], ['a', 76, 94, 76, 82]] },
+  tbarsup: { h: [74, 40], t: [40, 58, 65, 46], L: [['U', 65, 46, 57, 55], ['F', 57, 55, 61, 67], ['Th', 40, 58, 45, 76], ['S', 45, 76, 41, 93]], hands: [[61, 68]], eq: [['l', 36, 66, 68, 51, 5], ['l', 44, 64, 44, 94, 3], ['f', 96]] },
+  tbar: { h: [76, 38], t: [40, 56, 67, 43], L: [['U', 67, 43, 57, 51], ['F', 57, 51, 60, 63], ['Th', 40, 56, 47, 75], ['S', 47, 75, 43, 94]], hands: [], eq: [['l', 8, 94, 76, 58, 2.6], ['o', 74, 59, 6], ['c', 8, 94, 2.5], ['f', 96]] },
+  pendlay: { h: [75, 54], t: [38, 55, 66, 55], L: [['U', 66, 55, 63, 70], ['F', 63, 70, 63, 84], ['Th', 38, 55, 46, 74], ['S', 46, 74, 42, 94]], hands: [[63, 88]], eq: [['f', 96], ['a', 80, 88, 80, 72]] },
+  rowmach: { h: [46, 27], t: [40, 66, 44, 37], L: [['U', 44, 37, 34, 46], ['F', 34, 46, 57, 44], ['Th', 40, 66, 60, 60], ['S', 60, 60, 62, 84]], hands: [[58, 44]], eq: [['l', 53, 34, 55, 60, 5], ['l', 28, 70, 50, 70, 4], ['l', 40, 71, 40, 92, 3]] },
+  rowuni: { h: [44, 28], t: [40, 66, 42, 38], L: [['U2', 42, 38, 56, 42], ['F2', 56, 42, 71, 45], ['U', 42, 38, 31, 46], ['F', 31, 46, 49, 48], ['Th', 40, 66, 60, 58], ['S', 60, 58, 76, 66]], hands: [[50, 48]], an: [[94, 54]], eq: [['l', 28, 70, 50, 70, 4], ['l', 40, 71, 40, 90, 3], ['t', 84, 22, '1']] },
+  rowwide: { h: [44, 28], t: [40, 66, 42, 38], L: [['U', 42, 38, 29, 37], ['F', 29, 37, 47, 40], ['Th', 40, 66, 60, 58], ['S', 60, 58, 76, 66]], hands: [[48, 40]], an: [[94, 50]], eq: [['l', 28, 70, 50, 70, 4], ['l', 79, 52, 81, 76, 3.5], ['l', 40, 71, 40, 90, 3], ['l', 48, 32, 48, 48, 3]] },
+  sealrow: { h: [72, 50], t: [34, 50, 63, 50], L: [['U', 63, 50, 59, 63], ['F', 59, 63, 63, 74], ['Th', 34, 50, 20, 51], ['S', 20, 51, 7, 52]], hands: [[63, 77]], eq: [['l', 26, 56, 70, 56, 5], ['l', 32, 58, 32, 94, 3], ['l', 64, 58, 64, 94, 3], ['f', 96]] },
+  dlfloor: { h: [69, 38], t: [38, 57, 62, 46], L: [['U', 62, 46, 62, 62], ['F', 62, 62, 62, 78], ['Th', 38, 57, 53, 73], ['S', 53, 73, 47, 93]], hands: [[62, 86]], eq: [['f', 96]] },
+  rdl: { h: [74, 36], t: [42, 50, 66, 42], L: [['U', 66, 42, 66, 57], ['F', 66, 57, 66, 71], ['Th', 42, 50, 45, 72], ['S', 45, 72, 44, 94]], hands: [[66, 74]], eq: [['f', 96]] },
+  sldl: { h: [72, 67], t: [44, 48, 66, 58], L: [['U', 66, 58, 64, 72], ['F', 64, 72, 62, 84], ['Th', 44, 48, 46, 71], ['S', 46, 71, 46, 94]], hands: [[62, 87]], eq: [['f', 96]] },
+  rackpull: { h: [61, 21], t: [42, 52, 56, 30], L: [['U', 56, 30, 58, 46], ['F', 58, 46, 60, 60], ['Th', 42, 52, 50, 72], ['S', 50, 72, 47, 93]], hands: [[60, 62]], eq: [['l', 76, 40, 76, 96, 3], ['l', 66, 70, 82, 70, 3], ['f', 96]] },
+  goodmorning: { h: [75, 37], t: [40, 52, 66, 41], L: [['U', 66, 41, 58, 33], ['F', 58, 33, 62, 35], ['Th', 40, 52, 42, 73], ['S', 42, 73, 41, 94]], hands: [[61, 35]], eq: [['f', 96]] },
+  sumodl: { h: [50, 20], tf: [31, 60], L: [['U', 40, 32, 42, 46], ['F', 42, 46, 44, 60], ['U', 60, 32, 58, 46], ['F', 58, 46, 56, 60], ['Th', 45, 60, 30, 72], ['S', 30, 72, 28, 93], ['Th', 55, 60, 70, 72], ['S', 70, 72, 72, 93]], hands: [[44, 62], [56, 62]], eq: [['f', 96]] },
+  landmine: { h: [52, 15], t: [48, 55, 50, 26], L: [['U', 50, 26, 61, 28], ['F', 61, 28, 71, 17], ['Th', 48, 55, 55, 74], ['S', 55, 74, 55, 94], ['Th2', 48, 55, 42, 74], ['S2', 42, 74, 36, 93]], hands: [], eq: [['l', 6, 94, 80, 10, 2.6], ['o', 78, 12, 6], ['c', 6, 94, 2.5], ['f', 96]] },
+
+  // hombros
+  arnold: { h: [50, 15], tf: [26, 58], L: [['U', 40, 27, 31, 23], ['F', 31, 23, 33, 9], ['U', 60, 27, 57, 40], ['F', 57, 40, 55, 26], ...LEGS(58, 77, 95)], hands: [[33, 8], [55, 24]], eq: [['rot', 72, 14]] },
+  latcable: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 28, 28], ['F', 28, 28, 16, 30], ['U', 60, 25, 65, 38], ['F', 65, 38, 58, 48], ...LEGS()], hands: [[15, 30]], an: [[94, 95]], eq: [] },
+  latmach: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 28, 24], ['F', 28, 24, 25, 36], ['U', 60, 25, 72, 24], ['F', 72, 24, 75, 36], ...SEATL(56)], hands: [], eq: [['l', 28, 18, 28, 30, 4.5], ['l', 72, 18, 72, 30, 4.5], ['a', 20, 30, 20, 18], ['a', 80, 30, 80, 18]] },
+  reardelt: { h: [50, 31], tf: [38, 58], back: true, L: [['U', 40, 39, 27, 42], ['F', 27, 42, 14, 46], ['U', 60, 39, 73, 42], ['F', 73, 42, 86, 46], ['Th', 45, 58, 43, 76], ['S', 43, 76, 45, 94], ['Th', 55, 58, 57, 76], ['S', 57, 76, 55, 94]], hands: [[13, 47], [87, 47]], an: [[94, 95], [6, 95]], eq: [['a', 12, 58, 12, 50], ['a', 88, 58, 88, 50]] },
+  revcross: { h: [50, 13], tf: [24, 56], back: true, L: [['U', 40, 25, 27, 27], ['F', 27, 27, 14, 28], ['U', 60, 25, 73, 27], ['F', 73, 27, 86, 28], ...LEGS()], hands: [[13, 28], [87, 28]], an: [[97, 20], [3, 20]], eq: [] },
+  yraise: { h: [50, 15], tf: [26, 58], back: true, L: [['U', 40, 27, 33, 16], ['F', 33, 16, 25, 6], ['U', 60, 27, 67, 16], ['F', 67, 16, 75, 6], ...LEGS(58, 77, 95)], hands: [[24, 5], [76, 5]], an: [[94, 95], [6, 95]], eq: [] },
+  shrugup: { ...PO.shrug, eq: [['a', 32, 21, 32, 11], ['a', 68, 21, 68, 11]] },
+  farmer: { h: [52, 13], t: [50, 54, 51, 24], L: [['Th2', 50, 54, 44, 73], ['S2', 44, 73, 38, 91], ['U', 51, 24, 51, 40], ['F', 51, 40, 51, 54], ['Th', 50, 54, 58, 72], ['S', 58, 72, 57, 92]], hands: [[51, 57]], eq: [['f', 95], ['a', 64, 8, 86, 8]] },
+
+  // bíceps
+  curlalt: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 39, 40], ['F', 39, 40, 33, 28], ['U', 60, 25, 62, 40], ['F', 62, 40, 63, 54], ...LEGS()], hands: [[33, 27], [63, 56]], eq: [] },
+  curlconc: { h: [62, 32], t: [40, 60, 56, 39], L: [['Th', 40, 60, 62, 62], ['S', 62, 62, 64, 88], ['U', 56, 39, 60, 55], ['F', 60, 55, 55, 42]], hands: [[55, 41]], eq: [['l', 28, 65, 50, 65, 4], ['l', 36, 66, 36, 92, 3]] },
+  curlinc: { h: [35, 31], t: [56, 66, 41, 41], L: [['U', 41, 41, 41, 57], ['F', 41, 57, 50, 65], ['Th', 56, 66, 73, 66], ['S', 73, 66, 75, 90]], hands: [[51, 66]], eq: [['l', 49, 71, 34, 46, 4], ['l', 49, 72, 68, 72, 4], ['l', 58, 72, 58, 92, 3]] },
+  hammer: { ...PO.curl, dbv: true },
+  curlrope: { ...PO.curl, rope: true },
+  curlZ: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 38, 40], ['F', 38, 40, 44, 29], ['U', 60, 25, 62, 40], ['F', 62, 40, 56, 29], ...LEGS()], hands: [[44, 29], [56, 29]], zbar: true, eq: [] },
+  curl21: { ...PO.curl, L: [['U', 51, 24, 52, 40], ['F', 52, 40, 66, 40], ...STAND], hands: [[68, 40]], eq: [['f', 96], ['t', 80, 18, '21']] },
+  curlrev: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 38, 40], ['F', 38, 40, 45, 31], ['U', 60, 25, 62, 40], ['F', 62, 40, 55, 31], ...LEGS()], hands: [[45, 31], [55, 31]], eq: [['t', 50, 50, 'inv']] },
+  pdmach: { h: [50, 14], tf: [25, 57], L: [['U', 40, 26, 31, 16], ['F', 31, 16, 27, 7], ['U', 60, 26, 69, 16], ['F', 69, 16, 73, 7], ...SEATL(57)], hands: [[27, 7], [73, 7]], eq: [['l', 27, 7, 12, 22, 3.2], ['l', 73, 7, 88, 22, 3.2], ['c', 12, 22, 3.4], ['c', 88, 22, 3.4], ['l', 12, 22, 12, 96, 2.5], ['l', 88, 22, 88, 96, 2.5], ['l', 34, 64, 66, 64, 4.5]] },
+  dbrow: { h: [71, 50], t: [36, 54, 62, 52], L: [['U2', 62, 52, 66, 63], ['F2', 66, 63, 68, 74], ['Th2', 36, 54, 44, 73], ['S2', 44, 73, 28, 73], ['U', 62, 52, 52, 44], ['F', 52, 44, 56, 60], ['Th', 36, 54, 34, 74], ['S', 34, 74, 32, 94]], hands: [[56, 63]], eq: [['l', 24, 77, 78, 77, 4.5], ['l', 30, 78, 30, 94, 3], ['l', 72, 78, 72, 94, 3], ['f', 96]] },
+  wallsit: { h: [42, 22], t: [40, 60, 40, 32], L: [['U', 40, 32, 47, 44], ['F', 47, 44, 56, 40], ['Th', 40, 60, 62, 60], ['S', 62, 60, 62, 88]], hands: [], eq: [['l', 31, 4, 31, 96, 4], ['f', 95]] },
+  inclinesmith: { ...PO.incline, eq: [['rails', 40, 54], ...PO.incline.eq] },
+  ohsmith: { ...PO.ohpress, eq: [['rails', 20, 80]] },
+  dipmachp: { h: [55, 25], t: [44, 62, 50, 35], L: [['U', 50, 35, 45, 48], ['F', 45, 48, 45, 60], ['Th', 44, 62, 63, 64], ['S', 63, 64, 63, 87]], hands: [[45, 61]], eq: [['l', 33, 66, 58, 66, 4], ['l', 31, 32, 33, 66, 4], ['l', 44, 67, 44, 92, 3], ['a', 58, 44, 58, 56]] },
+  wrist: { h: [46, 22], t: [40, 60, 44, 32], L: [['Th', 40, 60, 62, 60], ['S', 62, 60, 62, 86], ['U', 44, 32, 47, 50], ['F', 47, 50, 64, 54]], hands: [[68, 50]], eq: [['l', 30, 64, 50, 64, 4], ['l', 36, 65, 36, 92, 3], ['ca', 76, 58, 78, 50, 72, 42]] },
+  spider: { h: [70, 37], t: [40, 62, 62, 44], L: [['U', 62, 44, 62, 60], ['F', 62, 60, 70, 52], ['Th', 40, 62, 38, 78], ['S', 38, 78, 34, 94]], hands: [[71, 51]], eq: [['l', 36, 70, 66, 50, 5], ['l', 44, 66, 44, 94, 3], ['f', 96]] },
+  bayes: { h: [53, 13], t: [50, 54, 51, 24], L: [['U', 51, 24, 45, 39], ['F', 45, 39, 52, 27], ...STAND], hands: [[53, 26]], an: [[8, 95]], eq: [['f', 96]] },
+
+  // tríceps
+  ohext2: { h: [50, 16], tf: [27, 59], L: [['U', 40, 28, 42, 13], ['F', 42, 13, 49, 4], ['U', 60, 28, 58, 13], ['F', 58, 13, 51, 4], ...LEGS(59, 77, 95)], hands: [[50, 4]], eq: [] },
+  pdrope: { ...PO.pushdown, L: [['U', 51, 24, 52, 40], ['F', 52, 40, 60, 54], ...STAND], hands: [[61, 56]], rope: true },
+  pduni1: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 38, 40], ['F', 38, 40, 36, 54], ['U', 60, 25, 65, 38], ['F', 65, 38, 58, 48], ...LEGS()], hands: [[36, 55]], an: [[36, 0]], eq: [] },
+
+  // piernas
+  frontsquat: { h: [56, 23], t: [40, 60, 52, 33], L: [['U', 52, 33, 64, 35], ['F', 64, 35, 57, 30], ['Th', 40, 60, 62, 65], ['S', 62, 65, 57, 93]], hands: [[58, 31]], eq: [['f', 96]] },
+  squatsmith: { ...PO.squat, eq: [['rails', 44, 58], ['f', 96]] },
+  goblet: { h: [58, 24], t: [40, 60, 54, 34], L: [['U', 54, 34, 59, 45], ['F', 59, 45, 62, 39], ['Th', 40, 60, 62, 66], ['S', 62, 66, 57, 93]], hands: [[63, 38]], eq: [['f', 96]] },
+  sumosq: { h: [50, 22], tf: [33, 61], L: [['U', 40, 34, 44, 48], ['F', 44, 48, 49, 61], ['U', 60, 34, 56, 48], ['F', 56, 48, 51, 61], ['Th', 45, 61, 29, 71], ['S', 29, 71, 27, 93], ['Th', 55, 61, 71, 71], ['S', 71, 71, 73, 93]], hands: [[50, 64]], eq: [['f', 96]] },
+  legpressuni: { ...PO.legpress, L: [['Th2', 34, 70, 46, 76], ['S2', 46, 76, 52, 90], ...PO.legpress.L] },
+  calfpress: { h: [14, 41], t: [34, 70, 19, 48], L: [['U', 19, 48, 24, 62], ['F', 24, 62, 32, 67], ['Th', 34, 70, 52, 57], ['S', 52, 57, 69, 45]], hands: [], eq: [['l', 28, 75, 12, 51, 4], ['l', 28, 75, 44, 76, 4], ['l', 70, 33, 80, 52, 5], ['l', 38, 80, 84, 88, 3], ['a', 84, 40, 88, 32]] },
+  pendulum: { ...PO.hack, eq: [...PO.hack.eq, ['ca', 22, 16, 12, 44, 22, 72]] },
+  bulgarian: { h: [50, 17], t: [48, 56, 49, 27], L: [['Th2', 48, 56, 40, 76], ['S2', 40, 76, 24, 66], ['U', 49, 27, 49, 42], ['F', 49, 42, 49, 56], ['Th', 48, 56, 66, 62], ['S', 66, 62, 66, 90]], hands: [[49, 58]], eq: [['l', 12, 68, 32, 68, 4.5], ['l', 22, 69, 22, 92, 3], ['f', 92]] },
+  walklunge: { ...PO.lunge, eq: [['f', 92], ['a', 62, 8, 86, 8], ['a', 62, 14, 86, 14]] },
+  revlunge: { h: [50, 17], t: [48, 56, 49, 27], L: [['Th2', 48, 56, 38, 80], ['S2', 38, 80, 20, 88], ['U', 49, 27, 49, 42], ['F', 49, 42, 49, 56], ['Th', 48, 56, 64, 64], ['S', 64, 64, 64, 90]], hands: [[49, 58]], eq: [['f', 92], ['a', 38, 8, 14, 8]] },
+  stepup: { h: [51, 13], t: [48, 52, 50, 23], L: [['Th2', 48, 52, 45, 72], ['S2', 45, 72, 41, 92], ['U', 50, 23, 50, 38], ['F', 50, 38, 50, 52], ['Th', 48, 52, 63, 57], ['S', 63, 57, 64, 71]], hands: [[50, 55]], eq: [['r', 56, 73, 26, 21], ['f', 95]] },
+  bridge: { h: [18, 81], t: [52, 67, 28, 80], L: [['U', 28, 80, 38, 84], ['F', 38, 84, 48, 85], ['Th', 52, 67, 68, 66], ['S', 68, 66, 71, 86]], hands: [], eq: [['f', 88], ['a', 52, 56, 52, 46]] },
+  nordic: { h: [77, 41], t: [55, 66, 70, 48], L: [['U', 70, 48, 76, 58], ['F', 76, 58, 82, 66], ['Th', 55, 66, 40, 84], ['S', 40, 84, 16, 86]], hands: [], eq: [['c', 14, 83, 3], ['l', 30, 88, 50, 88, 4], ['f', 90], ['ca', 88, 40, 90, 60, 82, 76]] },
+  hipabd: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 34, 38], ['F', 34, 38, 28, 48], ['U', 60, 25, 65, 38], ['F', 65, 38, 58, 48], ['Th', 45, 56, 45, 75], ['S', 45, 75, 45, 94], ['Th', 55, 56, 66, 72], ['S', 66, 72, 76, 87]], hands: [], cf: [77, 88], an: [[4, 95]], eq: [['a', 82, 72, 90, 64]] },
+
+  // abdominales
+  crunchdec: { h: [66, 56], t: [38, 64, 57, 60], fl: -1, L: [['U', 57, 60, 62, 50], ['F', 62, 50, 66, 56], ['Th', 38, 64, 27, 50], ['S', 27, 50, 16, 58]], hands: [], eq: [['l', 18, 66, 76, 82, 4.5], ['c', 14, 58, 3], ['l', 50, 72, 50, 94, 3]] },
+  crunchobl: { ...PO.crunch, eq: [['f', 86], ['rot', 58, 52]] },
+  bicycle: { h: [66, 64], t: [40, 80, 58, 70], fl: -1, L: [['Th2', 40, 80, 26, 76], ['S2', 26, 76, 11, 73], ['U', 58, 70, 56, 60], ['F', 56, 60, 63, 62], ['Th', 40, 80, 50, 64], ['S', 50, 64, 38, 60]], hands: [], eq: [['f', 86]] },
+  kneeraise: { h: [55, 17], t: [50, 56, 50, 27], L: [['U', 50, 27, 45, 15], ['F', 45, 15, 44, 5], ['Th', 50, 56, 67, 48], ['S', 67, 48, 67, 66]], hands: [[44, 4]], eq: [['l', 32, 4, 60, 4, 3.5]] },
+  captain: { h: [52, 18], t: [50, 56, 50, 28], L: [['U', 50, 28, 48, 40], ['F', 48, 40, 62, 40], ['Th', 50, 56, 68, 50], ['S', 68, 50, 70, 68]], hands: [[63, 40]], eq: [['l', 42, 43, 66, 43, 4], ['l', 40, 20, 40, 62, 5], ['l', 40, 62, 40, 96, 3]] },
+  hollow: { h: [21, 66], t: [50, 78, 30, 71], L: [['U', 30, 71, 19, 64], ['F', 19, 64, 8, 58], ['Th', 50, 78, 66, 72], ['S', 66, 72, 82, 66]], hands: [], eq: [['f', 86]] },
+  sideplank: { h: [77, 51], t: [44, 71, 69, 58], L: [['U2', 69, 58, 69, 43], ['F2', 69, 43, 69, 29], ['U', 69, 58, 70, 73], ['F', 70, 73, 82, 76], ['Th', 44, 71, 29, 78], ['S', 29, 78, 14, 84]], hands: [], eq: [['f', 86]] },
+  climber: { h: [79, 52], t: [44, 66, 70, 57], L: [['Th2', 44, 66, 30, 74], ['S2', 30, 74, 16, 82], ['U', 70, 57, 71, 70], ['F', 71, 70, 72, 84], ['Th', 44, 66, 60, 74], ['S', 60, 74, 49, 80]], hands: [], eq: [['f', 87], ['a', 36, 58, 50, 58]] },
+  pallof: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 44, 35], ['F', 44, 35, 50, 38], ['U', 60, 25, 56, 35], ['F', 56, 35, 50, 38], ...LEGS()], hands: [[50, 38]], an: [[97, 38]], eq: [['a', 30, 46, 22, 46]] },
+  woodchop: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 50, 38], ['F', 50, 38, 62, 50], ['U', 60, 25, 61, 39], ['F', 61, 39, 62, 50], ...LEGS()], hands: [[63, 51]], an: [[4, 4]], eq: [['ca', 30, 12, 60, 18, 80, 44]] },
+  legraiseB: { ...PO.legraiseL, eq: [['l', 8, 87, 58, 87, 4], ['ca', 88, 44, 86, 24, 76, 16]] }
+});
+Object.assign(POSE_NAMES, {
+  wallsit: 'Sentadilla en pared', pdmach: 'Jalón en máquina', dbrow: 'Remo con apoyo', benchsmith: 'Press en Smith', inclinesmith: 'Inclinado Smith', ohsmith: 'Press hombro Smith', dipmachp: 'Fondos máquina pecho', benchmach: 'Press acostado máquina', squeeze: 'Squeeze press', benchclose: 'Press cerrado', flybench: 'Aperturas en banco', flyinc: 'Aperturas inclinadas',
+  benchmachcp: 'Press sentado empuje', peck: 'Mariposa', revpeck: 'Mariposa invertida', flyseatc: 'Poleas sentado', cross: 'Cruce de poleas', crossup: 'Cruce hacia arriba',
+  crossdown: 'Cruce hacia abajo', pushinc: 'Flexión inclinada', pushdec: 'Flexión declinada', pushdia: 'Flexión diamante', dipbench: 'Fondos en banco', dipmach: 'Fondos máquina',
+  dipassist: 'Fondos asistidos', pdclose: 'Jalón cerrado', pdmid: 'Jalón medio', pdsup: 'Jalón supino', pduni: 'Jalón a una mano', chinup: 'Dominada supina', hang: 'Colgado',
+  pullupa: 'Dominada asistida', tbarsup: 'Remo T con apoyo', tbar: 'Remo en T', pendlay: 'Remo Pendlay', rowmach: 'Remo máquina', rowuni: 'Remo a una mano', rowwide: 'Remo abierto',
+  sealrow: 'Remo acostado', dlfloor: 'Peso muerto suelo', rdl: 'Rumano', sldl: 'Piernas rígidas', rackpull: 'Rack pull', goodmorning: 'Buenos días', sumodl: 'Peso muerto sumo',
+  landmine: 'Landmine', arnold: 'Press Arnold', latcable: 'Lateral en polea', latmach: 'Lateral máquina', reardelt: 'Pájaros', revcross: 'Cruce invertido', yraise: 'Elevación Y',
+  shrugup: 'Encogimiento', farmer: 'Paseo granjero', curlalt: 'Curl alterno', curlconc: 'Curl concentrado', curlinc: 'Curl inclinado', hammer: 'Curl martillo', curlrope: 'Curl con cuerda',
+  curlZ: 'Curl barra Z', curl21: 'Curl 21', curlrev: 'Curl invertido', wrist: 'Curl de muñeca', spider: 'Curl araña', bayes: 'Curl bayesiano', ohext2: 'Extensión dos manos',
+  pdrope: 'Extensión cuerda', pduni1: 'Extensión una mano', frontsquat: 'Sentadilla frontal', squatsmith: 'Sentadilla Smith', goblet: 'Goblet', sumosq: 'Sentadilla sumo',
+  legpressuni: 'Prensa una pierna', calfpress: 'Talones en prensa', pendulum: 'Péndulo', bulgarian: 'Búlgara', walklunge: 'Estocada caminando', revlunge: 'Zancada atrás',
+  stepup: 'Subida al cajón', bridge: 'Puente', nordic: 'Nordic', hipabd: 'Abducción de pie', crunchdec: 'Crunch declinado', crunchobl: 'Crunch oblicuo', bicycle: 'Bicicleta',
+  kneeraise: 'Rodillas colgado', captain: 'Silla romana', hollow: 'Hollow', sideplank: 'Plancha lateral', climber: 'Escalador', pallof: 'Pallof', woodchop: 'Leñador', legraiseB: 'Piernas en banco'
+});
+POSE_LIST.length = 0; Object.keys(PO).forEach((k) => POSE_LIST.push(k));
+
 /* músculo del ejercicio -> zonas que se pintan en rojo */
 function regsForMuscle(m, pid) {
   const n = norm(m || '');
@@ -557,7 +716,7 @@ function capsule(x1, y1, x2, y2, r1, r2, fill, extra = '') {
   return `<path d="M${fx(x1 + nx * r1)} ${fx(y1 + ny * r1)} L${fx(x2 + nx * r2)} ${fx(y2 + ny * r2)} L${fx(x2 - nx * r2)} ${fx(y2 - ny * r2)} L${fx(x1 - nx * r1)} ${fx(y1 - ny * r1)} Z" fill="${fill}"${extra}/>` +
     `<circle cx="${fx(x1)}" cy="${fx(y1)}" r="${r1}" fill="${fill}"${extra}/><circle cx="${fx(x2)}" cy="${fx(y2)}" r="${r2}" fill="${fill}"${extra}/>`;
 }
-function exIcon(key, tool, regs, size) {
+function exIcon(key, tool, regs, size, mode) {
   const p = PO[key] || PO.gen;
   const id = 'x' + (++ICN);
   let back = '', body = '', red = '', front = '';
@@ -577,6 +736,13 @@ function exIcon(key, tool, regs, size) {
     else if (k === 'o') back += `<circle cx="${e[1]}" cy="${e[2]}" r="${e[3]}" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="2.4"/>` + C(e[1], e[2], 1.4, IC.eq);
     else if (k === 'r') back += `<rect x="${e[1]}" y="${e[2]}" width="${e[3]}" height="${e[4]}" rx="1.8" fill="${IC.pad}"/>`;
     else if (k === 'a') front += arrow(e[1], e[2], e[3], e[4]);
+    else if (k === 'rails') back += [e[1], e[2]].map((x) => L(x, 4, x, 94, 1.6, '#57524c') + L(x - 2.5, 4, x + 2.5, 4, 2, '#57524c')).join('');
+    else if (k === 't') front += `<text x="${e[1]}" y="${e[2]}" text-anchor="middle" font-size="${String(e[3]).length > 2 ? 10 : 13}" font-weight="800" font-family="Arial,sans-serif" fill="${IC.mark}">${e[3]}</text>`;
+    else if (k === 'dia') front += `<path d="M${e[1]} ${e[2] - 5} L${e[1] + 5} ${e[2]} L${e[1]} ${e[2] + 5} L${e[1] - 5} ${e[2]} Z" fill="none" stroke="${IC.mark}" stroke-width="1.8"/>`;
+    else if (k === 'ca') {
+      const [x1, y1, cx, cy, x2, y2] = e.slice(1), a = Math.atan2(y2 - cy, x2 - cx), kk = 4.2;
+      front += `<path d="M${x1} ${y1} Q${cx} ${cy} ${x2} ${y2}" fill="none" stroke="${IC.mark}" stroke-width="1.8" stroke-dasharray="3 2.5"/><polygon points="${x2},${y2} ${fx(x2 - kk * Math.cos(a - 0.5))},${fx(y2 - kk * Math.sin(a - 0.5))} ${fx(x2 - kk * Math.cos(a + 0.5))},${fx(y2 - kk * Math.sin(a + 0.5))}" fill="${IC.mark}"/>`;
+    }
     else if (k === 'rot') { const [x, y] = [e[1], e[2]]; front += `<path d="M${x - 10} ${y} A10 4 0 1 0 ${x + 10} ${y}" fill="none" stroke="${IC.mark}" stroke-width="2"/><polygon points="${x + 10},${y - 3.5} ${x + 13},${y + 1.5} ${x + 7},${y + 1.5}" fill="${IC.mark}"/>`; }
   });
   const hands = p.hands || [];
@@ -590,6 +756,15 @@ function exIcon(key, tool, regs, size) {
       back += L(mx, my, an[0][0], an[0][1], 1.3, IC.cab) + pulley(an[0]);
     } else from.forEach((h, i) => { const a = an[i] || an[0]; back += L(h[0], h[1], a[0], a[1], 1.3, IC.cab) + pulley(a); });
   }
+  // extremidades del lado lejano: más oscuras y detrás del tronco
+  (p.L || []).forEach(([k0, x1, y1, x2, y2]) => {
+    if (!k0.endsWith('2')) return;
+    const k = k0.slice(0, -1), [r1, r2] = RAD[k];
+    const on = (k === 'U' && (regs.has('bi') || regs.has('tri'))) || (k === 'F' && regs.has('fore')) || (k === 'Th' && (regs.has('quads') || regs.has('hams'))) || (k === 'S' && regs.has('calves'));
+    back += capsule(x1, y1, x2, y2, r1 * 0.95, r2 * 0.95, on ? '#9e2a22' : '#8a837a');
+    if (k === 'F') back += C(x2, y2, 2.3, '#77706a');
+    if (k === 'S') { const l = Math.hypot(x2 - x1, y2 - y1) || 1; back += capsule(x2, y2, x2 + ((y2 - y1) / l) * 5.4, y2 - ((x2 - x1) / l) * 5.4, 2.3, 1.6, '#77706a'); }
+  });
   // tronco
   if (p.t) {
     const [px, py, sx, sy] = p.t;
@@ -611,7 +786,8 @@ function exIcon(key, tool, regs, size) {
     body += capsule(50, y1 + 1, 50, y1 - 5, 3, 2.7, IC.body);
     body += `<path d="M39 ${y1 + 1} Q50 ${y1 - 2.5} 61 ${y1 + 1} L58 ${y2} Q50 ${y2 + 2.5} 42 ${y2} Z" fill="${IC.body}" stroke="${IC.body}" stroke-width="2.5" stroke-linejoin="round"/>`;
     const R = (x, y, w, h) => { red += `<rect x="${x}" y="${fx(y)}" width="${w}" height="${fx(h)}" rx="2" fill="${IC.hi}"/>`; };
-    if (regs.has('chest')) { R(42, y1 + 2.5, 7.3, 8); R(50.7, y1 + 2.5, 7.3, 8); }
+    if (p.back) body += L(50, y1 + 3, 50, y2 - 3, 1.2, '#9f988f') + L(44, y1 + 5, 47, y1 + 11, 1, '#aaa39a') + L(56, y1 + 5, 53, y1 + 11, 1, '#aaa39a');
+    if (regs.has('chest') && !p.back) { R(42, y1 + 2.5, 7.3, 8); R(50.7, y1 + 2.5, 7.3, 8); }
     if (regs.has('abs')) R(45.5, y1 + 12.5, 9, hgt - 14);
     if (regs.has('obl')) { R(42.3, y1 + 13, 2.9, hgt - 16); R(54.8, y1 + 13, 2.9, hgt - 16); }
     if (regs.has('lats')) { R(40.5, y1 + 4, 2.9, 13); R(56.6, y1 + 4, 2.9, 13); }
@@ -622,6 +798,7 @@ function exIcon(key, tool, regs, size) {
   body += C(p.h[0], p.h[1], 6.4, IC.body);
   // extremidades con forma, manos y pies
   (p.L || []).forEach(([k, x1, y1, x2, y2]) => {
+    if (k.endsWith('2')) return;
     const on = (k === 'U' && (regs.has('bi') || regs.has('tri'))) || (k === 'F' && regs.has('fore')) ||
       (k === 'Th' && (regs.has('quads') || regs.has('hams'))) || (k === 'S' && regs.has('calves'));
     const [r1, r2] = RAD[k];
@@ -635,228 +812,239 @@ function exIcon(key, tool, regs, size) {
       body += capsule(x2, y2, x2 + fdx * 5.6, y2 + fdy * 5.6, 2.4, 1.7, IC.body2);
     }
   });
-  if (regs.has('delt')) (p.L || []).forEach(([k, x1, y1]) => { if (k === 'U') red += C(x1, y1, 4.5, IC.hi) + C(x1 - 0.6, y1 - 0.8, 1.7, IC.hi2).replace('/>', ' opacity=".55"/>'); });
+  if (regs.has('delt')) (p.L || []).forEach(([k, x1, y1]) => { if (k === 'U' || (k === 'U2' && false)) red += C(x1, y1, 4.5, IC.hi) + C(x1 - 0.6, y1 - 0.8, 1.7, IC.hi2).replace('/>', ' opacity=".55"/>'); });
   // implemento en las manos
   const plate = (x, y, r) => `<circle cx="${fx(x)}" cy="${fx(y)}" r="${r}" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="2.4"/><circle cx="${fx(x)}" cy="${fx(y)}" r="${(r * 0.48).toFixed(1)}" fill="none" stroke="${IC.eq}" stroke-width="1"/>` + C(x, y, 1.4, IC.eq);
   if (tool === 'b') {
     if (hands.length > 1 || p.bar) {
       const xs = hands.map((h) => h[0]), y = hands.reduce((a, h) => a + h[1], 0) / hands.length;
       const x1 = Math.min(...xs) - 10, x2 = Math.max(...xs) + 10;
-      front += L(x1, y, x2, y, 2.4, IC.eq) + `<rect x="${fx(x1 - 2.5)}" y="${fx(y - 7)}" width="5" height="14" rx="1.4" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="1.6"/><rect x="${fx(x2 - 2.5)}" y="${fx(y - 7)}" width="5" height="14" rx="1.4" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="1.6"/>`;
+      front += (p.zbar ? `<polyline points="${x1},${y} ${x1 + 6},${y} ${x1 + 9},${y - 3} ${x1 + 12},${y + 2} ${x1 + 15},${y} ${x2 - 15},${y} ${x2 - 12},${y + 2} ${x2 - 9},${y - 3} ${x2 - 6},${y} ${x2},${y}" fill="none" stroke="${IC.eq}" stroke-width="2.4" stroke-linejoin="round"/>` : L(x1, y, x2, y, 2.4, IC.eq)) + `<rect x="${fx(x1 - 2.5)}" y="${fx(y - 7)}" width="5" height="14" rx="1.4" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="1.6"/><rect x="${fx(x2 - 2.5)}" y="${fx(y - 7)}" width="5" height="14" rx="1.4" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="1.6"/>`;
     } else hands.forEach((h) => { front += plate(h[0], h[1], 7.4); });
   } else if (tool === 'd') {
-    hands.forEach((h) => { front += plate(h[0], h[1], 4.3); });
+    if (p.dbv) hands.forEach((h) => { front += `<rect x="${h[0] - 2.2}" y="${h[1] - 8}" width="4.4" height="16" rx="1.6" fill="${IC.eqd}" stroke="${IC.eq}" stroke-width="1.6"/>`; });
+    else hands.forEach((h) => { front += plate(h[0], h[1], 4.3); });
   } else if (tool === 'm' || tool === 'c') {
     if (p.bar && hands.length > 1) { const y = hands[0][1]; front += L(hands[0][0] - 6, y, hands[1][0] + 6, y, 3, IC.eq); }
     else if (tool === 'm') hands.forEach((h) => { front += L(h[0], h[1] - 5.5, h[0], h[1] + 5.5, 3.6, IC.eq); });
+    else if (p.rope) hands.forEach((h) => { front += L(h[0], h[1] - 7, h[0] - 3, h[1] + 1, 2.2, IC.eq) + L(h[0], h[1] - 7, h[0] + 3, h[1] + 1, 2.2, IC.eq) + C(h[0] - 3, h[1] + 1.5, 1.6, IC.eq) + C(h[0] + 3, h[1] + 1.5, 1.6, IC.eq); });
     else hands.forEach((h) => { front += `<circle cx="${h[0]}" cy="${h[1]}" r="2.6" fill="none" stroke="${IC.eq}" stroke-width="1.6"/>`; });
   }
+  if (mode === 'time') front += `<circle cx="86" cy="14" r="8" fill="#12301a" stroke="#7BE08A" stroke-width="1.8"/><path d="M86 9.5 L86 14 L89.5 16" fill="none" stroke="#7BE08A" stroke-width="1.8" stroke-linecap="round"/>`;
   return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><defs><radialGradient id="${id}g" cx="50%" cy="46%" r="55%"><stop offset="0" stop-color="#2b2825"/><stop offset=".7" stop-color="#121110"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient><filter id="${id}f" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.8"/></filter></defs>` +
     `<rect width="100" height="100" fill="url(#${id}g)"/>${back}${red ? `<g filter="url(#${id}f)" opacity=".85">${red}</g>` : ''}${body}${red}${front}</svg>`;
 }
 
 /* ---------- catálogo inicial: parte -> músculos -> ejercicios ---------- */
 /* catálogo: [nombre, dibujo, implemento (b barra, d mancuerna, c polea, m máquina, n sin peso), explicación, id fijo opcional] */
+/* catálogo: [nombre, dibujo, implemento (b barra, d mancuerna, c polea, m máquina, n peso corporal), explicación, id fijo opcional] */
 const CATALOG = [
   { n: 'Pecho', muscles: [
     ['Pectoral medio', 'La parte central del pecho. Se trabaja con press y aperturas en banco plano.', [
-      ['Press banca con barra', 'bench', 'b', 'Acostado en banco plano, baja la barra a la mitad del pecho y empújala hasta estirar los brazos.'],
-      ['Press plano con mancuernas', 'bench', 'd', 'En banco plano, baja las mancuernas a los costados del pecho y súbelas juntándolas arriba.'],
-      ['Press plano en máquina', 'cpress', 'm', 'Sentado con la espalda apoyada, empuja las manillas al frente sin despegar los omóplatos del respaldo.'],
-      ['Press plano en Smith', 'bench', 'b', 'Como el press banca, pero con la barra guiada por rieles; da más estabilidad para ir pesado.'],
-      ['Press de pecho sentado en máquina', 'cpress', 'm', 'Sentado, empuja las manillas al frente a la altura del pecho y vuelve controlando.'],
-      ['Squeeze press con mancuernas', 'bench', 'd', 'En banco plano, aprieta las mancuernas una contra otra mientras las empujas hacia arriba.'],
-      ['Aperturas con mancuernas', 'fly', 'd', 'Acostado, abre los brazos con los codos algo doblados hasta sentir el estiramiento y ciérralos arriba.'],
-      ['Peck deck (mariposa)', 'fly', 'm', 'Sentado en la máquina, junta los brazos al frente como abrazando un árbol.'],
-      ['Peck deck con poleas', 'fly', 'c', 'En la máquina de poleas enfrentadas, junta las manillas al frente a la altura del pecho.'],
-      ['Cruce de poleas', 'fly', 'c', 'De pie entre dos poleas a la altura del hombro, junta las manos al frente con los codos algo doblados.'],
-      ['Flexiones', 'pushup', 'n', 'Manos bajo los hombros y cuerpo recto: baja el pecho casi al suelo y empuja.'],
-      ['Flexiones inclinadas', 'pushup', 'n', 'Flexiones con las manos sobre un banco. Son más fáciles y cargan más la parte baja del pecho.']]],
+      ['Press banca con barra', 'bench', 'b', 'Acostado en banco plano con los pies firmes en el suelo, baja la barra controlada hasta la mitad del pecho y empújala hasta estirar los brazos. Clave: omóplatos juntos y apoyados en el banco, y codos a unos 45° del cuerpo, no abiertos en cruz.'],
+      ['Press plano con mancuernas', 'bench', 'd', 'En banco plano, baja las mancuernas a los costados del pecho y súbelas acercándolas arriba. Clave: bajan más que una barra, así que aprovecha ese estiramiento sin rebotar.'],
+      ['Press plano en máquina', 'benchmach', 'm', 'Acostado en la máquina de press, empuja las manillas hacia arriba y baja lento. Clave: la máquina guía el recorrido, así que puedes concentrarte en apretar el pecho sin preocuparte del equilibrio.'],
+      ['Press plano en Smith', 'benchsmith', 'b', 'Press banca con la barra guiada por rieles. Clave: ubica el banco para que la barra baje a la mitad del pecho; es útil para ir pesado sin compañero.'],
+      ['Press de pecho sentado en máquina', 'cpress', 'm', 'Sentado con la espalda apoyada, empuja las manillas al frente a la altura del pecho y vuelve controlando. Clave: no despegues la espalda del respaldo ni subas los hombros.'],
+      ['Squeeze press con mancuernas', 'squeeze', 'd', 'En banco plano, junta las mancuernas y apriétalas una contra otra mientras las empujas hacia arriba. Clave: la presión constante entre ellas es lo que hace trabajar el centro del pecho.'],
+      ['Aperturas con mancuernas', 'flybench', 'd', 'Acostado con las mancuernas arriba, abre los brazos en arco con los codos algo doblados hasta sentir el estiramiento y ciérralos. Clave: mantén el mismo ángulo de codo todo el recorrido; es un abrazo, no un press.'],
+      ['Peck deck (mariposa)', 'peck', 'm', 'Sentado con los antebrazos en los cojines, junta los brazos al frente y vuelve lento. Clave: pecho afuera y hombros abajo; si sientes los hombros, baja el asiento.'],
+      ['Peck deck con poleas', 'flyseatc', 'c', 'Sentado en la máquina de poleas enfrentadas, junta las manillas al frente a la altura del pecho. Clave: la polea mantiene tensión incluso con los brazos abiertos.'],
+      ['Cruce de poleas', 'cross', 'c', 'De pie entre dos poleas altas, da un paso adelante y junta las manos frente al pecho con los codos algo doblados. Clave: inclina un poco el torso y aprieta un segundo al juntar.'],
+      ['Flexiones', 'pushup', 'n', 'Manos bajo los hombros y cuerpo recto de cabeza a talones: baja el pecho casi al suelo y empuja. Clave: aprieta abdomen y glúteos para que la cadera no se hunda.'],
+      ['Flexiones inclinadas', 'pushinc', 'n', 'Flexiones con las manos sobre un banco o cajón. Clave: son más fáciles que en el suelo y cargan más la parte baja del pecho; buenas para sumar repeticiones.']]],
     ['Pectoral superior', 'La parte alta del pecho, bajo la clavícula. Se trabaja en banco inclinado.', [
-      ['Press inclinado con barra', 'incline', 'b', 'En banco a 30–45°, baja la barra a la parte alta del pecho y empuja hacia arriba.'],
-      ['Press inclinado con mancuernas', 'incline', 'd', 'En banco inclinado, baja las mancuernas junto a la parte alta del pecho y súbelas.'],
-      ['Press inclinado en máquina', 'incline', 'm', 'Sentado en la máquina inclinada, empuja las manillas hacia arriba y adelante.'],
-      ['Press inclinado en Smith', 'incline', 'b', 'Press inclinado con la barra guiada por rieles, para concentrarte solo en empujar.'],
-      ['Aperturas inclinadas', 'fly', 'd', 'Aperturas con mancuernas en banco inclinado para enfocar la parte alta del pecho.'],
-      ['Cruce de poleas de abajo hacia arriba', 'fly', 'c', 'Con las poleas abajo, sube las manos al frente hasta la altura de la cara.'],
-      ['Flexiones declinadas', 'pushup', 'n', 'Flexiones con los pies sobre un banco; cargan más la parte alta del pecho.']]],
+      ['Press inclinado con barra', 'incline', 'b', 'En banco a 30–45°, baja la barra a la parte alta del pecho y empuja hacia arriba. Clave: más de 45° pasa a trabajar sobre todo el hombro.'],
+      ['Press inclinado con mancuernas', 'incline', 'd', 'En banco inclinado, baja las mancuernas junto a la parte alta del pecho y súbelas. Clave: codos algo más cerrados que en plano y muñecas firmes sobre los codos.'],
+      ['Press inclinado en máquina', 'incline', 'm', 'Sentado en la máquina inclinada, empuja las manillas hacia arriba y adelante. Clave: ajusta el asiento para que las manillas queden a la altura de la parte alta del pecho.'],
+      ['Press inclinado en Smith', 'inclinesmith', 'b', 'Press inclinado con la barra guiada por rieles. Clave: pon el banco para que la barra baje justo bajo la clavícula.'],
+      ['Aperturas inclinadas', 'flyinc', 'd', 'Aperturas con mancuernas en banco inclinado. Clave: baja hasta sentir el estiramiento en la parte alta del pecho, sin llevar los codos por debajo del hombro.'],
+      ['Cruce de poleas de abajo hacia arriba', 'crossup', 'c', 'Con las poleas abajo, sube las manos en arco hasta juntarlas a la altura de la cara. Clave: el movimiento va hacia arriba y adentro, como si levantaras una bandeja.'],
+      ['Flexiones declinadas', 'pushdec', 'n', 'Flexiones con los pies sobre un banco. Clave: mientras más alto el banco, más trabajan la parte alta del pecho y los hombros.']]],
     ['Pectoral inferior', 'La parte baja del pecho. Se trabaja en banco declinado y con fondos.', [
-      ['Press declinado con barra', 'decline', 'b', 'En banco declinado con los pies trabados, baja la barra a la parte baja del pecho y empuja.'],
-      ['Press declinado con mancuernas', 'decline', 'd', 'En banco declinado, baja las mancuernas junto a la parte baja del pecho y súbelas.'],
-      ['Press declinado en máquina', 'decline', 'm', 'Sentado en la máquina, empuja las manillas hacia adelante y abajo.'],
-      ['Fondos en paralelas', 'dip', 'n', 'Sostenido en las paralelas, inclina el torso adelante, baja doblando los codos y vuelve a subir.'],
-      ['Fondos en máquina', 'dip', 'm', 'Sentado en la máquina, empuja las manillas hacia abajo hasta estirar los brazos.'],
-      ['Fondos asistidos en máquina', 'dip', 'm', 'Fondos con la plataforma de la máquina asistida bajo las rodillas. El peso es ayuda: mientras menos, mejor.'],
-      ['Cruce de poleas de arriba hacia abajo', 'fly', 'c', 'Con las poleas arriba, baja las manos al frente hasta juntarlas a la altura de la cadera.']]]
+      ['Press declinado con barra', 'decline', 'b', 'En banco declinado con los pies trabados, baja la barra a la parte baja del pecho y empuja. Clave: controla la bajada; en esta posición la barra tiende a irse hacia la cara.'],
+      ['Press declinado con mancuernas', 'decline', 'd', 'En banco declinado, baja las mancuernas junto a la parte baja del pecho y súbelas. Clave: pide ayuda para tomar y dejar las mancuernas.'],
+      ['Press declinado en máquina', 'decline', 'm', 'Sentado en la máquina, empuja las manillas hacia adelante y abajo. Clave: termina con los brazos casi estirados sin trabar los codos.'],
+      ['Fondos en paralelas', 'dip', 'n', 'Sostenido en las paralelas, inclina el torso adelante, baja doblando los codos y vuelve a subir. Clave: el torso inclinado carga el pecho; recto, carga los tríceps.'],
+      ['Fondos en máquina', 'dipmachp', 'm', 'Sentado en la máquina de fondos, inclínate levemente adelante y empuja las manillas hacia abajo. Clave: codos un poco abiertos para llevar el trabajo al pecho.'],
+      ['Fondos asistidos en máquina', 'dipassist', 'm', 'Fondos con las rodillas sobre la plataforma de la máquina asistida. Clave: el peso es ayuda, así que mientras menos uses, mejor.'],
+      ['Cruce de poleas de arriba hacia abajo', 'crossdown', 'c', 'Con las poleas arriba, baja las manos en arco hasta juntarlas a la altura de la cadera. Clave: termina con las manos bajas y el pecho apretado.']]]
   ] },
   { n: 'Espalda', muscles: [
     ['Dorsal ancho', 'Los músculos de los costados de la espalda que le dan forma de V. Se trabajan tirando desde arriba.', [
-      ['Jalón al pecho', 'pulldown', 'c', 'Sentado con las rodillas trabadas, tira la barra ancha hacia la parte alta del pecho sacando pecho.'],
-      ['Jalón agarre cerrado', 'pulldown', 'c', 'Jalón con el agarre en V o las manos juntas, llevando los codos pegados al cuerpo.'],
-      ['Jalón agarre medio', 'pulldown', 'c', 'Jalón con las manos al ancho de los hombros; punto medio entre agarre ancho y cerrado.'],
-      ['Jalón agarre supino', 'pulldown', 'c', 'Jalón con las palmas mirando hacia ti; también trabaja bastante el bíceps.'],
-      ['Jalón en máquina', 'pulldown', 'm', 'Máquina con palancas: tira las manillas hacia abajo llevando los codos a los costados.'],
-      ['Jalón unilateral en polea', 'pulldown', 'c', 'Con una manilla, tira hacia abajo un brazo a la vez para trabajar cada lado por separado.'],
-      ['Dominadas', 'pullup', 'n', 'Colgado de la barra con agarre ancho, sube hasta pasar el mentón por sobre la barra.'],
-      ['Dominadas supinas', 'pullup', 'n', 'Dominadas con las palmas hacia ti y las manos al ancho de los hombros; suman bíceps.'],
-      ['Dominadas asistidas en máquina', 'pullup', 'm', 'Dominadas con una plataforma que te empuja hacia arriba. El peso que eliges es ayuda: mientras menos, mejor.'],
-      ['Pullover en polea', 'cpull', 'c', 'También llamado jalón con brazos rectos: frente a la polea alta, baja la barra con los brazos estirados hasta los muslos.'],
-      ['Pullover con mancuerna', 'pullover', 'd', 'Acostado, lleva una mancuerna desde arriba del pecho hacia atrás de la cabeza y vuelve.']]],
+      ['Jalón al pecho', 'pulldown', 'c', 'Sentado con las rodillas trabadas, toma la barra ancha y tírala hacia la parte alta del pecho sacando pecho. Clave: piensa en llevar los codos hacia los bolsillos, no en tirar con las manos.'],
+      ['Jalón agarre cerrado', 'pdclose', 'c', 'Jalón con el agarre en V, llevándolo hasta el pecho con los codos pegados al cuerpo. Clave: permite más recorrido y mucha contracción abajo.'],
+      ['Jalón agarre medio', 'pdmid', 'c', 'Jalón con las manos al ancho de los hombros. Clave: es el punto medio entre agarre ancho y cerrado, y suele permitir más peso.'],
+      ['Jalón agarre supino', 'pdsup', 'c', 'Jalón con las palmas mirando hacia ti y las manos al ancho de los hombros. Clave: suma bastante bíceps; lleva la barra al pecho con el torso algo inclinado atrás.'],
+      ['Jalón en máquina', 'pdmach', 'm', 'Máquina de jalón con palancas: tira las manillas hacia abajo llevando los codos a los costados. Clave: cada brazo trabaja por separado, lo que ayuda a emparejar los lados.'],
+      ['Jalón unilateral en polea', 'pduni', 'c', 'Con una manilla, tira hacia abajo un brazo a la vez. Clave: gira levemente el torso hacia el brazo que tira para sentir más el dorsal.'],
+      ['Dominadas', 'pullup', 'n', 'Colgado de la barra con agarre ancho, sube hasta pasar el mentón por sobre la barra y baja completo. Clave: empieza bajando los hombros, no doblando los brazos.'],
+      ['Dominadas supinas', 'chinup', 'n', 'Dominadas con las palmas hacia ti y las manos al ancho de los hombros. Clave: suelen ser más fáciles que las pronas porque ayuda el bíceps.'],
+      ['Dominadas asistidas en máquina', 'pullupa', 'm', 'Dominadas con las rodillas sobre una plataforma que te empuja hacia arriba. Clave: el peso es ayuda, así que tu progreso es ir bajándolo.'],
+      ['Pullover en polea', 'cpull', 'c', 'También llamado jalón con brazos rectos: frente a la polea alta, baja la barra con los brazos estirados hasta los muslos. Clave: brazos casi rectos todo el recorrido; el movimiento es del hombro.'],
+      ['Pullover con mancuerna', 'pullover', 'd', 'Acostado, sostén una mancuerna sobre el pecho y llévala en arco hacia atrás de la cabeza y de vuelta. Clave: codos levemente doblados y sin arquear la espalda.']]],
     ['Espalda media', 'Romboides y trapecio medio, entre los omóplatos. Dan grosor a la espalda y se trabajan con remos.', [
-      ['Remo con barra', 'bentrow', 'b', 'Inclinado con la espalda recta, tira la barra hacia el ombligo juntando los omóplatos.'],
-      ['Remo con mancuerna', 'bentrow', 'd', 'Con una mano y una rodilla apoyadas en el banco, tira la mancuerna hacia la cadera.'],
-      ['Remo en polea baja', 'row', 'c', 'Sentado con los pies apoyados, tira el agarre hacia el abdomen sin balancear el torso.'],
-      ['Remo en máquina', 'row', 'm', 'Con el pecho en el cojín, tira las manillas hacia atrás juntando los omóplatos.'],
-      ['Remo en T con apoyo', 'bentrow', 'b', 'Con el pecho sobre el cojín, tira las manillas de la barra en T hacia el pecho.'],
-      ['Remo en T libre', 'bentrow', 'b', 'De pie sobre la barra en T, inclinado y con la espalda recta, tírala hacia el pecho.'],
-      ['Remo en máquina unilateral', 'row', 'm', 'Remo en máquina con un brazo a la vez, para corregir diferencias entre lados.'],
-      ['Remo en polea agarre abierto', 'row', 'c', 'Remo en polea baja con barra ancha y codos abiertos; enfoca la espalda alta.'],
-      ['Remo Pendlay', 'bentrow', 'b', 'Remo con barra que vuelve al suelo en cada repetición, con el torso paralelo al piso.'],
-      ['Remo invertido', 'invrow', 'n', 'Colgado bajo una barra baja con el cuerpo recto, tira el pecho hacia la barra.']]],
+      ['Remo con barra', 'bentrow', 'b', 'Inclinado con la espalda recta y rodillas algo dobladas, tira la barra hacia el ombligo juntando los omóplatos. Clave: el torso no debe subir y bajar para ayudar.'],
+      ['Remo con mancuerna', 'dbrow', 'd', 'Con una mano y una rodilla apoyadas en el banco, tira la mancuerna hacia la cadera. Clave: lleva el codo hacia atrás, no hacia arriba.'],
+      ['Remo en polea baja', 'row', 'c', 'Sentado con los pies apoyados, tira el agarre hacia el abdomen sin balancear el torso. Clave: estira los brazos al volver para sentir el estiramiento de la espalda.'],
+      ['Remo en máquina', 'rowmach', 'm', 'Con el pecho en el cojín, tira las manillas hacia atrás juntando los omóplatos. Clave: el cojín evita trampas; aguanta un segundo atrás.'],
+      ['Remo en T con apoyo', 'tbarsup', 'b', 'Con el pecho sobre el cojín inclinado, tira las manillas de la barra en T hacia el pecho. Clave: no despegues el pecho del cojín.'],
+      ['Remo en T libre', 'tbar', 'b', 'De pie sobre la barra en T, inclinado y con la espalda recta, tírala hacia el pecho. Clave: rodillas dobladas y espalda firme, como en un remo con barra.'],
+      ['Remo en máquina unilateral', 'rowuni', 'm', 'Remo en máquina con un brazo a la vez. Clave: sirve para detectar y corregir diferencias de fuerza entre lados.'],
+      ['Remo en polea agarre abierto', 'rowwide', 'c', 'Remo en polea baja con barra ancha, llevando los codos abiertos a la altura del pecho. Clave: enfoca la espalda alta y el deltoide posterior.'],
+      ['Remo Pendlay', 'pendlay', 'b', 'Con el torso paralelo al suelo, tira la barra desde el piso hasta el pecho y déjala volver al suelo en cada repetición. Clave: tirón explosivo y espalda plana.'],
+      ['Remo invertido', 'invrow', 'n', 'Colgado bajo una barra baja con el cuerpo recto, tira el pecho hacia la barra. Clave: mientras más horizontal el cuerpo, más difícil.'],
+      ['Remo acostado en banco', 'sealrow', 'b', 'También llamado remo sello: boca abajo sobre un banco alto, tira la barra desde abajo hasta tocar el banco. Clave: al estar apoyado no puedes hacer trampa con la espalda baja.']]],
     ['Lumbar', 'La zona baja de la espalda. Sostiene la columna en casi todos los ejercicios pesados.', [
-      ['Peso muerto', 'deadlift', 'b', 'Con la barra sobre los pies, levántala estirando cadera y rodillas con la espalda recta.'],
-      ['Hiperextensiones', 'hyper', 'n', 'En el banco romano, baja el torso y súbelo hasta quedar en línea con las piernas.'],
-      ['Buenos días con barra', 'deadlift', 'b', 'Con la barra en la espalda, inclina el torso adelante desde la cadera y vuelve.'],
-      ['Rack pull', 'deadlift', 'b', 'Peso muerto parcial desde soportes a la altura de la rodilla; permite más carga.']]]
+      ['Peso muerto', 'dlfloor', 'b', 'Con la barra sobre la mitad del pie, tómala, saca pecho y levántala estirando cadera y rodillas a la vez. Clave: la barra sube pegada a las piernas y la espalda nunca se redondea.'],
+      ['Hiperextensiones', 'hyper', 'n', 'En el banco romano con la cadera en el cojín, baja el torso y súbelo hasta quedar en línea con las piernas. Clave: no subas más allá de la línea recta.'],
+      ['Buenos días con barra', 'goodmorning', 'b', 'Con la barra en la espalda y las rodillas algo dobladas, inclina el torso adelante llevando la cadera atrás y vuelve. Clave: parte con poco peso; es un ejercicio exigente para la zona lumbar.'],
+      ['Rack pull', 'rackpull', 'b', 'Peso muerto parcial desde soportes a la altura de la rodilla. Clave: permite más carga que el peso muerto completo y enfoca la parte final del tirón.']]]
   ] },
   { n: 'Hombros', muscles: [
     ['Deltoide anterior', 'La parte delantera del hombro. Trabaja en todos los press y al levantar el brazo hacia adelante.', [
-      ['Press militar con barra', 'ohpress', 'b', 'De pie o sentado, empuja la barra desde la clavícula hasta sobre la cabeza.'],
-      ['Press con mancuernas', 'ohpress', 'd', 'Sentado, empuja las mancuernas desde la altura de las orejas hasta arriba.'],
-      ['Press en máquina', 'ohpress', 'm', 'Sentado en la máquina, empuja las manillas hacia arriba sin arquear la espalda.'],
-      ['Press Arnold', 'ohpress', 'd', 'Parte con las palmas hacia ti y gíralas mientras empujas las mancuernas hacia arriba.'],
-      ['Press en Smith', 'ohpress', 'b', 'Press de hombros con la barra guiada; útil para ir pesado con seguridad.'],
-      ['Elevaciones frontales', 'frontraise', 'd', 'De pie, sube las mancuernas al frente con los brazos casi estirados hasta la altura de los hombros.'],
-      ['Elevaciones frontales en polea', 'frontraise', 'c', 'Elevación frontal tomando la polea baja entre las piernas.'],
-      ['Elevación frontal con disco', 'frontraise', 'b', 'Sube un disco tomado con ambas manos al frente, hasta la altura de los ojos.']]],
+      ['Press militar con barra', 'ohpress', 'b', 'De pie o sentado, empuja la barra desde la clavícula hasta sobre la cabeza. Clave: aprieta glúteos y abdomen para no arquear la espalda, y mete la cabeza al pasar la barra.'],
+      ['Press con mancuernas', 'ohpress', 'd', 'Sentado con respaldo, empuja las mancuernas desde la altura de las orejas hasta arriba. Clave: no juntes las mancuernas arriba de golpe; mantén la tensión.'],
+      ['Press en máquina', 'ohpress', 'm', 'Sentado en la máquina, empuja las manillas hacia arriba sin despegar la espalda. Clave: buena opción para ir pesado de forma segura.'],
+      ['Press Arnold', 'arnold', 'd', 'Parte con las mancuernas frente a la cara y las palmas hacia ti, y gíralas mientras las empujas hacia arriba. Clave: el giro suma recorrido y trabajo para todo el hombro.'],
+      ['Press en Smith', 'ohsmith', 'b', 'Press de hombros con la barra guiada por rieles, sentado en un banco. Clave: ubica el banco para que la barra baje frente a la cara, no detrás.'],
+      ['Elevaciones frontales', 'frontraise', 'd', 'De pie, sube las mancuernas al frente con los brazos casi estirados hasta la altura de los hombros. Clave: sin balanceo; si necesitas impulso, baja el peso.'],
+      ['Elevaciones frontales en polea', 'frontraise', 'c', 'Elevación frontal tomando la polea baja entre las piernas. Clave: la polea mantiene tensión también abajo.'],
+      ['Elevación frontal con disco', 'frontraise', 'b', 'Sube un disco tomado con ambas manos al frente, hasta la altura de los ojos. Clave: brazos casi rectos y torso quieto.'],
+      ['Press landmine', 'landmine', 'b', 'Con un extremo de la barra anclado en el suelo, empuja el otro extremo hacia arriba y adelante con una mano. Clave: es un press de hombro amable con las articulaciones.']]],
     ['Deltoide lateral', 'El costado del hombro. Es el que da ancho a los hombros.', [
-      ['Elevaciones laterales', 'lateral', 'd', 'De pie, sube las mancuernas hacia los lados hasta la altura de los hombros, con los codos algo doblados.'],
-      ['Elevaciones laterales en polea', 'lateral', 'c', 'Elevación lateral con la polea baja; mantiene la tensión en todo el recorrido.'],
-      ['Elevaciones laterales en máquina', 'lateral', 'm', 'Sentado, empuja los cojines hacia arriba con los brazos a los costados.'],
-      ['Remo al mentón', 'uprow', 'b', 'Con la barra frente a los muslos, súbela pegada al cuerpo hasta el pecho con los codos altos.'],
-      ['Remo al mentón en polea', 'uprow', 'c', 'Remo al mentón usando la polea baja con barra o cuerda.']]],
+      ['Elevaciones laterales', 'lateral', 'd', 'De pie, sube las mancuernas hacia los lados hasta la altura de los hombros, con los codos algo doblados. Clave: guía con los codos y no subas los hombros hacia las orejas.'],
+      ['Elevaciones laterales en polea', 'latcable', 'c', 'De lado a la polea baja, sube el brazo hacia afuera tomando la manilla con la mano contraria a la polea. Clave: la tensión es constante, así que usa menos peso que con mancuernas.'],
+      ['Elevaciones laterales en máquina', 'latmach', 'm', 'Sentado, empuja los cojines hacia arriba con la parte externa de los brazos. Clave: sube hasta la altura de los hombros y baja lento.'],
+      ['Remo al mentón', 'uprow', 'b', 'Con la barra frente a los muslos, súbela pegada al cuerpo hasta el pecho con los codos altos. Clave: no subas más allá del pecho si te molesta el hombro.'],
+      ['Remo al mentón en polea', 'uprow', 'c', 'Remo al mentón usando la polea baja con barra o cuerda. Clave: codos siempre por encima de las manos.']]],
     ['Deltoide posterior', 'La parte de atrás del hombro. Ayuda a la postura y suele quedar atrasado.', [
-      ['Pájaros con mancuernas', 'lateral', 'd', 'Inclinado hacia adelante, abre los brazos hacia los lados como alas.'],
-      ['Pájaros en polea', 'lateral', 'c', 'Pájaros usando las poleas cruzadas, tirando hacia afuera y atrás.'],
-      ['Face pull', 'facepull', 'c', 'Con la cuerda en la polea alta, tira hacia la cara separando las manos y subiendo los codos.'],
-      ['Peck deck invertido', 'fly', 'm', 'Sentado mirando hacia la máquina, abre los brazos hacia atrás.']]],
+      ['Pájaros con mancuernas', 'reardelt', 'd', 'Inclinado hacia adelante con la espalda recta, abre los brazos hacia los lados como alas. Clave: pesos livianos y codos algo doblados; el movimiento es corto.'],
+      ['Pájaros en polea', 'reardelt', 'c', 'Inclinado entre dos poleas bajas, tómalas cruzadas y abre los brazos hacia afuera. Clave: la polea da tensión en todo el recorrido.'],
+      ['Face pull', 'facepull', 'c', 'Con la cuerda en la polea alta, tira hacia la cara separando las manos y subiendo los codos. Clave: termina con las manos junto a las orejas, como mostrando los bíceps.'],
+      ['Peck deck invertido', 'revpeck', 'm', 'Sentado mirando hacia la máquina, abre los brazos hacia atrás. Clave: brazos casi rectos y sin juntar los omóplatos al final.'],
+      ['Cruce de poleas invertido', 'revcross', 'c', 'De pie entre dos poleas a la altura del hombro, toma cada manilla con la mano contraria y abre los brazos hacia los lados. Clave: los cables se cruzan frente a ti y los brazos van casi rectos.'],
+      ['Elevación Y en polea', 'yraise', 'c', 'Con las poleas bajas cruzadas, sube los brazos en diagonal hasta formar una Y sobre la cabeza. Clave: trabaja el hombro posterior y el trapecio bajo; usa poco peso.']]],
     ['Trapecio superior', 'Entre el cuello y el hombro. Se trabaja subiendo los hombros hacia las orejas.', [
-      ['Encogimientos con mancuernas', 'shrug', 'd', 'De pie con las mancuernas a los costados, sube los hombros hacia las orejas y baja lento.'],
-      ['Encogimientos con barra', 'shrug', 'b', 'Encogimientos sosteniendo una barra frente a los muslos.'],
-      ['Encogimientos en máquina', 'shrug', 'm', 'Encogimientos en máquina o Smith, subiendo solo los hombros.'],
-      ['Paseo del granjero', 'shrug', 'd', 'Camina sosteniendo mancuernas pesadas a los costados; se anota el tiempo y el peso de cada mancuerna.']]]
+      ['Encogimientos con mancuernas', 'shrugup', 'd', 'De pie con las mancuernas a los costados, sube los hombros hacia las orejas y baja lento. Clave: sube recto, sin girar los hombros.'],
+      ['Encogimientos con barra', 'shrugup', 'b', 'Encogimientos sosteniendo una barra frente a los muslos. Clave: aguanta un segundo arriba.'],
+      ['Encogimientos en máquina', 'shrugup', 'm', 'Encogimientos en máquina o Smith, subiendo solo los hombros. Clave: brazos estirados todo el tiempo.'],
+      ['Paseo del granjero', 'farmer', 'd', 'Camina sosteniendo mancuernas pesadas a los costados, con el torso erguido. Clave: se anota el tiempo y el peso de cada mancuerna; entrena agarre, trapecio y core.']]]
   ] },
   { n: 'Bíceps', muscles: [
     ['Bíceps', 'La parte delantera del brazo. Dobla el codo y gira la muñeca hacia arriba.', [
-      ['Curl con barra recta', 'curl', 'b', 'De pie con los codos pegados al cuerpo, sube la barra doblando los codos.'],
-      ['Curl con barra Z', 'curl', 'b', 'Curl con la barra de agarre ondulado, más cómoda para las muñecas.'],
-      ['Curl alterno', 'curl', 'd', 'Sube una mancuerna a la vez girando la palma hacia arriba.'],
-      ['Curl concentrado', 'curl', 'd', 'Sentado, con el codo apoyado en la cara interna del muslo, sube la mancuerna.'],
-      ['Curl inclinado', 'curl', 'd', 'Sentado en banco inclinado con los brazos colgando, sube las mancuernas; estira mucho el bíceps.'],
-      ['Curl en polea', 'curl', 'c', 'De frente a la polea baja, sube la barra o manilla con los codos fijos.'],
-      ['Curl con dos poleas bajas', 'curl2low', 'c', 'De pie entre dos poleas bajas, parte con los brazos abajo y sube ambas manillas doblando los codos.', 'biceps_curl-con-dos-poleas'],
-      ['Curl en poleas altas (doble bíceps)', 'curl2c', 'c', 'Con los brazos abiertos a la altura de los hombros, lleva las manillas de las poleas altas hacia la cabeza.'],
-      ['Curl predicador', 'preacher', 'b', 'Con la parte trasera de los brazos apoyada en el banco Scott, sube la barra.'],
-      ['Curl predicador en máquina', 'preacher', 'm', 'Curl en máquina con apoyo para los brazos; muy controlado.'],
-      ['Curl predicador con mancuerna', 'preacher', 'd', 'Curl en banco Scott con una mancuerna, un brazo a la vez.'],
-      ['Curl araña', 'preacher', 'b', 'Boca abajo en banco inclinado con los brazos colgando, sube la barra.'],
-      ['Curl 21', 'curl', 'b', 'Siete repeticiones de la mitad baja, siete de la mitad alta y siete completas, sin pausa.']]],
+      ['Curl con barra recta', 'curl', 'b', 'De pie con los codos pegados al cuerpo, sube la barra doblando los codos y baja lento. Clave: sin balancear el torso; los codos no se mueven hacia adelante.'],
+      ['Curl con barra Z', 'curlZ', 'b', 'Curl con la barra de agarre ondulado. Clave: es más cómoda para las muñecas que la barra recta.'],
+      ['Curl alterno', 'curlalt', 'd', 'Sube una mancuerna a la vez girando la palma hacia arriba mientras subes. Clave: el giro de la muñeca aprieta más el bíceps.'],
+      ['Curl concentrado', 'curlconc', 'd', 'Sentado, con el codo apoyado en la cara interna del muslo, sube la mancuerna. Clave: no hay forma de hacer trampa; ideal para terminar la rutina.'],
+      ['Curl inclinado', 'curlinc', 'd', 'Sentado en banco inclinado con los brazos colgando detrás del cuerpo, sube las mancuernas. Clave: estira mucho el bíceps; usa menos peso que de pie.'],
+      ['Curl en polea', 'curl', 'c', 'De frente a la polea baja, sube la barra o manilla con los codos fijos. Clave: la polea mantiene tensión también abajo.'],
+      ['Curl con dos poleas bajas', 'curl2low', 'c', 'De pie entre dos poleas bajas, parte con los brazos abajo y sube ambas manillas doblando los codos. Clave: codos quietos a los costados del cuerpo.', 'biceps_curl-con-dos-poleas'],
+      ['Curl en poleas altas (doble bíceps)', 'curl2c', 'c', 'Con los brazos abiertos a la altura de los hombros, lleva las manillas de las poleas altas hacia la cabeza. Clave: los codos no bajan; es la pose de "doble bíceps".'],
+      ['Curl predicador', 'preacher', 'b', 'Con la parte trasera de los brazos apoyada en el banco Scott, sube la barra. Clave: no estires los codos de golpe al bajar.'],
+      ['Curl predicador en máquina', 'preacher', 'm', 'Curl en máquina con apoyo para los brazos. Clave: muy controlado; buena opción para ir al fallo con seguridad.'],
+      ['Curl predicador con mancuerna', 'preacher', 'd', 'Curl en banco Scott con una mancuerna, un brazo a la vez. Clave: sirve para emparejar un brazo más débil.'],
+      ['Curl araña', 'spider', 'b', 'Boca abajo en banco inclinado con los brazos colgando vertical, sube la barra. Clave: trabaja mucho la parte alta del recorrido.'],
+      ['Curl 21', 'curl21', 'b', 'Siete repeticiones de la mitad baja, siete de la mitad alta y siete completas, sin pausa. Clave: usa bastante menos peso que en un curl normal.'],
+      ['Curl bayesiano en polea', 'bayes', 'c', 'De espaldas a la polea baja, con el brazo estirado detrás del cuerpo, sube la manilla doblando el codo. Clave: parte con el bíceps muy estirado, lo que lo hace muy efectivo.']]],
     ['Braquial y antebrazo', 'El músculo bajo el bíceps y la parte alta del antebrazo. Dan grosor al brazo; se trabajan con agarre neutro.', [
-      ['Curl martillo', 'curl', 'd', 'Curl con las palmas mirándose entre sí, como sosteniendo un martillo.'],
-      ['Curl invertido', 'curl', 'b', 'Curl con las palmas hacia abajo; trabaja más el antebrazo.'],
-      ['Curl martillo en polea con cuerda', 'curl', 'c', 'Curl martillo con la cuerda enganchada en la polea baja.'],
-      ['Curl de muñeca', 'curl', 'b', 'Sentado con los antebrazos sobre los muslos, sube la barra doblando solo las muñecas.'],
-      ['Colgarse de la barra', 'pullup', 'n', 'Cuélgate de la barra con los brazos estirados el mayor tiempo posible; entrena el agarre.']]]
+      ['Curl martillo', 'hammer', 'd', 'Curl con las palmas mirándose entre sí, como sosteniendo un martillo. Clave: da grosor al brazo; puedes alternar o subir ambas.'],
+      ['Curl invertido', 'curlrev', 'b', 'Curl con las palmas hacia abajo. Clave: trabaja más el antebrazo; usa menos peso que en el curl normal.'],
+      ['Curl martillo en polea con cuerda', 'curlrope', 'c', 'Curl martillo con la cuerda enganchada en la polea baja. Clave: separa un poco las puntas de la cuerda arriba.'],
+      ['Curl de muñeca', 'wrist', 'b', 'Sentado con los antebrazos sobre los muslos, sube la barra doblando solo las muñecas. Clave: recorrido completo y lento; son músculos chicos.'],
+      ['Colgarse de la barra', 'hang', 'n', 'Cuélgate de la barra con los brazos estirados el mayor tiempo posible. Clave: entrena el agarre; anota los segundos que aguantas.']]]
   ] },
   { n: 'Tríceps', muscles: [
     ['Cabeza larga', 'La parte interna y trasera del tríceps, la más grande. Se estira al llevar el brazo sobre la cabeza.', [
-      ['Extensión con mancuerna', 'ohext', 'd', 'Sentado, sostén una mancuerna con ambas manos sobre la cabeza y bájala detrás de la nuca.'],
-      ['Extensión con mancuerna a una mano', 'ohext', 'd', 'Extensión sobre la cabeza con una mancuerna, un brazo a la vez.'],
-      ['Extensión en polea sobre la cabeza', 'ohext', 'c', 'De espaldas a la polea, estira los brazos hacia adelante y arriba desde detrás de la cabeza.'],
-      ['Press francés', 'skull', 'b', 'Acostado, baja la barra hacia la frente doblando solo los codos y vuelve a estirar.'],
-      ['Press francés con mancuernas', 'skull', 'd', 'Press francés con una mancuerna en cada mano.']]],
+      ['Extensión con mancuerna', 'ohext2', 'd', 'Sentado, sostén una mancuerna con ambas manos sobre la cabeza, bájala detrás de la nuca y súbela. Clave: codos apuntando al techo, sin abrirse.'],
+      ['Extensión con mancuerna a una mano', 'ohext', 'd', 'Extensión sobre la cabeza con una mancuerna, un brazo a la vez. Clave: sujeta el codo con la otra mano para que no se abra.'],
+      ['Extensión en polea sobre la cabeza', 'ohext', 'c', 'De espaldas a la polea, estira los brazos hacia adelante y arriba desde detrás de la cabeza. Clave: gran estiramiento de la cabeza larga.'],
+      ['Press francés', 'skull', 'b', 'Acostado, baja la barra hacia la frente doblando solo los codos y vuelve a estirar. Clave: brazos quietos; si se mueven, se vuelve un press.'],
+      ['Press francés con mancuernas', 'skull', 'd', 'Press francés con una mancuerna en cada mano. Clave: más cómodo para los codos que la barra.']]],
     ['Cabezas lateral y medial', 'La parte externa del tríceps, la que marca la herradura. Se trabaja con el brazo pegado al cuerpo.', [
-      ['Extensión con cuerda', 'pushdown', 'c', 'Frente a la polea alta, baja la cuerda estirando los codos y separando las manos abajo.'],
-      ['Extensión con barra', 'pushdown', 'c', 'Frente a la polea alta, empuja la barra hacia abajo con los codos pegados al cuerpo.'],
-      ['Extensión unilateral en polea', 'pushdown', 'c', 'Extensión en polea alta con una manilla, un brazo a la vez.'],
-      ['Press cerrado', 'bench', 'b', 'Press banca con las manos al ancho de los hombros y los codos pegados.'],
-      ['Fondos en banco', 'dip', 'n', 'Con las manos en un banco detrás de ti, baja doblando los codos y sube.'],
-      ['Fondos para tríceps en máquina', 'dip', 'm', 'Sentado, empuja las manillas hacia abajo con el torso recto.'],
-      ['Patada de tríceps', 'tkick', 'd', 'Inclinado y con el codo pegado al cuerpo, estira el brazo hacia atrás.'],
-      ['Patada de tríceps en polea', 'tkick', 'c', 'Patada de tríceps usando la polea baja.'],
-      ['Flexiones diamante', 'pushup', 'n', 'Flexiones con las manos juntas formando un rombo bajo el pecho.']]]
+      ['Extensión con cuerda', 'pdrope', 'c', 'Frente a la polea alta, baja la cuerda estirando los codos y separa las manos abajo. Clave: codos pegados al cuerpo y aprieta al final.'],
+      ['Extensión con barra', 'pushdown', 'c', 'Frente a la polea alta, empuja la barra hacia abajo con los codos pegados al cuerpo. Clave: permite más peso que la cuerda.'],
+      ['Extensión unilateral en polea', 'pduni1', 'c', 'Extensión en polea alta con una manilla, un brazo a la vez. Clave: sirve para concentrarte en cada brazo.'],
+      ['Press cerrado', 'benchclose', 'b', 'Press banca con las manos al ancho de los hombros y los codos pegados al cuerpo. Clave: la barra baja a la parte baja del pecho.'],
+      ['Fondos en banco', 'dipbench', 'n', 'Con las manos en un banco detrás de ti y las piernas estiradas, baja doblando los codos y sube. Clave: espalda pegada al banco.'],
+      ['Fondos para tríceps en máquina', 'dipmach', 'm', 'Sentado con el torso recto, empuja las manillas hacia abajo hasta estirar los brazos. Clave: el torso recto enfoca el trabajo en los tríceps.'],
+      ['Patada de tríceps', 'tkick', 'd', 'Inclinado y con el codo pegado al cuerpo, estira el brazo hacia atrás. Clave: el brazo no se mueve, solo el antebrazo.'],
+      ['Patada de tríceps en polea', 'tkick', 'c', 'Patada de tríceps usando la polea baja. Clave: tensión constante incluso con el brazo estirado.'],
+      ['Flexiones diamante', 'pushdia', 'n', 'Flexiones con las manos juntas formando un rombo bajo el pecho. Clave: codos pegados al cuerpo al bajar.']]]
   ] },
   { n: 'Piernas', muscles: [
     ['Cuádriceps', 'La parte delantera del muslo. Estira la rodilla.', [
-      ['Sentadilla', 'squat', 'b', 'Con la barra en la espalda, baja doblando cadera y rodillas hasta que los muslos queden paralelos al suelo y sube.'],
-      ['Sentadilla frontal', 'squat', 'b', 'Sentadilla con la barra apoyada adelante, sobre los hombros; el torso va más vertical.'],
-      ['Sentadilla goblet', 'squat', 'd', 'Sentadilla sosteniendo una mancuerna pegada al pecho.'],
-      ['Sentadilla en Smith', 'squat', 'b', 'Sentadilla con la barra guiada por rieles.'],
-      ['Prensa', 'legpress', 'm', 'Sentado en la prensa inclinada, baja la plataforma doblando las rodillas y empújala.'],
-      ['Prensa horizontal sentado', 'legpressH', 'm', 'La seated leg press: sentado con la espalda apoyada, empuja la plataforma hacia adelante.'],
-      ['Prensa unilateral', 'legpress', 'm', 'Prensa empujando con una pierna a la vez.'],
-      ['Sentadilla hack', 'hack', 'm', 'Con la espalda en el respaldo inclinado y los hombros bajo los cojines, baja y sube.'],
-      ['Sentadilla péndulo', 'hack', 'm', 'Máquina de sentadilla con movimiento en arco; muy enfocada en cuádriceps.'],
-      ['Extensión de cuádriceps', 'legext', 'm', 'Sentado en la máquina, estira las rodillas levantando el cojín con los tobillos.'],
-      ['Sentadilla búlgara', 'lunge', 'd', 'Con el pie de atrás apoyado en un banco, baja doblando la rodilla de adelante.'],
-      ['Estocadas', 'lunge', 'd', 'Da un paso largo al frente y baja hasta que ambas rodillas formen 90°; vuelve.'],
-      ['Estocadas caminando', 'lunge', 'd', 'Estocadas avanzando, alternando las piernas en cada paso.'],
-      ['Zancada inversa', 'lunge', 'd', 'Estocada dando el paso hacia atrás; es más amable con las rodillas.'],
-      ['Subida al cajón', 'lunge', 'd', 'Sube a un cajón o banco con una pierna, empujando con el talón.'],
-      ['Sentadilla isométrica en pared', 'hack', 'n', 'Con la espalda apoyada en la pared, baja hasta que los muslos queden paralelos al suelo y mantén.']]],
+      ['Sentadilla', 'squat', 'b', 'Con la barra en la espalda, baja doblando cadera y rodillas hasta que los muslos queden al menos paralelos al suelo, y sube. Clave: rodillas en la línea de los pies y pecho arriba.'],
+      ['Sentadilla frontal', 'frontsquat', 'b', 'Sentadilla con la barra apoyada adelante, sobre los hombros, y los codos altos. Clave: el torso va más vertical y carga más el cuádriceps.'],
+      ['Sentadilla goblet', 'goblet', 'd', 'Sentadilla sosteniendo una mancuerna pegada al pecho. Clave: ideal para aprender la técnica de la sentadilla.'],
+      ['Sentadilla en Smith', 'squatsmith', 'b', 'Sentadilla con la barra guiada por rieles. Clave: adelanta un poco los pies para bajar más cómodo.'],
+      ['Prensa', 'legpress', 'm', 'Sentado en la prensa inclinada, baja la plataforma doblando las rodillas y empújala. Clave: no bloquees las rodillas arriba ni despegues la zona lumbar abajo.'],
+      ['Prensa horizontal sentado', 'legpressH', 'm', 'La seated leg press: sentado con la espalda apoyada, empuja la plataforma hacia adelante. Clave: pies al ancho de la cadera en la mitad de la plataforma.'],
+      ['Prensa unilateral', 'legpressuni', 'm', 'Prensa empujando con una pierna a la vez. Clave: sirve para emparejar diferencias entre piernas.'],
+      ['Sentadilla hack', 'hack', 'm', 'Con la espalda en el respaldo inclinado y los hombros bajo los cojines, baja y sube. Clave: pies algo adelantados; muy enfocada en el cuádriceps.'],
+      ['Sentadilla péndulo', 'pendulum', 'm', 'Máquina de sentadilla con movimiento en arco. Clave: permite bajar mucho con la espalda apoyada.'],
+      ['Extensión de cuádriceps', 'legext', 'm', 'Sentado en la máquina, estira las rodillas levantando el cojín con los tobillos. Clave: aprieta un segundo arriba y baja lento.'],
+      ['Sentadilla búlgara', 'bulgarian', 'd', 'Con el pie de atrás apoyado en un banco, baja doblando la rodilla de adelante. Clave: la mayor parte del peso va en la pierna de adelante.'],
+      ['Estocadas', 'lunge', 'd', 'Da un paso largo al frente y baja hasta que ambas rodillas formen 90°; vuelve. Clave: torso erguido y la rodilla de atrás casi toca el suelo.'],
+      ['Estocadas caminando', 'walklunge', 'd', 'Estocadas avanzando, alternando las piernas en cada paso. Clave: pasos largos y controlados.'],
+      ['Zancada inversa', 'revlunge', 'd', 'Estocada dando el paso hacia atrás. Clave: es más amable con las rodillas que la estocada hacia adelante.'],
+      ['Subida al cajón', 'stepup', 'd', 'Sube a un cajón o banco con una pierna, empujando con el talón. Clave: no te impulses con la pierna de abajo.'],
+      ['Sentadilla isométrica en pared', 'wallsit', 'n', 'Con la espalda apoyada en la pared, baja hasta que los muslos queden paralelos al suelo y mantén. Clave: anota los segundos que aguantas.']]],
     ['Isquiotibiales', 'La parte trasera del muslo. Dobla la rodilla y ayuda a extender la cadera.', [
-      ['Curl femoral acostado', 'legcurl', 'm', 'Boca abajo en la máquina, lleva los talones hacia los glúteos.'],
-      ['Curl femoral sentado', 'seatcurl', 'm', 'Sentado con el cojín sobre los muslos, lleva los talones hacia abajo y atrás.'],
-      ['Curl femoral de pie', 'standcurl', 'm', 'De pie en la máquina, dobla una rodilla llevando el talón hacia el glúteo.'],
-      ['Peso muerto rumano', 'deadlift', 'b', 'Con las rodillas casi estiradas, baja la barra por los muslos llevando la cadera hacia atrás.'],
-      ['Peso muerto rumano con mancuernas', 'deadlift', 'd', 'Peso muerto rumano con una mancuerna en cada mano.'],
-      ['Peso muerto piernas rígidas', 'deadlift', 'b', 'Como el rumano, pero con las piernas más estiradas y más recorrido.']]],
+      ['Curl femoral acostado', 'legcurl', 'm', 'Boca abajo en la máquina, lleva los talones hacia los glúteos. Clave: la cadera no se despega del banco.'],
+      ['Curl femoral sentado', 'seatcurl', 'm', 'Sentado con el cojín sobre los muslos, lleva los talones hacia abajo y atrás. Clave: inclina el torso levemente adelante para más estiramiento.'],
+      ['Curl femoral de pie', 'standcurl', 'm', 'De pie en la máquina, dobla una rodilla llevando el talón hacia el glúteo. Clave: una pierna a la vez, sin mover la cadera.'],
+      ['Peso muerto rumano', 'rdl', 'b', 'Con las rodillas casi estiradas, baja la barra por los muslos llevando la cadera hacia atrás, y sube. Clave: baja hasta sentir el estiramiento en la parte trasera del muslo, con la espalda recta.'],
+      ['Peso muerto rumano con mancuernas', 'rdl', 'd', 'Peso muerto rumano con una mancuerna en cada mano. Clave: mancuernas pegadas a las piernas.'],
+      ['Peso muerto piernas rígidas', 'sldl', 'b', 'Como el rumano, pero con las piernas más estiradas y bajando más. Clave: requiere buena flexibilidad; no redondees la espalda.'],
+      ['Nordic curl', 'nordic', 'n', 'De rodillas con los tobillos sujetos, deja caer el cuerpo recto hacia adelante lo más lento posible. Clave: es muy exigente; usa las manos para frenar abajo.']]],
     ['Glúteos', 'La musculatura de la cadera y el trasero. Extiende y abre la cadera.', [
-      ['Hip thrust', 'hipthrust', 'b', 'Con la espalda alta en un banco y la barra sobre la cadera, sube la cadera apretando los glúteos.'],
-      ['Hip thrust en máquina', 'hipthrust', 'm', 'Hip thrust en máquina, con el cinturón o cojín sobre la cadera.'],
-      ['Puente de glúteo', 'hipthrust', 'n', 'Acostado en el suelo con las rodillas dobladas, sube la cadera apretando los glúteos.'],
-      ['Patada de glúteo en polea', 'kickback', 'c', 'Con la tobillera en la polea baja, lleva la pierna estirada hacia atrás.'],
-      ['Patada de glúteo en máquina', 'kickback', 'm', 'En la máquina de glúteo, empuja la plataforma hacia atrás con una pierna.'],
-      ['Abducción en máquina', 'abduct', 'm', 'Sentado, abre las piernas empujando los cojines que están por fuera de las rodillas.'],
-      ['Peso muerto sumo', 'deadlift', 'b', 'Peso muerto con las piernas muy abiertas y las manos por dentro; suma glúteos y aductores.']]],
+      ['Hip thrust', 'hipthrust', 'b', 'Con la espalda alta en un banco y la barra sobre la cadera, sube la cadera apretando los glúteos. Clave: arriba el cuerpo queda recto de hombros a rodillas y el mentón hacia el pecho.'],
+      ['Hip thrust en máquina', 'hipthrust', 'm', 'Hip thrust en máquina, con el cinturón o cojín sobre la cadera. Clave: más cómodo de preparar que con barra.'],
+      ['Puente de glúteo', 'bridge', 'n', 'Acostado en el suelo con las rodillas dobladas, sube la cadera apretando los glúteos. Clave: empuja con los talones.'],
+      ['Patada de glúteo en polea', 'kickback', 'c', 'Con la tobillera en la polea baja, lleva la pierna estirada hacia atrás. Clave: sin arquear la espalda baja.'],
+      ['Patada de glúteo en máquina', 'kickback', 'm', 'En la máquina de glúteo, empuja la plataforma hacia atrás con una pierna. Clave: aprieta arriba un segundo.'],
+      ['Abducción en máquina', 'abduct', 'm', 'Sentado, abre las piernas empujando los cojines que están por fuera de las rodillas. Clave: inclinarse un poco adelante carga más el glúteo.'],
+      ['Abducción de cadera en polea', 'hipabd', 'c', 'De pie con la tobillera en la polea baja, lleva la pierna estirada hacia el lado. Clave: tórax quieto; el movimiento es solo de la cadera.'],
+      ['Peso muerto sumo', 'sumodl', 'b', 'Peso muerto con las piernas muy abiertas y las manos por dentro de las rodillas. Clave: suma glúteos y aductores; torso más vertical que el convencional.']]],
     ['Aductores', 'La cara interna del muslo. Juntan las piernas.', [
-      ['Aducción en máquina', 'adduct', 'm', 'Sentado, cierra las piernas empujando los cojines que están por dentro de las rodillas.'],
-      ['Sentadilla sumo', 'squat', 'd', 'Sentadilla con los pies muy abiertos y las puntas hacia afuera.']]],
+      ['Aducción en máquina', 'adduct', 'm', 'Sentado, cierra las piernas empujando los cojines que están por dentro de las rodillas. Clave: vuelve lento, sin dejar que el peso te abra de golpe.'],
+      ['Sentadilla sumo', 'sumosq', 'd', 'Sentadilla con los pies muy abiertos, las puntas hacia afuera y una mancuerna colgando al centro. Clave: rodillas hacia afuera, en la dirección de los pies.']]],
     ['Pantorrillas', 'Gemelos y sóleo, en la parte trasera de la pierna bajo la rodilla.', [
-      ['Elevación de talones de pie', 'calf', 'm', 'Con las puntas de los pies en un escalón, sube los talones lo más alto posible y baja lento.'],
-      ['Elevación de talones sentado', 'calfseat', 'm', 'Sentado con el cojín sobre las rodillas, sube los talones; trabaja más el sóleo.'],
-      ['Pantorrillas en máquina hack', 'calfhack', 'm', 'En la máquina hack con las puntas en el borde, sube y baja los talones.'],
-      ['Pantorrillas en prensa', 'legpress', 'm', 'En la prensa con solo las puntas en la plataforma, empuja estirando los tobillos.'],
-      ['Elevación de talones con mancuerna', 'calf', 'd', 'Elevación de talones sosteniendo mancuernas.'],
-      ['Elevación de talones en Smith', 'calf', 'b', 'Elevación de talones con la barra guiada sobre la espalda.']]]
+      ['Elevación de talones de pie', 'calf', 'm', 'Con las puntas de los pies en un escalón, sube los talones lo más alto posible y baja lento. Clave: baja hasta estirar bien y haz una pausa abajo.'],
+      ['Elevación de talones sentado', 'calfseat', 'm', 'Sentado con el cojín sobre las rodillas, sube los talones. Clave: con la rodilla doblada trabaja más el sóleo.'],
+      ['Pantorrillas en máquina hack', 'calfhack', 'm', 'En la máquina hack con las puntas en el borde, sube y baja los talones. Clave: rodillas estiradas pero sin bloquear.'],
+      ['Pantorrillas en prensa', 'calfpress', 'm', 'En la prensa con solo las puntas en la plataforma, empuja estirando los tobillos. Clave: mantén las rodillas estiradas.'],
+      ['Elevación de talones con mancuerna', 'calf', 'd', 'Elevación de talones sosteniendo mancuernas, o una sola pierna a la vez. Clave: apóyate en algo para mantener el equilibrio.'],
+      ['Elevación de talones en Smith', 'calf', 'b', 'Elevación de talones con la barra guiada sobre la espalda. Clave: pon un disco o escalón bajo las puntas.']]]
   ] },
   { n: 'Abdominales', muscles: [
     ['Recto abdominal', 'Los "cuadritos". Dobla el tronco hacia adelante.', [
-      ['Crunch', 'crunch', 'n', 'Acostado con las rodillas dobladas, despega los hombros del suelo apretando el abdomen.'],
-      ['Crunch en polea', 'cablecrunch', 'c', 'De rodillas frente a la polea alta, enrolla el torso hacia el suelo tirando de la cuerda.'],
-      ['Crunch en máquina', 'crunchmach', 'm', 'Sentado en la máquina, flexiona el tronco hacia adelante contra la resistencia.'],
-      ['Crunch en banco declinado', 'crunch', 'n', 'Crunch en banco declinado con los pies trabados; más difícil que en el suelo.'],
-      ['Elevación de piernas', 'legraiseL', 'n', 'Acostado, sube las piernas estiradas hasta la vertical y bájalas sin tocar el suelo.'],
-      ['Elevación de rodillas colgado', 'legraise', 'n', 'Colgado de la barra, sube las rodillas hacia el pecho sin balancearte.'],
-      ['Elevación de piernas en paralelas', 'legraise', 'n', 'Con los antebrazos apoyados en la silla romana, sube las rodillas o las piernas.']]],
+      ['Crunch', 'crunch', 'n', 'Acostado con las rodillas dobladas, despega los hombros del suelo apretando el abdomen. Clave: no tires del cuello; las manos solo acompañan la cabeza.'],
+      ['Crunch en polea', 'cablecrunch', 'c', 'De rodillas frente a la polea alta, enrolla el torso hacia el suelo tirando de la cuerda. Clave: la cadera no se mueve; solo se enrolla la columna.'],
+      ['Crunch en máquina', 'crunchmach', 'm', 'Sentado en la máquina, flexiona el tronco hacia adelante contra la resistencia. Clave: exhala al bajar y aprieta.'],
+      ['Crunch en banco declinado', 'crunchdec', 'n', 'Crunch en banco declinado con los pies trabados. Clave: más difícil que en el suelo; puedes sumar un disco al pecho.'],
+      ['Elevación de piernas', 'legraiseB', 'n', 'Acostado, sube las piernas estiradas hasta la vertical y bájalas sin tocar el suelo. Clave: la zona lumbar se mantiene pegada al suelo.'],
+      ['Elevación de rodillas colgado', 'kneeraise', 'n', 'Colgado de la barra, sube las rodillas hacia el pecho sin balancearte. Clave: enrolla la pelvis arriba, no solo subas las piernas.'],
+      ['Elevación de piernas en paralelas', 'captain', 'n', 'Con los antebrazos en la silla romana y la espalda en el respaldo, sube las rodillas o las piernas. Clave: más estable que colgado.']]],
     ['Oblicuos', 'Los costados del abdomen. Giran e inclinan el tronco.', [
-      ['Giros rusos', 'russian', 'b', 'Sentado con el torso inclinado atrás y los pies elevados, gira el tronco de lado a lado.'],
-      ['Crunch oblicuo', 'crunch', 'n', 'Crunch llevando el hombro hacia la rodilla contraria.'],
-      ['Crunch bicicleta', 'crunch', 'n', 'Acostado, lleva el codo a la rodilla contraria alternando, como pedaleando.'],
-      ['Crunch oblicuo en máquina', 'twist', 'm', 'En la máquina de rotación, gira el tronco contra la resistencia.'],
-      ['Oblicuo en polea', 'sidebend', 'c', 'De lado a la polea baja, inclina el tronco hacia el lado contrario.'],
-      ['Leñador en polea', 'sidebend', 'c', 'Tira la polea en diagonal cruzando el cuerpo, girando el tronco.'],
-      ['Inclinación lateral con mancuerna', 'sidebend', 'd', 'De pie con una mancuerna en una mano, inclínate hacia ese lado y vuelve.']]],
+      ['Giros rusos', 'russian', 'b', 'Sentado con el torso inclinado atrás y los pies elevados, gira el tronco de lado a lado con un disco. Clave: gira el torso, no solo los brazos.'],
+      ['Crunch oblicuo', 'crunchobl', 'n', 'Crunch llevando el hombro hacia la rodilla contraria. Clave: movimiento corto y controlado.'],
+      ['Crunch bicicleta', 'bicycle', 'n', 'Acostado, lleva el codo a la rodilla contraria mientras estiras la otra pierna, alternando. Clave: lento; rápido pierde efecto.'],
+      ['Crunch oblicuo en máquina', 'twist', 'm', 'En la máquina de rotación, gira el tronco contra la resistencia. Clave: cadera fija y giro controlado.'],
+      ['Oblicuo en polea', 'sidebend', 'c', 'De lado a la polea baja, inclina el tronco hacia el lado contrario. Clave: sin girar el torso; solo inclinación lateral.'],
+      ['Leñador en polea', 'woodchop', 'c', 'Desde la polea alta, tira en diagonal cruzando el cuerpo hasta la cadera contraria, girando el tronco. Clave: los brazos van casi rectos; gira desde el tronco.'],
+      ['Inclinación lateral con mancuerna', 'sidebend', 'd', 'De pie con una mancuerna en una mano, inclínate hacia ese lado y vuelve. Clave: una sola mancuerna, así el otro lado trabaja.']]],
     ['Core profundo', 'La faja interna que estabiliza la columna.', [
-      ['Plancha', 'plank', 'n', 'Apoyado en los antebrazos y las puntas de los pies, mantén el cuerpo recto el mayor tiempo posible.'],
-      ['Plancha lateral', 'plank', 'n', 'Apoyado de lado en un antebrazo, mantén la cadera arriba y el cuerpo recto. Anota el tiempo de un lado.'],
-      ['Hollow hold', 'legraiseL', 'n', 'Boca arriba, despega hombros y piernas del suelo formando una "banana" y mantén la posición.'],
-      ['Rueda abdominal', 'wheel', 'n', 'De rodillas, rueda hacia adelante estirando el cuerpo y vuelve sin arquear la espalda.'],
-      ['Pallof press', 'twist', 'c', 'De lado a la polea, empuja la manilla al frente y resiste que te haga girar.'],
-      ['Mountain climbers', 'plank', 'n', 'En posición de flexión, lleva las rodillas al pecho alternando rápido.']]]
+      ['Plancha', 'plank', 'n', 'Apoyado en los antebrazos y las puntas de los pies, mantén el cuerpo recto el mayor tiempo posible. Clave: aprieta glúteos y abdomen, sin subir ni hundir la cadera.'],
+      ['Plancha lateral', 'sideplank', 'n', 'Apoyado de lado en un antebrazo, mantén la cadera arriba y el cuerpo recto. Clave: anota el tiempo de un lado.'],
+      ['Hollow hold', 'hollow', 'n', 'Boca arriba, despega hombros y piernas del suelo formando una "banana" y mantén. Clave: la espalda baja pegada al suelo.'],
+      ['Rueda abdominal', 'wheel', 'n', 'De rodillas, rueda hacia adelante estirando el cuerpo y vuelve sin arquear la espalda. Clave: avanza solo hasta donde controlas la zona lumbar.'],
+      ['Pallof press', 'pallof', 'c', 'De lado a la polea, empuja la manilla al frente y resiste que te haga girar. Clave: el ejercicio es no moverse; el core trabaja resistiendo.'],
+      ['Mountain climbers', 'climber', 'n', 'En posición de flexión, lleva las rodillas al pecho alternando rápido. Clave: la cadera se mantiene baja.']]]
   ] }
 ];
-const CATALOG_V = 7;
+const CATALOG_V = 8;
 /* ejercicios que no se miden por peso × repeticiones */
 const MODES = {
   'Plancha': 'time', 'Plancha lateral': 'time', 'Colgarse de la barra': 'time', 'Sentadilla isométrica en pared': 'time', 'Hollow hold': 'time', 'Paseo del granjero': 'time',
@@ -933,6 +1121,7 @@ function mergeCatalog(s) {
           if (POSE_FIX[fe.id] && ue.id === fe.id && (!ue.pose || ue.pose === POSE_FIX[fe.id][0])) ue.pose = POSE_FIX[fe.id][1];
           if (TOOL_FIX[fe.id] && ue.id === fe.id && ue.tool === TOOL_FIX[fe.id][0]) ue.tool = TOOL_FIX[fe.id][1];
           if (fe.mode && !ue.mode) ue.mode = fe.mode;
+          if ((s.cv || 0) < 8 && ue.custom !== true) { if (!ue.poseSet) ue.pose = fe.pose; if (!ue.descSet) ue.desc = fe.desc; }
           ue.pose = ue.pose || fe.pose; ue.tool = ue.tool || fe.tool; ue.m = ue.m || fe.m; ue.desc = ue.desc || fe.desc; ue.custom = false; known.add(ue.id);
         }
         else { if (s.removed.includes(fe.id)) fe.hidden = true; up.ex.push(fe); known.add(fe.id); }
@@ -1259,14 +1448,34 @@ function tile(r, sug) {
   const l = lastRoutine(r.id);
   return `<button class="tile" data-act="open" data-r="${r.id}"><span class="grow">${sug ? '<span class="tag">Te toca</span>' : ''}<span class="nm">${esc(r.name)}</span><span class="sub">${esc(partsLabel(r))}</span><span class="when">${l ? rel(l) : 'Sin registros'}</span></span>${body(regsFor(r.parts), TH.yl, 108)}</button>`;
 }
+/* rutina que toca, siguiendo el orden de las favoritas (Ajustes → Orden de tus rutinas):
+   - si haces la que toca, toca la siguiente
+   - si te saltas la que toca una vez, sigue sugiriéndose esa misma
+   - si la vuelves a saltar, se retoma el orden desde la última que hiciste
+   - si recuperas la saltada, se sigue desde la que habías hecho en su lugar
+   Las rutinas alternativas (no favoritas) no cuentan. */
+function nextRoutineId() {
+  const favs = S.routines.filter((r) => r.fav);
+  if (favs.length < 2) return null;
+  const pos = (id) => favs.findIndex((r) => r.id === id);
+  const next = (id) => favs[(pos(id) + 1) % favs.length].id;
+  const seen = new Map();
+  S.logs.slice().sort(byTs).forEach((l) => { const k = l.d + '|' + l.r; if (!seen.has(k)) seen.set(k, l.r); });
+  let toca = favs[0].id, skips = 0, from = null, first = true;
+  for (const rid of seen.values()) {
+    if (pos(rid) < 0) continue;
+    if (first) { toca = next(rid); first = false; continue; }
+    if (rid === toca) { toca = from ? next(from) : next(rid); if (toca === rid) toca = next(rid); from = null; skips = 0; }
+    else if (++skips === 1) from = rid;
+    else { toca = next(rid); from = null; skips = 0; }
+  }
+  return toca;
+}
 function vHome() {
   const favs = S.routines.filter((r) => r.fav);
   const alts = S.routines.filter((r) => !r.fav);
-  let sug = null;
-  if (S.logs.length && favs.length > 1) {
-    const done = favs.map((r) => ({ r, l: lastRoutine(r.id) || '0' })).sort((a, b) => (a.l < b.l ? -1 : a.l > b.l ? 1 : 0));
-    if (done[0].l !== today()) sug = done[0].r;
-  }
+  const sid = nextRoutineId();
+  const sug = sid ? R(sid) : null;
   const name = S.settings.name.trim();
   return `
   <div class="top">
@@ -1325,7 +1534,7 @@ function vPart(r, p) {
       ? `<button class="iconbtn sm" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${ic('edit', 18)}</button>`
       : nT ? `<span class="badge" aria-label="${nT} series hoy">${nT}</span>`
       : l ? `<span class="meta">${setTxt(l)}</span>` : `<span class="chev">${ic('chev')}</span>`;
-    const inner = `<span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 58)}</span><span class="grow"><span class="nm">${esc(e.name)}</span><span class="sub">${esc(e.m || '')}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}${e.hidden ? '<span class="ptag">Oculto</span>' : ''}</span></span>`;
+    const inner = `<span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 58, e.mode)}</span><span class="grow"><span class="nm">${esc(e.name)}</span><span class="sub">${esc(e.m || '')}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}${e.hidden ? '<span class="ptag">Oculto</span>' : ''}</span></span>`;
     return `<div class="item ex${e.hidden ? ' hid' : ''}" data-n="${esc(norm(e.name))}" data-m="${esc(e.m || '')}" data-h="${e.hidden ? 1 : 0}">${edit
       ? `<button class="main" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${inner}</button><button class="iconbtn sm" data-act="exhide" data-id="${e.id}" aria-label="${e.hidden ? 'Mostrar' : 'Ocultar'} ${esc(e.name)}" aria-pressed="${!!e.hidden}">${ic(e.hidden ? 'eyeoff' : 'eye', 18)}</button><button class="iconbtn sm" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${ic('edit', 18)}</button>`
       : `<button class="main" data-act="nav" data-to="/r/${r.id}/x/${e.id}">${inner}${right}</button>`}</div>`;
@@ -1405,7 +1614,7 @@ function vEx(r, xid) {
   return `${hdr(`/r/${r.id}/p/${p.id}`, p.name)}
     <h2 class="pt">${esc(e.name)}</h2>
     <div class="exhead">
-      <span class="exic big">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 104)}</span>
+      <span class="exic big">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 104, e.mode)}</span>
       <div class="grow"><p class="crumb" style="margin:0 0 4px">${esc(p.name)}${e.m ? ' › ' + esc(e.m) : ''}</p>${e.desc ? `<p class="exdesc">${esc(e.desc)}</p>` : (() => { const md = p.muscles.find((m) => m.n === e.m); return md && md.d ? `<p class="exdesc">${esc(md.d)}</p>` : ''; })()}${{ bw: '<span class="ptag">Peso corporal</span>', time: '<span class="ptag">Por tiempo</span>', assist: '<span class="ptag">Asistido</span>' }[kd] || ''}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}</div>
     </div>
     ${notes}
@@ -1627,7 +1836,7 @@ function applySuggest() {
   EX.sug = !!(s.pose || s.tool || s.m);
 }
 const exParts = {
-  pv: () => exIcon(EX.pose, EX.tool, regsForMuscle(EX.m, EX.pid), 92),
+  pv: () => exIcon(EX.pose, EX.tool, regsForMuscle(EX.m, EX.pid), 92, EX.mode),
   hint: () => EX.id ? '' : EX.name.trim()
     ? (EX.sug ? `Sugerido por el nombre: <b>${esc(POSE_NAMES[EX.pose] || EX.pose)}</b>, ${esc(TOOLS.find((t) => t[0] === EX.tool)[1].toLowerCase())}${EX.m ? ', ' + esc(EX.m.toLowerCase()) : ''}. Puedes cambiarlo abajo.` : 'No reconocí el movimiento: elige el dibujo que más se parezca.')
     : 'Escribe el nombre y te sugiero el dibujo, el músculo y con qué se hace.',
@@ -1640,7 +1849,7 @@ const exParts = {
     const regs = regsForMuscle(EX.m, EX.pid);
     const mine = partPoses(EX.pid);
     const list = EX.all ? POSE_LIST : [...new Set([EX.pose, ...mine])];
-    const tile = (k) => `<button class="pose${EX.pose === k ? ' on' : ''}" data-act="expose" data-k="${k}" aria-pressed="${EX.pose === k}">${exIcon(k, EX.tool, regs, 60)}<span>${esc(POSE_NAMES[k] || k)}</span></button>`;
+    const tile = (k) => `<button class="pose${EX.pose === k ? ' on' : ''}" data-act="expose" data-k="${k}" aria-pressed="${EX.pose === k}">${exIcon(k, EX.tool, regs, 60, EX.mode)}<span>${esc(POSE_NAMES[k] || k)}</span></button>`;
     return `<div class="posegrid">${list.map(tile).join('')}</div>
       <button class="txtbtn sm wide" data-act="exall">${EX.all ? `Ver solo los de ${esc(P(EX.pid).name.toLowerCase())}` : `Ver todos los dibujos (${POSE_LIST.length})`}</button>`;
   }
@@ -1713,22 +1922,48 @@ function renderCal() {
   openSheet(`<div class="calh"><button class="iconbtn" data-act="cmove" data-d="-1" aria-label="Mes anterior">${ic('back')}</button><h2 class="sh-t">${cap(title.replace(' de ', ' '))}</h2><button class="iconbtn" data-act="cmove" data-d="1" aria-label="Mes siguiente">${ic('chev')}</button></div>
     <p class="calsub">${cnt ? `Entrenaste ${plural(cnt, 'día', 'días')} este mes` : 'Sin entrenamientos este mes'}</p>
     <div class="cal">${g}</div>
-    ${calSel ? daySummary(calSel) : `<p class="calsub" style="margin-top:16px">Toca un día naranjo para ver lo que hiciste.</p>`}`);
+    <p class="calsub" style="margin-top:16px">Toca un día naranjo para ver el resumen de ese entrenamiento.</p>`);
 }
-function daySummary(d) {
+/* duración de una sesión: la registrada al terminar o, si no, del primer al último registro */
+function sessionTime(d, rid, arr) {
+  const s = S.sessions?.[d + '|' + rid];
+  if (s) return { start: s.start, end: s.end, exact: true };
+  return { start: arr[0].ts, end: arr[arr.length - 1].ts, exact: false };
+}
+const hhmm = (ts) => { const d = new Date(ts); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+function renderDay(d) {
   const ls = S.logs.filter((l) => l.d === d).sort(byTs);
-  if (!ls.length) return '';
-  const byR = {};
-  ls.forEach((l) => (byR[l.r] || (byR[l.r] = [])).push(l));
-  let h = `<div class="sum"><h3 class="sum-d">${cap(fLong(d))}</h3>`;
-  for (const [rid, arr] of Object.entries(byR)) {
-    const vol = arr.reduce((a, l) => a + volKg(l), 0);
+  if (!ls.length) { renderCal(); return; }
+  const byR = [];
+  ls.forEach((l) => { let g = byR.find((x) => x.r === l.r); if (!g) byR.push((g = { r: l.r, arr: [] })); g.arr.push(l); });
+  let mins = 0, approx = false;
+  const blocks = byR.map(({ r, arr }) => {
+    const t = sessionTime(d, r, arr); const m = (t.end - t.start) / 60000; mins += m; if (!t.exact) approx = true;
     const byX = [];
-    arr.forEach((l) => { let g = byX.find((x) => x.x === l.x); if (!g) byX.push((g = { x: l.x, name: X(l.x)?.e.name || l.name, sets: [] })); g.sets.push(l); });
-    h += `<div class="sum-r"><div class="sum-h"><span class="rn">${esc(R(rid)?.name || arr[0].rn || 'Rutina')}</span><span class="mu small">${plural(arr.length, 'serie', 'series')}, ${nf(vol, 0)} kg</span></div>
-      ${byX.map((g) => `<div class="sum-x">${esc(g.name)}<div class="sx">${g.sets.map((s) => `<span>${setTxt(s)}</span>`).join('')}</div></div>`).join('')}</div>`;
-  }
-  return h + `<button class="btn2 danger" data-act="delday" data-d="${d}">Borrar este día</button></div>`;
+    arr.forEach((l) => { let g = byX.find((x) => x.x === l.x); if (!g) byX.push((g = { x: l.x, sets: [] })); g.sets.push(l); });
+    const rows = byX.map((g) => {
+      const f = X(g.x), e = f?.e;
+      const icon = e ? exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, f.p.id), 52, e.mode) : '';
+      return `<div class="dx"><span class="exic">${icon}</span><div class="grow"><div class="dxn">${esc(e?.name || g.sets[0].name)}</div>${e?.m ? `<div class="dxm">${esc(e.m)}</div>` : ''}
+        <div class="dxs">${g.sets.map((s, i) => `<span class="cs${isBest(s, g.sets) ? ' best' : ''}"><i>${i + 1}</i>${setTxt(s)}${s.pr ? '<b>Récord</b>' : ''}</span>`).join('')}</div></div></div>`;
+    }).join('');
+    return `<section class="dblock"><div class="dbh"><span class="dbn">${esc(R(r)?.name || arr[0].rn || 'Rutina')}</span><span class="dbt">${hhmm(t.start)}–${hhmm(t.end)} · ${t.exact ? '' : '≈ '}${fmtDur(m)}</span></div>${rows}</section>`;
+  }).join('');
+  const vol = ls.reduce((a, l) => a + volKg(l), 0);
+  const nEx = new Set(ls.map((l) => l.x)).size;
+  const nPR = ls.filter((l) => l.pr).length;
+  openSheet(`<button class="backlink" data-act="calback">${ic('back', 18)} Calendario</button>
+    <h2 class="dtitle">${cap(fLong(d))}</h2>
+    <p class="dsub">${byR.map((g) => esc(R(g.r)?.name || g.arr[0].rn || 'Rutina')).join(' + ')}</p>
+    <div class="dstats">
+      <div class="dst big"><div><b>${approx ? '≈ ' : ''}${fmtDur(mins)}</b><span>Tiempo en el gym</span></div>${nPR ? `<em>${ic('star', 16)} ${plural(nPR, 'récord', 'récords')}</em>` : ''}</div>
+      <div class="dst"><b>${ls.length}</b><span>Series</span></div>
+      <div class="dst"><b>${nEx}</b><span>${nEx === 1 ? 'Ejercicio' : 'Ejercicios'}</span></div>
+      <div class="dst"><b>${nf(vol, 0)}</b><span>Kilos levantados</span></div>
+    </div>
+    <p class="dnote">En verde, la mejor serie de cada ejercicio.${approx ? ' El tiempo con ≈ es aproximado: va de la primera a la última serie, porque ese día no tocaste "Terminar".' : ''}</p>
+    ${blocks}
+    <button class="btn2 danger" data-act="delday" data-d="${d}">Borrar este día</button>`);
 }
 
 /* ajustes */
@@ -1742,6 +1977,9 @@ function openSettings() {
     <label class="lbl" for="sbw">Tu peso corporal en kg <span class="mu">(opcional)</span></label>
     <input id="sbw" class="inp" data-bind="sbw" inputmode="decimal" value="${esc(S.settings.bw || '')}" placeholder="Ej: 75">
     <p class="mu small" style="margin:6px 0 0">Sirve para comparar series de calistenia con y sin lastre. Si lo dejas vacío se usan 70 kg.</p>
+    ${(() => { const favs = S.routines.filter((r) => r.fav); return favs.length > 1 ? `<p class="lbl">Orden de tus rutinas</p>
+    <p class="mu small" style="margin:0 0 8px">Define el ciclo que sigues. La etiqueta "Te toca" sigue este orden: si te saltas una, te la vuelve a sugerir una vez; si la saltas de nuevo, sigue el orden desde la última que hiciste.</p>
+    <div class="rord">${favs.map((r, i) => `<div class="rrow"><span class="rnum">${i + 1}</span><span class="grow">${esc(r.name)}</span><button class="iconbtn sm" data-act="rmove" data-id="${r.id}" data-d="-1" aria-label="Subir ${esc(r.name)}" ${i === 0 ? 'disabled' : ''}>${ic('up', 18)}</button><button class="iconbtn sm" data-act="rmove" data-id="${r.id}" data-d="1" aria-label="Bajar ${esc(r.name)}" ${i === favs.length - 1 ? 'disabled' : ''}>${ic('down', 18)}</button></div>`).join('')}</div>` : ''; })()}
     <p class="lbl">Unidad por defecto</p>
     <div class="seg wide" role="group" aria-label="Unidad por defecto"><button data-act="sunit" data-u="kg" class="${u === 'kg' ? 'on' : ''}">Kilos</button><button data-act="sunit" data-u="lb" class="${u === 'lb' ? 'on' : ''}">Libras</button></div>
     ${isStandalone() ? '' : `<p class="lbl">App</p><button class="btn2" data-act="install" style="margin-top:0">Instalar GymRat en el teléfono</button>`}
@@ -1763,7 +2001,11 @@ function finish(rid) {
   if (!td.length) return;
   const vol = td.reduce((a, l) => a + volKg(l), 0);
   const exs = new Set(td.map((l) => l.x)).size;
-  const dur = (td[td.length - 1].ts - td[0].ts) / 60000;
+  const end = Math.min(Date.now(), td[td.length - 1].ts + 30 * 60000);
+  S.sessions = S.sessions || {};
+  S.sessions[today() + '|' + rid] = { start: td[0].ts, end };
+  save();
+  const dur = (end - td[0].ts) / 60000;
   const prs = td.filter((l) => l.pr);
   openSheet(`<h2 class="sh-t">Entrenamiento terminado</h2>
     <p class="mu" style="margin:0 0 12px">${esc(r.name)}, ${fLong(today())}</p>
@@ -1915,6 +2157,8 @@ const A = {
       const e = p.ex.find((x) => x.id === EX.id);
       const modeChanged = (e.mode || 'reps') !== (EX.mode || 'reps') && S.logs.some((l) => l.x === e.id);
       confirmS({ title: '¿Guardar los cambios?', text: `Se actualizará el ejercicio «${esc(e.name)}». Su historial se mantiene.${modeChanged ? ' Ojo: cambiaste cómo se mide; tus series anteriores se leerán con la nueva forma.' : ''}`, cta: 'Guardar', danger: false, ok: () => {
+        if (EX.pose !== e.pose) e.poseSet = true;
+        if (EX.desc.trim() !== (e.desc || '')) e.descSet = true;
         e.name = name; e.m = EX.m; e.pose = EX.pose; e.tool = EX.tool; e.desc = EX.desc.trim(); e.mode = EX.mode === 'reps' ? undefined : EX.mode;
         S.logs.forEach((l) => { if (l.x === e.id) l.name = name; });
         save(); closeSheet(); toast('Cambios guardados');
@@ -1937,7 +2181,8 @@ const A = {
     const n = S.logs.filter((l) => l.d === d).length;
     confirmS({ title: '¿Borrar este día?', text: `Se ${n === 1 ? 'borrará la serie' : `borrarán las ${n} series`} del ${fLong(d)}. No se puede deshacer.`, cta: 'Borrar día', ok: () => {
       S.logs = S.logs.filter((l) => l.d !== d); save();
-      calSel = null; renderCal(); render(); toast('Día borrado');
+      if (S.sessions) Object.keys(S.sessions).forEach((k) => { if (k.startsWith(d + '|')) delete S.sessions[k]; });
+      save(); calSel = null; renderCal(); render(); toast('Día borrado');
     } });
   },
 
@@ -1997,8 +2242,17 @@ const A = {
   done: () => { hideSheet(); goHome(); },
 
   cmove: (el) => { calM = new Date(calM.getFullYear(), calM.getMonth() + Number(el.dataset.d), 1); calSel = null; renderCal(); },
-  cday: (el) => { calSel = el.dataset.d; renderCal(); setTimeout(() => $('#sheet .sum')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30); },
+  cday: (el) => { calSel = el.dataset.d; renderDay(calSel); $('#sheet').scrollTop = 0; },
+  calback: () => { renderCal(); $('#sheet').scrollTop = 0; },
 
+  rmove: (el) => {
+    const favs = S.routines.filter((r) => r.fav);
+    const i = favs.findIndex((r) => r.id === el.dataset.id), j = i + Number(el.dataset.d);
+    if (i < 0 || j < 0 || j >= favs.length) return;
+    const a = S.routines.indexOf(favs[i]), b = S.routines.indexOf(favs[j]);
+    [S.routines[a], S.routines[b]] = [S.routines[b], S.routines[a]];
+    save(); openSettings();
+  },
   sunit: (el) => { S.settings.unit = el.dataset.u; save(); openSettings(); },
   exp: () => {
     const blob = new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' });
