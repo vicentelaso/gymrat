@@ -1,6 +1,6 @@
 // GymRat service worker
 // Sube el número de versión cada vez que cambies archivos, así el celular baja la versión nueva.
-const CACHE = 'gymrat-v22';
+const CACHE = 'gymrat-v23';
 const ASSETS = [
   './',
   './index.html',
