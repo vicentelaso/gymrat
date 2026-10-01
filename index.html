@@ -275,6 +275,42 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .sum-x{padding:8px 0;border-top:1px solid #1f1f1f;font-size:15px}
 .sum-x .sx{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--mu);margin-top:2px}
 
+/* estrella de favoritas */
+.tile{position:relative;cursor:pointer}
+.tright{display:flex;flex-direction:column;align-items:flex-end;gap:2px;align-self:stretch}
+.favstar{width:40px;height:40px;margin:-6px -4px 0 0;display:grid;place-items:center;color:#000;border-radius:12px;flex:none}
+.favstar:active{background:rgba(0,0,0,.1)}
+.row.rt{cursor:pointer}
+.row.rt .favstar{margin:0}
+
+/* tutorial */
+#tour{position:fixed;inset:0;z-index:100;touch-action:none}
+#tour .tdim{position:absolute;inset:0;background:rgba(0,0,0,.78)}
+.tspot{position:absolute;border-radius:20px;box-shadow:0 0 0 9999px rgba(0,0,0,.78);transition:left .35s cubic-bezier(.2,.8,.2,1),top .35s cubic-bezier(.2,.8,.2,1),width .35s cubic-bezier(.2,.8,.2,1),height .35s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.tspot::after{content:"";position:absolute;inset:-5px;border-radius:24px;border:2.5px solid var(--ac);animation:tpulse 1.6s ease-out infinite}
+@keyframes tpulse{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.05)}}
+.tcard{position:absolute;left:12px;right:12px;max-width:440px;margin:0 auto;background:#1b1b1b;border:1px solid #343434;border-radius:24px;padding:16px 16px 14px;box-shadow:0 24px 60px rgba(0,0,0,.65);animation:tin .28s cubic-bezier(.2,.8,.2,1)}
+.tcard.wait{opacity:0}
+.tcard.center{top:50%;transform:translateY(-50%);text-align:center;padding:22px 20px 18px}
+.tcard.center .tbtns{justify-content:center}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+.tcard.center{animation:none}
+.thero{display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:12px;position:relative}
+.thero svg{border-radius:16px;box-shadow:0 0 0 6px rgba(255,106,31,.15),0 0 40px rgba(255,106,31,.35)}
+.tconf{color:var(--yl)}
+.tconf svg{box-shadow:none}
+.tprog{height:4px;background:#000;border-radius:2px;overflow:hidden;margin-bottom:10px}
+.tprog i{display:block;height:100%;background:var(--ac);border-radius:2px;transition:width .3s}
+.tstep{font-size:11px;color:var(--mu);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tcard h3{font-family:var(--cond);font-weight:800;font-size:28px;line-height:1.05;margin:4px 0 6px}
+.tcard p{margin:0 0 14px;color:#d8d2ca;font-size:15px;line-height:1.45}
+.tbtns{display:flex;align-items:center;gap:8px}
+.tbtns .cta,.tbtns .btn2{margin:0;height:48px;width:auto;padding:0 18px;font-size:16px}
+.tskip{color:var(--mu);font-weight:600;font-size:15px;min-height:44px;padding:0 6px}
+.dbox.welcome{text-align:center}
+.dbox.welcome h3{margin-top:4px}
+.tourbtn{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px}
+
 /* estadísticas */
 .iconbtn.inst{background:var(--ac);color:#000}
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
@@ -469,6 +505,8 @@ const I = {
   clock: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/>',
   filter: '<path d="M4 5h16l-6.2 7.6V18l-3.6 2v-7.4z"/>',
   stats: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  starf: '<path fill="currentColor" d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
+  play: '<path d="M7 5l12 7-12 7z"/>',
   star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
   search: '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
   dl: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
@@ -1245,18 +1283,12 @@ function seedParts() {
   });
 }
 function seed() {
+  const parts = seedParts();
   return {
-    v: 2, cv: CATALOG_V, removed: [], parts: seedParts(),
-    routines: [
-      { id: 'r1', name: 'Espalda y bíceps', parts: ['espalda', 'biceps'], fav: true },
-      { id: 'r2', name: 'Hombro y tríceps', parts: ['hombros', 'triceps'], fav: true },
-      { id: 'r3', name: 'Piernas', parts: ['piernas'], fav: true },
-      { id: 'r4', name: 'Pecho y abs', parts: ['pecho', 'abdominales'], fav: true },
-      { id: 'r5', name: 'Full body', parts: ['pecho', 'espalda', 'piernas', 'hombros'], fav: false },
-      { id: 'rcardio', name: 'Cardio', parts: ['cardio'], fav: false }
-    ],
+    v: 2, cv: CATALOG_V, removed: [], parts,
+    routines: [{ id: 'rfull', name: 'Full body', parts: parts.map((p) => p.id), fav: true }],
     logs: [],
-    settings: { name: '', unit: 'kg', asked: false }
+    settings: { name: '', unit: 'kg', asked: false, tourSeen: false }
   };
 }
 /* pasa los datos de la versión con "tipos" a la versión con músculos, sin perder series */
@@ -1353,7 +1385,7 @@ function legacyLocal() { try { const s = JSON.parse(localStorage.getItem(KEY)); 
 let dirty = false, pushT = null, pushing = false, syncState = 'ok';
 function save() {
   bwCache = null;
-  if (!S || !USER) return;
+  if (!S || !USER || TOUR) return;
   S.ts = Date.now();
   try { localStorage.setItem(cacheKey(), JSON.stringify(S)); localStorage.setItem(cacheKey() + ':dirty', '1'); } catch (e) { toast('No se pudo guardar en el teléfono'); }
   dirty = true; syncState = 'pend';
@@ -1400,13 +1432,14 @@ async function loadUserData() {
   S = chosen;
   S.settings = Object.assign({ name: '', unit: 'kg' }, S.settings);
   S.settings.asked = true;
+  if (S.settings.tourSeen === undefined) S.settings.tourSeen = true; // quienes ya usaban la app no ven la invitación (está en Ajustes)
   if (!S.settings.name) S.settings.name = cap(userName());
   if (localStorage.getItem(cacheKey() + ':dirty')) upload = true;
   if (upload) save();
   else { localStorage.setItem(cacheKey(), JSON.stringify(S)); dirty = false; syncState = 'ok'; }
 }
 async function refreshFromCloud() {
-  if (!USER || !sb || dirty || pushing) return;
+  if (!USER || !sb || dirty || pushing || TOUR) return;
   try {
     const { data, error } = await sb.from(TABLE).select('data, ts').eq('user_id', USER.id).maybeSingle();
     if (error || !data || !data.data) return;
@@ -1444,6 +1477,7 @@ async function doAuth() {
   history.replaceState({ d: 0 }, '', '#/');
   lastPath = null;
   render();
+  maybeOfferTour();
 }
 async function logout() {
   clearTimeout(pushT);
@@ -1591,6 +1625,7 @@ function goHome() {
   else { history.replaceState({ d: 0 }, '', '#/'); render(); }
 }
 window.addEventListener('popstate', () => {
+  if (TOUR) { history.replaceState({ d: 0 }, '', location.hash); tourShow(TOUR.i); return; }
   if ($('#dlg').classList.contains('on')) hideDlg();
   if (sheetOpen() && !history.state?.sheet) hideSheet();
   render();
@@ -1651,9 +1686,10 @@ function week() {
   }
   return `<button class="week" data-act="cal" aria-label="Esta semana entrenaste ${plural(n, 'día', 'días')}. Abrir calendario">${h}</button>`;
 }
+const favStar = (r) => `<button class="favstar${r.fav ? ' on' : ''}" data-act="favstar" data-r="${r.id}" aria-label="${r.fav ? 'Sacar de favoritos' : 'Agregar a favoritos'}: ${esc(r.name)}" aria-pressed="${!!r.fav}">${ic(r.fav ? 'starf' : 'star', 24)}</button>`;
 function tile(r, sug) {
   const l = lastRoutine(r.id);
-  return `<button class="tile" data-act="open" data-r="${r.id}"><span class="grow">${sug ? '<span class="tag">Te toca</span>' : ''}<span class="nm">${esc(r.name)}</span><span class="sub">${esc(partsLabel(r))}</span><span class="when">${l ? rel(l) : 'Sin registros'}</span></span>${body(regsFor(r.parts), TH.yl, 108)}</button>`;
+  return `<div class="tile" role="button" tabindex="0" data-act="open" data-r="${r.id}"><span class="grow">${sug ? '<span class="tag">Te toca</span>' : ''}<span class="nm">${esc(r.name)}</span><span class="sub">${esc(partsLabel(r))}</span><span class="when">${l ? rel(l) : 'Sin registros'}</span></span><span class="tright">${favStar(r)}${body(regsFor(r.parts), TH.yl, 92)}</span></div>`;
 }
 /* rutina que toca, siguiendo el orden de las favoritas (Ajustes → Orden de tus rutinas):
    - si haces la que toca, toca la siguiente
@@ -1702,7 +1738,7 @@ function vHome() {
   </div>
   <button class="alt-toggle" data-act="alt" aria-expanded="${altOpen}">Hacer una rutina alternativa ${ic(altOpen ? 'up' : 'down', 18)}</button>
   ${altOpen ? `<div class="alts">
-    ${alts.map((r) => `<button class="row rt" data-act="open" data-r="${r.id}"><span class="grow"><span class="rn">${esc(r.name)}</span><span class="sub">${esc(partsLabel(r))}</span></span>${body(regsFor(r.parts), TH.yl, 54)}</button>`).join('')}
+    ${alts.map((r) => `<div class="row rt" role="button" tabindex="0" data-act="open" data-r="${r.id}"><span class="grow"><span class="rn">${esc(r.name)}</span><span class="sub">${esc(partsLabel(r))}</span></span>${body(regsFor(r.parts), TH.yl, 54)}${favStar(r)}</div>`).join('')}
     <button class="row addrow" data-act="newR">${ic('plus', 18)} Crear rutina</button>
   </div>` : ''}`;
 }
@@ -1876,6 +1912,159 @@ function vEx(r, xid) {
     ${hist}`;
 }
 
+/* ---------- recorrido guiado (tutorial) ----------
+   Recorre la app real con datos de ejemplo. Antes de empezar se guarda una copia de tus datos
+   y al terminar u omitir se restauran tal cual: el ejemplo nunca se guarda ni se sube. */
+let TOUR = null;
+const TX = 'pecho_press-banca-con-barra';
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+function tourDemo() {
+  S.routines = [
+    { id: 'tour_fb', name: 'Full body', parts: S.parts.map((p) => p.id), fav: true },
+    { id: 'tour_pt', name: 'Pecho y tríceps', parts: ['pecho', 'triceps'], fav: true },
+    { id: 'tour_eb', name: 'Espalda y bíceps', parts: ['espalda', 'biceps'], fav: true },
+    { id: 'tour_pi', name: 'Piernas', parts: ['piernas'], fav: false }
+  ];
+  S.parts.forEach((p) => p.ex.forEach((e) => { if (e.id === TX) e.hidden = false; }));
+  S.logs = []; S.sessions = {};
+  const day = (ago, h) => { const d = new Date(); d.setDate(d.getDate() - ago); d.setHours(h, 5, 0, 0); return d; };
+  const add = (d, rid, x, sets, extra = {}) => { let t = d.getTime(); sets.forEach(([kg, reps]) => { S.logs.push({ id: uid(), d: iso(d), ts: t, x, name: X(x)?.e.name || x, r: rid, rn: R(rid)?.name, kg, raw: kg, u: 'kg', reps, pr: false, ...extra }); t += 4 * 60000; }); d.setTime(t); };
+  [[26, [[50, 10], [50, 9], [47.5, 10]]], [21, [[52.5, 8], [52.5, 8], [50, 9]]], [16, [[52.5, 10], [55, 6], [52.5, 9]]],
+   [12, [[55, 8], [55, 8], [52.5, 9]]], [8, [[55, 10], [57.5, 6], [55, 8]]], [4, [[57.5, 8], [57.5, 7], [55, 9]]]].forEach(([a, s]) => {
+    const d = day(a, 19); add(d, 'tour_pt', TX, s); add(d, 'tour_pt', 'pecho_aperturas-con-mancuernas', [[14, 12], [16, 10]]); add(d, 'tour_pt', 'triceps_extension-con-cuerda', [[25, 12], [27.5, 10]]);
+  });
+  [[24, 50], [19, 52.5], [14, 55], [10, 55], [6, 57.5], [2, 60]].forEach(([a, w]) => {
+    const d = day(a, 18); add(d, 'tour_eb', 'espalda_jalon-al-pecho', [[w, 10], [w, 9], [w - 5, 10]]); add(d, 'tour_eb', 'biceps_curl-con-barra-z', [[25, 10], [25, 9]]);
+  });
+  [[22], [15], [9], [3]].forEach(([a]) => {
+    const d = day(a, 20); add(d, 'tour_fb', 'piernas_sentadilla', [[80, 8], [80, 8]]); add(d, 'tour_fb', 'abdominales_plancha', [[0, 75]]); add(d, 'tour_fb', 'cardio_trotadora', [[0, 1500]], { km: 4.2 });
+  });
+  const now = new Date(Date.now() - 50 * 60000);
+  add(now, 'tour_pt', TX, [[60, 8], [60, 7]]);
+  const g = {}; S.logs.forEach((l) => { const k = l.d + '|' + l.r; (g[k] || (g[k] = [])).push(l.ts); });
+  Object.entries(g).forEach(([k, ts]) => { if (!k.startsWith(today())) S.sessions[k] = { start: Math.min(...ts), end: Math.max(...ts) + 8 * 60000 }; });
+  bwCache = null;
+}
+const TOUR_STEPS = [
+  { center: true, hero: true, title: '¡Bienvenido a GymRat!', text: 'Te muestro en un par de minutos todo lo que puedes hacer. Usaremos datos de ejemplo, así que nada de lo que veas se guarda ni cambia tus datos.' },
+  { go: '/', el: '.title', title: 'Tu pantalla de inicio', text: 'Cada vez que abras la app partes aquí: eliges qué vas a entrenar hoy.' },
+  { go: '/', el: '.tools', title: 'Barra superior', text: 'Desde aquí instalas la app en el celular, ves tus estadísticas, el calendario y los ajustes. Los vamos a recorrer todos.' },
+  { go: '/', el: '.week', title: 'Tu semana', text: 'Los días en naranjo son los que entrenaste esta semana. Si la tocas, se abre el calendario.' },
+  { go: '/', el: () => document.querySelector('.tile .tag')?.closest('.tile') || document.querySelector('.tile'), title: 'Tus rutinas favoritas', text: 'Cada rutina muestra un monito con los músculos que trabaja en rojo. La etiqueta "Te toca" te sugiere cuál sigue según el orden que definas en Ajustes.' },
+  { go: '/', el: '.tile .favstar', title: 'Favoritas con la estrella', text: 'La estrella negra agrega o saca una rutina de favoritas. Las favoritas aparecen grandes aquí; las demás quedan como alternativas.' },
+  { go: '/', prep: () => { altOpen = true; render(); }, el: '.alts', title: 'Rutinas alternativas', text: 'Las que no son favoritas quedan aquí abajo. También desde aquí creas rutinas nuevas.' },
+  { prep: () => { editRoutine(null); ER.name = 'Mi rutina'; ER.parts = ['pecho', 'triceps', 'cardio']; ER.fav = true; renderER(); }, el: () => [document.querySelector('.erhead'), document.querySelector('#sheet .chips.yl')], title: 'Crear una rutina', text: 'Le pones nombre, eliges las partes del cuerpo (el monito se pinta en vivo) y decides si va a favoritas. Para editar una rutina existente, usa el lápiz dentro de ella.' },
+  { go: '/r/tour_pt', el: '.hero', title: 'Dentro de una rutina', text: 'Ves de frente y de espalda los músculos que trabaja. Debajo están las partes del cuerpo de la rutina.' },
+  { go: '/r/tour_pt', el: '.list', title: 'Elige qué entrenar', text: 'Toca la parte del cuerpo que vas a trabajar. El círculo muestra cuántas series llevas hoy en cada una.' },
+  { go: '/r/tour_pt/p/pecho', el: '.search', title: 'Buscar ejercicios', text: 'Escribe parte del nombre para encontrar un ejercicio al tiro. La app trae más de 200 ejercicios, cada uno con su dibujo.' },
+  { go: '/r/tour_pt/p/pecho', prep: () => { filt.pecho = { q: '', m: '', open: true }; render(); }, el: () => [document.querySelector('.fbar'), document.querySelector('.flist')], title: 'Filtrar por músculo', text: 'Con este botón filtras por músculo, por ejemplo solo pectoral superior. En cardio se filtra por tipo.' },
+  { go: '/r/tour_pt/p/pecho', prep: () => { filt.pecho = { q: '', m: '' }; render(); }, el: '#exlist .item', title: 'Los ejercicios', text: 'Cada uno tiene su dibujo con el músculo marcado. Los que más haces aparecen primero. A la derecha ves tu última serie o cuántas llevas hoy.' },
+  { go: '/r/tour_pt/p/pecho', prep: () => { edit = true; render(); }, el: () => [document.querySelector('.editbar'), document.querySelector('#exlist .item')], title: 'Ocultar y editar', text: 'En "Editar", el ojo oculta los ejercicios que nunca haces para que la lista quede corta, y el lápiz abre el ejercicio para editarlo.' },
+  { prep: () => { editEx('pecho', TX); EX.open = true; refreshEX(); }, el: () => [document.querySelector('#sheet .erhead'), document.querySelector('#exgrid')], title: 'Editar un ejercicio y su dibujo', text: 'Puedes cambiar nombre, músculo, con qué se hace y cómo se mide. En "Dibujo del movimiento" eliges otro dibujo; el músculo se pinta solo.' },
+  { prep: () => { editEx('espalda', null); EX.name = 'Remo sentado con cuerda'; $('#exn').value = EX.name; applySuggest(); refreshEX(); }, el: () => [document.querySelector('#sheet .erhead'), document.querySelector('#exhint')], title: 'Crear tu propio ejercicio', text: 'Escribe el nombre y la app sugiere sola el dibujo, el músculo y el implemento. Puedes agregar una explicación. Quedará marcado como "Personalizado".' },
+  { go: '/r/tour_pt/x/' + TX, el: '.exhead', title: 'La pantalla del ejercicio', text: 'Cada ejercicio trae su dibujo y una explicación de cómo hacerlo, con un consejo clave.' },
+  { go: '/r/tour_pt/x/' + TX, el: '.notes', title: 'Última vez y mejor serie', text: 'Arriba ves qué hiciste la última vez y tu mejor serie histórica, para saber qué superar. La mejor serie se calcula con el 1RM estimado.' },
+  { go: '/r/tour_pt/x/' + TX, el: '.logger', title: 'Anotar una serie', text: 'Escribe el peso y las repeticiones y toca "Guardar serie". Puedes anotar en kg o lb. Al guardar vuelves a la lista para seguir con el próximo ejercicio.' },
+  { go: '/r/tour_pt/x/' + TX, el: '.card', title: 'Tu progreso', text: 'Cada punto es la mejor serie del día. Cambia entre Peso, Reps y 1RM, y toca un punto para ver el detalle. Arriba te dice cuánto subiste.' },
+  { go: '/r/tour_pt/x/' + TX, prep: () => { const h = document.querySelector('.hist'); if (h) h.open = true; }, el: '.hist', title: 'Historial', text: 'Todas tus sesiones de este ejercicio. En verde, la mejor serie de cada día.' },
+  { go: '/r/tour_fb/x/abdominales_plancha', el: '.logger', title: 'Ejercicios por tiempo', text: 'La plancha, el cardio y otros se anotan en minutos y segundos, con cronómetro incluido. Su dibujo lleva un reloj verde. El cardio además registra distancia, calorías, saltos o golpes según el ejercicio.' },
+  { go: '/r/tour_pt', el: '.dock', title: 'Mientras entrenas', text: '"Hoy" muestra las series de hoy para borrar alguna mal anotada. "Terminar" guarda tu tiempo en el gym y te muestra un resumen.' },
+  { go: '/r/tour_pt', prep: () => finish('tour_pt'), el: () => [document.querySelector('#sheet .stats'), document.querySelector('.sesrow')], title: 'Resumen al terminar', text: 'Series, ejercicios, kilos, duración y récords del día. Si el horario quedó mal, lo corriges con "Editar".' },
+  { go: '/', prep: () => openCal(), el: '#sheet .cal', title: 'Calendario', text: 'Los días en naranjo son los que entrenaste. Toca uno para ver qué hiciste.' },
+  { go: '/', prep: () => renderDay(iso(new Date(Date.now() - 4 * 864e5))), el: () => [document.querySelector('.dtitle'), document.querySelector('.dstats')], title: 'Resumen de un día', text: 'Tiempo en el gym, series, kilos y cada ejercicio con su mejor serie en verde. Aquí también puedes editar el horario o borrar el día.' },
+  { go: '/stats', el: '.sgrid', title: 'Estadísticas', text: 'Días entrenados, veces por semana, tiempo promedio y total en el gym. Puedes ver todo tu historial o solo los últimos 90 o 30 días.' },
+  { go: '/stats', el: () => document.querySelectorAll('.sblock')[1], title: 'Rutinas y más', text: 'Cuántas veces hiciste cada rutina, tus días favoritos, las partes del cuerpo que más entrenas, tus ejercicios top, rachas y récords.' },
+  { go: '/', prep: () => openSettings(), el: '.rord', title: 'Ajustes: orden de rutinas', text: 'Aquí defines el ciclo de tus favoritas. "Te toca" sigue este orden: si te saltas una te la vuelve a sugerir una vez, y si la saltas de nuevo, sigue con la siguiente.' },
+  { go: '/', prep: () => openSettings(), el: () => [document.querySelector('#sbw'), document.querySelector('#sheet .seg.wide')], title: 'Tus preferencias', text: 'Tu peso corporal (para comparar ejercicios de calistenia) y si prefieres anotar en kilos o libras. Más abajo puedes descargar un respaldo y cerrar sesión.' },
+  { go: '/', prep: () => openSettings(), el: '#tourbtn', title: 'Vuelve cuando quieras', text: 'Este recorrido queda aquí, al final de Ajustes, por si quieres repasarlo.' },
+  { center: true, hero: true, last: true, title: '¡Listo para entrenar!', text: 'Arma tus rutinas, marca tus favoritas y anota tus series. GymRat se encarga de mostrarte tu progreso.' }
+];
+function startTour() {
+  if (TOUR) return;
+  hideSheet(); hideDlg();
+  TOUR = { i: 0, snap: JSON.parse(JSON.stringify(S)) };
+  tourDemo();
+  tourShow(0);
+}
+function endTour(done) {
+  if (!TOUR) return;
+  const snap = TOUR.snap; TOUR = null;
+  $('#tour')?.remove();
+  hideSheet(); hideDlg();
+  S = snap; S.settings.tourSeen = true; bwCache = null;
+  altOpen = false; edit = false; draft = null; kmOpen = false; calSel = null;
+  Object.keys(filt).forEach((k) => delete filt[k]);
+  history.replaceState({ d: 0 }, '', '#/'); lastPath = null; render(); save();
+  toast(done ? '¡Listo! Ya conoces GymRat.' : 'Recorrido omitido. Lo encuentras al final de Ajustes.');
+}
+async function tourShow(i) {
+  if (!TOUR) return;
+  TOUR.i = i;
+  const st = TOUR_STEPS[i];
+  hideDlg();
+  if (!st.keepSheet) hideSheet();
+  if (st.go !== undefined) { history.replaceState({ d: 0 }, '', '#' + st.go); render(); }
+  edit = false; altOpen = false; if (st.go !== undefined) render();
+  if (st.prep) st.prep();
+  drawTour(null, st, i, true);
+  await wait(st.prep ? 380 : 260);
+  if (!TOUR || TOUR.i !== i) return;
+  let els = st.el ? (typeof st.el === 'function' ? st.el() : document.querySelector(st.el)) : null;
+  els = (Array.isArray(els) ? els : [els]).filter(Boolean);
+  if (els.length) { els[0].scrollIntoView({ block: 'center' }); await wait(120); }
+  if (!TOUR || TOUR.i !== i) return;
+  drawTour(els, st, i);
+}
+function drawTour(els, st, i, loading) {
+  let t = $('#tour');
+  if (!t) { t = document.createElement('div'); t.id = 'tour'; t.setAttribute('role', 'dialog'); t.setAttribute('aria-modal', 'true'); document.body.appendChild(t); t.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false }); t.addEventListener('wheel', (e) => e.preventDefault(), { passive: false }); }
+  const n = TOUR_STEPS.length, vw = window.innerWidth, vh = window.innerHeight;
+  let rect = null;
+  if (els && els.length && !st.center) {
+    const rs = els.map((e) => e.getBoundingClientRect());
+    rect = { l: Math.min(...rs.map((r) => r.left)), t: Math.min(...rs.map((r) => r.top)), r: Math.max(...rs.map((r) => r.right)), b: Math.max(...rs.map((r) => r.bottom)) };
+    const p = 8;
+    rect = { l: Math.max(6, rect.l - p), t: Math.max(6, rect.t - p), r: Math.min(vw - 6, rect.r + p), b: Math.min(vh - 6, rect.b + p) };
+    if (rect.b - rect.t > vh * 0.62) rect.b = rect.t + vh * 0.62;
+  }
+  const spot = rect ? `<div class="tspot" style="left:${rect.l}px;top:${rect.t}px;width:${rect.r - rect.l}px;height:${rect.b - rect.t}px"></div>` : '<div class="tdim"></div>';
+  const hero = st.hero ? `<div class="thero">${logo(64)}${st.last ? `<span class="tconf">${ic('star', 22)}</span>` : ''}</div>` : '';
+  t.innerHTML = `${spot}
+    <div class="tcard${st.center ? ' center' : ''}${loading ? ' wait' : ''}" id="tcard">
+      ${hero}
+      <div class="tprog"><i style="width:${((i + 1) / n) * 100}%"></i></div>
+      <div class="tstep">Paso ${i + 1} de ${n}</div>
+      <h3>${esc(st.title)}</h3>
+      <p>${esc(st.text)}</p>
+      <div class="tbtns">
+        ${st.last ? '' : '<button class="tskip" data-act="tskip">Omitir</button>'}
+        <span class="grow"></span>
+        ${i > 0 ? '<button class="btn2" data-act="tprev">Atrás</button>' : ''}
+        <button class="cta" data-act="tnext">${st.last ? 'Empezar a usar GymRat' : i === 0 ? 'Empezar' : 'Siguiente'}</button>
+      </div>
+    </div>`;
+  const c = $('#tcard');
+  if (!st.center && rect) {
+    const ch = c.offsetHeight, gap = 14;
+    let top;
+    if (rect.b + gap + ch < vh - 8) top = rect.b + gap;
+    else if (rect.t - gap - ch > 8) top = rect.t - gap - ch;
+    else top = vh - ch - 10;
+    c.style.top = top + 'px';
+  }
+}
+function offerTour() {
+  if (!S || TOUR || $('#dlg').classList.contains('on')) return;
+  const d = $('#dlg');
+  d.innerHTML = `<div class="dbg"></div><div class="dbox welcome" role="alertdialog" aria-modal="true" aria-labelledby="wt">
+    <div class="thero">${logo(64)}</div>
+    <h3 id="wt">¡Bienvenido a GymRat${S.settings.name ? ', ' + esc(S.settings.name) : ''}!</h3>
+    <p>¿Quieres un recorrido rápido que te enseña a usar la app? Dura un par de minutos y puedes omitirlo cuando quieras.</p>
+    <div class="dbtns"><button class="btn2" data-act="tno">Ahora no</button><button class="cta" data-act="tgo">Empezar recorrido</button></div></div>`;
+  d.classList.add('on');
+}
+function maybeOfferTour() { if (S && S.settings.tourSeen === false) setTimeout(offerTour, 700); }
+
 /* ---------- estadísticas generales ---------- */
 let statsP = 0;
 function statsData(days) {
@@ -2047,7 +2236,7 @@ let PEND = null, sheetRender = null;
 const sheetOpen = () => $('#sheet').classList.contains('on');
 function openSheet(h, rerender = null) {
   sheetRender = rerender;
-  if (!sheetOpen()) { history.pushState(Object.assign({}, history.state, { sheet: true }), ''); $('#sheet').scrollTop = 0; }
+  if (!sheetOpen()) { if (!TOUR) history.pushState(Object.assign({}, history.state, { sheet: true }), ''); $('#sheet').scrollTop = 0; }
   $('#sheet').innerHTML = `<div class="shbar"><div class="grab"></div><button class="shx" data-act="close" aria-label="Cerrar">${ic('x', 18)}</button></div>` + h;
   $('#ov').classList.add('on');
   $('#sheet').classList.add('on');
@@ -2338,7 +2527,9 @@ function openSettings() {
     <p class="lbl">Respaldo</p>
     <p class="mu small" style="margin:0 0 10px">Tus datos ya se guardan en tu cuenta. Igual puedes descargar una copia en un archivo.</p>
     <div class="two"><button class="btn2" data-act="exp">Descargar</button><label class="btn2" for="imp">Restaurar</label></div>
-    <input id="imp" type="file" accept="application/json,.json" hidden>`);
+    <input id="imp" type="file" accept="application/json,.json" hidden>
+    <p class="lbl">Ayuda</p>
+    <button class="btn2 tourbtn" id="tourbtn" data-act="tourstart">${ic('play', 18)} Ver el tutorial de la app</button>`);
 }
 
 /* resumen final */
@@ -2542,6 +2733,12 @@ const A = {
   },
   dyes: () => { const f = PEND; hideDlg(); f?.(); },
   dno: () => hideDlg(),
+  tgo: () => { hideDlg(); S.settings.tourSeen = true; save(); startTour(); },
+  tno: () => { hideDlg(); S.settings.tourSeen = true; save(); toast('Puedes ver el recorrido cuando quieras al final de Ajustes'); },
+  tourstart: () => { hideSheet(); startTour(); },
+  tnext: () => { if (!TOUR) return; if (TOUR.i >= TOUR_STEPS.length - 1) endTour(true); else tourShow(TOUR.i + 1); },
+  tprev: () => { if (TOUR && TOUR.i > 0) tourShow(TOUR.i - 1); },
+  tskip: () => endTour(false),
   editsess: (el) => editSession(el.dataset.d, el.dataset.r, el.dataset.from),
   sessok: (el) => {
     const d = el.dataset.d, rid = el.dataset.r, from = el.dataset.from;
@@ -2642,6 +2839,13 @@ const A = {
   cday: (el) => { calSel = el.dataset.d; renderDay(calSel); $('#sheet').scrollTop = 0; },
   calback: () => { renderCal(); $('#sheet').scrollTop = 0; },
 
+  favstar: (el) => {
+    const r = R(el.dataset.r); if (!r) return;
+    const add = !r.fav;
+    confirmS({ title: add ? '¿Agregar a favoritos?' : '¿Sacar de favoritos?', text: `¿Desea ${add ? 'agregar' : 'sacar'} la rutina «${esc(r.name)}» ${add ? 'a' : 'de'} favoritos?`, cta: add ? 'Agregar' : 'Sacar', danger: false, ok: () => {
+      r.fav = add; if (!add) altOpen = true; save(); render(); toast(add ? `${r.name} ahora es favorita` : `${r.name} pasó a rutinas alternativas`);
+    } });
+  },
   rmove: (el) => {
     const favs = S.routines.filter((r) => r.fav);
     const i = favs.findIndex((r) => r.id === el.dataset.id), j = i + Number(el.dataset.d);
@@ -2691,6 +2895,7 @@ document.addEventListener('input', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return;
+  if (e.target.matches?.('[role=button][data-act]')) { e.preventDefault(); e.target.click(); return; }
   const id = e.target.id;
   if (id === 'lu') { e.preventDefault(); $('#lp').focus(); }
   else if (id === 'lp') { e.preventDefault(); doAuth(); }
@@ -2730,6 +2935,7 @@ async function boot() {
   }
   booting = false;
   render();
+  maybeOfferTour();
 }
 boot();
 if (navigator.storage?.persist) navigator.storage.persist().catch(() => {});
