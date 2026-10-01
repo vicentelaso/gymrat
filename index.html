@@ -1505,6 +1505,7 @@ const topSet = (sets) => sets.reduce((b, s) => (!b || score(s) > score(b) + 1e-1
 const isBest = (s, sets) => { const t = topSet(sets); return Math.abs(score(s) - score(t)) < 1e-9; };
 const setPos = (s) => { const ds = S.logs.filter((l) => l.x === s.x && l.d === s.d).sort(byTs); return [ds.indexOf(s) + 1, ds.length]; };
 function lastRoutine(rid) { let m = null; S.logs.forEach((l) => { if (l.r === rid && (!m || l.d > m)) m = l.d; }); return m; }
+const grpWord = (pid) => (pid === 'cardio' ? { one: 'tipo', One: 'Tipo', all: 'Todos los tipos', many: 'Tipos', field: 'Tipo de cardio' } : { one: 'músculo', One: 'Músculo', all: 'Todos los músculos', many: 'Músculos', field: 'Músculo que trabaja' });
 const partsLabel = (r) => r.parts.map((id) => P(id)?.name).filter(Boolean).join(', ');
 const todayR = (rid) => S.logs.filter((l) => l.r === rid && l.d === today()).sort(byTs);
 
@@ -1708,10 +1709,10 @@ function vPart(r, p) {
     ${edit ? `<div class="editbar"><span>Toca el ojo para ocultar los ejercicios que no haces, o el lápiz para editar.</span><button class="txtbtn" data-act="edit">Salir</button></div>` : ''}
     <div class="search">${ic('search', 20)}<input id="q" type="search" placeholder="Buscar ejercicio" value="${esc(f.q)}" autocomplete="off" aria-label="Buscar ejercicio"></div>
     ${p.muscles.length ? `<div class="fbar">
-      <button class="fbtn${f.m ? ' act' : ''}" data-act="fopen" aria-expanded="${!!f.open}">${ic('filter', 18)}<span class="grow">${f.m ? `Músculo: <b>${esc(f.m)}</b>` : 'Filtrar por músculo'}</span>${ic(f.open ? 'up' : 'down', 18)}</button>
+      <button class="fbtn${f.m ? ' act' : ''}" data-act="fopen" aria-expanded="${!!f.open}">${ic('filter', 18)}<span class="grow">${f.m ? `${grpWord(p.id).One}: <b>${esc(f.m)}</b>` : `Filtrar por ${grpWord(p.id).one}`}</span>${ic(f.open ? 'up' : 'down', 18)}</button>
       ${f.m ? `<button class="fclr" data-act="fm" data-m="" aria-label="Quitar filtro">${ic('x', 18)}</button>` : ''}
     </div>
-    ${f.open ? `<div class="flist" role="listbox" aria-label="Músculos">${[['', 'Todos los músculos']].concat(p.muscles.map((m) => [m.n, m.n])).map(([v, l]) => {
+    ${f.open ? `<div class="flist" role="listbox" aria-label="${grpWord(p.id).many}">${[['', grpWord(p.id).all]].concat(p.muscles.map((m) => [m.n, m.n])).map(([v, l]) => {
       const n = p.ex.filter((e) => !e.hidden && (!v || e.m === v)).length;
       return `<button class="fopt${(f.m || '') === v ? ' on' : ''}" role="option" aria-selected="${(f.m || '') === v}" data-act="fm" data-m="${esc(v)}"><i></i><span class="grow">${esc(l)}</span><span class="fn">${n}</span></button>`;
     }).join('')}</div>` : ''}` : ''}
@@ -2121,7 +2122,7 @@ const exParts = {
   pv: () => exIcon(EX.pose, EX.tool, regsForMuscle(EX.m, EX.pid), 92, EX.mode),
   hint: () => EX.id ? '' : EX.name.trim()
     ? (EX.sug ? `Sugerido por el nombre: <b>${esc(POSE_NAMES[EX.pose] || EX.pose)}</b>, ${esc(TOOLS.find((t) => t[0] === EX.tool)[1].toLowerCase())}${EX.m ? ', ' + esc(EX.m.toLowerCase()) : ''}. Puedes cambiarlo abajo.` : 'No reconocí el movimiento: elige el dibujo que más se parezca.')
-    : 'Escribe el nombre y te sugiero el dibujo, el músculo y con qué se hace.',
+    : `Escribe el nombre y te sugiero el dibujo, el ${grpWord(EX.pid).one} y con qué se hace.`,
   mus: () => P(EX.pid).muscles.map((m) => `<button class="chip${EX.m === m.n ? ' on' : ''}" data-act="exm" data-m="${esc(m.n)}" aria-pressed="${EX.m === m.n}">${esc(m.n)}</button>`).join('') + `<button class="chip add" data-act="exnm">${ic('plus', 16)} Otro</button>`,
   mode: () => [['reps', 'Repeticiones'], ['time', 'Tiempo'], ['assist', 'Asistida'], ['cardio', 'Cardio']].map(([k, l]) => `<button class="chip${(EX.mode || 'reps') === k ? ' on' : ''}" data-act="exmd" data-k="${k}" aria-pressed="${(EX.mode || 'reps') === k}">${l}</button>`).join(''),
   modeh: () => ({ reps: 'Lo normal: peso y repeticiones (o solo repeticiones si es peso corporal).', time: 'Se anota cuántos segundos aguantas, con cronómetro incluido. Ej: plancha.', assist: 'Máquinas donde el peso te ayuda, como las dominadas asistidas: mientras menos ayuda, mejor.', cardio: 'Se anotan minutos y distancia opcional (km); la app calcula tu velocidad.' })[EX.mode || 'reps'],
@@ -2147,7 +2148,7 @@ function renderEX() {
     <label class="lbl" for="exn">Nombre</label>
     <input id="exn" class="inp" data-bind="exname" value="${esc(EX.name)}" placeholder="Ej: Remo en polea con cuerda" maxlength="50" autocomplete="off">
     <p class="exhint" id="exhint">${exParts.hint()}</p>
-    <p class="lbl">Músculo que trabaja</p>
+    <p class="lbl">${grpWord(EX.pid).field}</p>
     <div class="chips" id="exmus">${exParts.mus()}</div>
     ${EX.newM ? `<div class="inrow"><input id="nmn" class="inp" placeholder="Ej: Serrato" maxlength="30" aria-label="Nuevo músculo"><button class="btn2" data-act="exnmok">Agregar</button></div>` : ''}
     <p class="lbl">Con qué se hace</p>
