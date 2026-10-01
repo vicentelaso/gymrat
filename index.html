@@ -325,7 +325,16 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .dblock{margin-top:14px}
 .dbh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:0 2px 8px;border-bottom:1px solid var(--line);margin-bottom:8px}
 .dbn{font-family:var(--cond);font-weight:800;font-size:24px}
-.dbt{color:var(--mu);font-size:13px;white-space:nowrap}
+.dbt{display:inline-flex;align-items:center;gap:5px;color:var(--mu);font-size:13px;white-space:nowrap;min-height:36px;padding:0 10px;border-radius:10px;background:#000;border:1px solid var(--line)}
+.dbt svg{color:var(--ac)}
+.sesrow{display:flex;align-items:center;gap:10px;width:100%;margin-top:10px;padding:12px 14px;border-radius:16px;background:#000;border:1.5px solid var(--line);text-align:left;font-size:15px}
+.sesrow b{font-family:var(--cond);font-size:20px}
+.sesrow i{color:var(--mu);font-style:normal;font-size:13px}
+.sesrow em{display:inline-flex;align-items:center;gap:4px;font-style:normal;color:var(--ac);font-weight:700;font-size:14px}
+.sesin{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 6px}
+.sesin span{display:block;color:var(--mu);font-size:13px;margin-bottom:6px}
+.sesin .inp{width:100%;min-width:0;height:54px;font-size:19px;font-weight:700;text-align:center;color-scheme:dark;padding:0 6px}
+.seserr{color:var(--red);font-size:14px;margin:4px 0 10px}
 .dx{display:flex;gap:12px;align-items:flex-start;background:#000;border-radius:18px;padding:10px;margin-bottom:8px}
 .dx .exic{width:56px;height:56px}
 .dxn{font-weight:700;font-size:16px;line-height:1.25}
@@ -2060,6 +2069,20 @@ function confirmS({ title, text, cta, ok, danger = true }) {
   d.classList.add('on');
   setTimeout(() => d.querySelector('[data-act=dno].btn2')?.focus(), 50);
 }
+function editSession(d, rid, from) {
+  const arr = S.logs.filter((l) => l.d === d && l.r === rid).sort(byTs);
+  if (!arr.length) return;
+  const t = sessionTime(d, rid, arr);
+  const dlg = $('#dlg');
+  dlg.innerHTML = `<div class="dbg" data-act="dno"></div><div class="dbox" role="dialog" aria-modal="true" aria-labelledby="sest">
+    <h3 id="sest">Horario del entrenamiento</h3>
+    <p>${esc(R(rid)?.name || arr[0].rn || 'Rutina')}, ${fLong(d)}. Tu primera serie fue a las ${hhmm(arr[0].ts)} y la última a las ${hhmm(arr[arr.length - 1].ts)}.</p>
+    <div class="sesin"><label><span>Inicio</span><input id="sesS" class="inp" type="time" value="${hhmm(t.start)}"></label><label><span>Término</span><input id="sesE" class="inp" type="time" value="${hhmm(t.end)}"></label></div>
+    <p class="seserr" id="seserr" hidden></p>
+    <div class="dbtns"><button class="btn2" data-act="dno">Cancelar</button><button class="cta" data-act="sessok" data-d="${d}" data-r="${rid}" data-from="${from}">Guardar</button></div></div>`;
+  dlg.classList.add('on');
+  setTimeout(() => $('#sesE')?.focus(), 60);
+}
 function hideDlg() { $('#dlg').classList.remove('on'); PEND = null; }
 
 /* rutina: crear y editar */
@@ -2275,7 +2298,7 @@ function renderDay(d) {
       return `<div class="dx"><span class="exic">${icon}</span><div class="grow"><div class="dxn">${esc(e?.name || g.sets[0].name)}</div>${e?.m ? `<div class="dxm">${esc(e.m)}</div>` : ''}
         <div class="dxs">${g.sets.map((s, i) => `<span class="cs${isBest(s, g.sets) ? ' best' : ''}"><i>${i + 1}</i>${setTxt(s)}${s.pr ? '<b>Récord</b>' : ''}</span>`).join('')}</div></div></div>`;
     }).join('');
-    return `<section class="dblock"><div class="dbh"><span class="dbn">${esc(R(r)?.name || arr[0].rn || 'Rutina')}</span><span class="dbt">${hhmm(t.start)}–${hhmm(t.end)} · ${t.exact ? '' : '≈ '}${fmtDur(m)}</span></div>${rows}</section>`;
+    return `<section class="dblock"><div class="dbh"><span class="dbn">${esc(R(r)?.name || arr[0].rn || 'Rutina')}</span><button class="dbt" data-act="editsess" data-d="${d}" data-r="${r}" data-from="day" aria-label="Editar horario">${hhmm(t.start)}–${hhmm(t.end)} · ${t.exact ? '' : '≈ '}${fmtDur(m)}${S.sessions?.[d + '|' + r]?.manual ? ' ✎' : ''} ${ic('edit', 14)}</button></div>${rows}</section>`;
   }).join('');
   const vol = ls.reduce((a, l) => a + volKg(l), 0);
   const nEx = new Set(ls.map((l) => l.x)).size;
@@ -2330,11 +2353,16 @@ function finish(rid) {
   if (!td.length) return;
   const vol = td.reduce((a, l) => a + volKg(l), 0);
   const exs = new Set(td.map((l) => l.x)).size;
-  const end = Math.min(Date.now(), td[td.length - 1].ts + 30 * 60000);
   S.sessions = S.sessions || {};
-  S.sessions[today() + '|' + rid] = { start: td[0].ts, end };
-  save();
-  const dur = (end - td[0].ts) / 60000;
+  const key = today() + '|' + rid, prev = S.sessions[key];
+  const lastTs = td[td.length - 1].ts;
+  /* el término solo se calcula si no existe, o si anotaste series nuevas después de él; un horario editado a mano no se toca */
+  if (!prev || (!prev.manual && lastTs > prev.end)) {
+    S.sessions[key] = { start: prev?.manual ? prev.start : td[0].ts, end: Math.min(Date.now(), lastTs + 30 * 60000) };
+    save();
+  }
+  const ses = S.sessions[key];
+  const dur = (ses.end - ses.start) / 60000;
   const prs = td.filter((l) => l.pr);
   openSheet(`<h2 class="sh-t">Entrenamiento terminado</h2>
     <p class="mu" style="margin:0 0 12px">${esc(r.name)}, ${fLong(today())}</p>
@@ -2344,6 +2372,7 @@ function finish(rid) {
       <div class="stat"><b>${nf(vol, 0)}</b><span>Kilos levantados</span></div>
       <div class="stat"><b>${fmtDur(dur)}</b><span>Duración</span></div>
     </div>
+    <button class="sesrow" data-act="editsess" data-d="${today()}" data-r="${rid}" data-from="finish">${ic('clock', 18)}<span class="grow">Horario: <b>${hhmm(ses.start)} – ${hhmm(ses.end)}</b>${ses.manual ? ' <i>(editado)</i>' : ''}</span><em>${ic('edit', 16)} Editar</em></button>
     ${prs.length ? `<p class="lbl">Récords de hoy</p>${prs.map((l) => `<div class="prrow"><span>${esc(X(l.x)?.e.name || l.name)}</span><b>${setTxt(l)}</b></div>`).join('')}` : ''}
     <button class="cta" data-act="done">Listo</button>`);
 }
@@ -2513,6 +2542,21 @@ const A = {
   },
   dyes: () => { const f = PEND; hideDlg(); f?.(); },
   dno: () => hideDlg(),
+  editsess: (el) => editSession(el.dataset.d, el.dataset.r, el.dataset.from),
+  sessok: (el) => {
+    const d = el.dataset.d, rid = el.dataset.r, from = el.dataset.from;
+    const sv = $('#sesS').value, ev = $('#sesE').value, err = $('#seserr');
+    const toTs = (v) => { const [hh, mm] = v.split(':').map(Number); const x = pd(d); x.setHours(hh, mm, 0, 0); return x.getTime(); };
+    if (!sv || !ev) { err.textContent = 'Completa la hora de inicio y de término.'; err.hidden = false; return; }
+    const start = toTs(sv); let end = toTs(ev);
+    if (end <= start) end += 864e5; // terminaste pasada la medianoche
+    if (end - start > 6 * 3600e3) { err.textContent = 'Revisa las horas: el entrenamiento quedaría de más de 6 horas.'; err.hidden = false; return; }
+    S.sessions = S.sessions || {};
+    S.sessions[d + '|' + rid] = { start, end, manual: true };
+    save(); hideDlg();
+    toast(`Horario guardado: ${hhmm(start)} – ${hhmm(end)} (${fmtDur((end - start) / 60000)})`);
+    if (from === 'day') renderDay(d); else if (from === 'finish') finish(rid); else render();
+  },
   delday: (el) => {
     const d = el.dataset.d;
     const n = S.logs.filter((l) => l.d === d).length;
