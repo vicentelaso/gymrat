@@ -1568,7 +1568,7 @@ function render() {
   const s = parse();
   const path = s.join('/');
   const changed = path !== lastPath;
-  if (changed) { edit = false; chartSel = null; kmOpen = false; if (s[2] === 'x') chartM = null; }
+  if (changed) { edit = false; chartSel = null; kmOpen = false; if (s[2] === 'x') chartM = null; if (s[0] === 'stats') statsP = 0; }
   lastPath = path;
   let html = null, rid = null;
   if (!s.length) html = vHome();
@@ -1831,7 +1831,7 @@ function vEx(r, xid) {
 }
 
 /* ---------- estadísticas generales ---------- */
-let statsP = 90;
+let statsP = 0;
 function statsData(days) {
   const since = days ? iso(new Date(Date.now() - (days - 1) * 864e5)) : '0000';
   const logs = S.logs.filter((l) => l.d >= since);
@@ -1849,8 +1849,10 @@ function statsData(days) {
   const totalMin = timed.reduce((a, d) => a + dayMin[d], 0);
   const avgMin = timed.length ? totalMin / timed.length : 0;
   const longest = timed.reduce((b, d) => (!b || dayMin[d] > dayMin[b] ? d : b), null);
-  const firstD = days ? since : dates[0];
-  const weeks = Math.max(1, (pd(today()) - pd(firstD)) / (7 * 864e5));
+  /* las semanas se cuentan desde tu primer entrenamiento (o desde el inicio del período si empezaste antes) */
+  const firstEver = S.logs.reduce((m, l) => (l.d < m ? l.d : m), today());
+  const firstD = firstEver > since ? firstEver : since;
+  const weeks = Math.max(1, ((pd(today()) - pd(firstD)) / 864e5 + 1) / 7);
   const perWeek = dates.length / weeks;
   const wd = [0, 0, 0, 0, 0, 0, 0];
   dates.forEach((d) => { wd[(pd(d).getDay() + 6) % 7]++; });
@@ -1879,7 +1881,7 @@ function statsData(days) {
   };
 }
 function vStats() {
-  const P_ = [[30, '30 días'], [90, '90 días'], [0, 'Todo']];
+  const P_ = [[0, 'Todo'], [90, '90 días'], [30, '30 días']];
   const st = statsData(statsP);
   const seg = `<div class="seg wide" role="group" aria-label="Período">${P_.map(([v, l]) => `<button data-act="statsp" data-p="${v}" class="${statsP === v ? 'on' : ''}" aria-pressed="${statsP === v}">${l}</button>`).join('')}</div>`;
   if (!st) return `${hdr('/', '')}<h2 class="pt">Estadísticas</h2>${seg}<p class="empty">Todavía no hay entrenamientos en este período.</p>`;
