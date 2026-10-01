@@ -1188,9 +1188,9 @@ const CATALOG = [
       ['Correr', 'run', 'n', 'Carrera continua al aire libre. Clave: si puedes hablar en frases cortas, vas a buen ritmo aeróbico.'],
       ['Caminar', 'walk', 'n', 'Caminata a paso rápido. Clave: brazos activos y pasos largos; suma mucho gasto sin cansarte tanto.'],
       ['Nadar', 'swim', 'n', 'Natación continua en el estilo que prefieras. Clave: anota los minutos y la distancia en km (por ejemplo, 1 km son 40 largos de 25 m).'],
-      ['Saco de boxeo', 'boxing', 'n', 'Golpea el saco en rounds, por ejemplo 3 minutos de trabajo y 1 de descanso. Clave: guardia arriba y gira la cadera en cada golpe.']]],
+      ['Saco de boxeo', 'boxing', 'n', 'Golpea el saco en rounds, por ejemplo 3 minutos de trabajo y 1 de descanso. Clave: anota los minutos totales y los rounds; guardia arriba y gira la cadera en cada golpe.']]],
     ['Intervalos (HIIT)', 'Esfuerzos cortos e intensos con pausas. Suben mucho las pulsaciones en poco tiempo.', [
-      ['Saltar la cuerda', 'jumprope', 'n', 'Salta con saltos cortos, girando la cuerda con las muñecas. Clave: aterriza en la punta de los pies con las rodillas algo dobladas.'],
+      ['Saltar la cuerda', 'jumprope', 'n', 'Salta con saltos cortos, girando la cuerda con las muñecas. Clave: anota los minutos y, si los cuentas, los saltos; aterriza en la punta de los pies.'],
       ['Burpees', 'burpee', 'n', 'Desde de pie, baja a plancha, vuelve a pararte y termina con un salto con los brazos arriba. Clave: se anotan repeticiones; mantén un ritmo parejo.'],
       ['Jumping jacks', 'jacks', 'n', 'Salta abriendo piernas y brazos a la vez, y vuelve a cerrarlos. Clave: buen calentamiento; se anotan repeticiones.'],
       ['Cuerdas de batalla', 'ropes', 'n', 'En media sentadilla, agita las cuerdas con ondas rápidas y continuas. Clave: se anotan los segundos; trabaja hombros, brazos y core.'],
@@ -1198,7 +1198,12 @@ const CATALOG = [
       ['Empuje de trineo', 'sled', 'm', 'Empuja el trineo con los brazos estirados y el cuerpo inclinado, dando pasos cortos y fuertes. Clave: se anota el tiempo y el peso cargado en el trineo.']]]
   ] }
 ];
-const CATALOG_V = 9;
+const CATALOG_V = 10;
+const CARDIO_X = {
+  'Trotadora': 'km', 'Caminata inclinada en trotadora': 'km', 'Bicicleta estática': 'km', 'Bicicleta reclinada': 'km', 'Spinning': 'cal', 'Elíptica': 'cal',
+  'Escaladora': 'floors', 'Remo ergómetro': 'km', 'Air bike': 'cal', 'Ski erg': 'km', 'Correr': 'km', 'Caminar': 'km', 'Nadar': 'km',
+  'Saco de boxeo': 'rounds', 'Saltar la cuerda': 'jumps'
+};
 /* ejercicios que no se miden por peso × repeticiones */
 const MODES = {
   'Plancha': 'time', 'Plancha lateral': 'time', 'Colgarse de la barra': 'time', 'Sentadilla isométrica en pared': 'time', 'Hollow hold': 'time', 'Paseo del granjero': 'time',
@@ -1217,7 +1222,7 @@ function seedParts() {
     return {
       id: pid, name: p.n,
       muscles: p.muscles.map(([n, d]) => ({ n, d })),
-      ex: p.muscles.flatMap(([m, , exs]) => exs.map(([e, pose, tool, desc, fid]) => { const o = { id: fid || pid + '_' + slug(e), name: e, m, pose, tool, desc }; if (MODES[e]) o.mode = MODES[e]; return o; }))
+      ex: p.muscles.flatMap(([m, , exs]) => exs.map(([e, pose, tool, desc, fid]) => { const o = { id: fid || pid + '_' + slug(e), name: e, m, pose, tool, desc }; if (MODES[e]) o.mode = MODES[e]; if (CARDIO_X[e]) o.cx = CARDIO_X[e]; return o; }))
     };
   });
 }
@@ -1279,6 +1284,7 @@ function mergeCatalog(s) {
           if (POSE_FIX[fe.id] && ue.id === fe.id && (!ue.pose || ue.pose === POSE_FIX[fe.id][0])) ue.pose = POSE_FIX[fe.id][1];
           if (TOOL_FIX[fe.id] && ue.id === fe.id && ue.tool === TOOL_FIX[fe.id][0]) ue.tool = TOOL_FIX[fe.id][1];
           if (fe.mode && !ue.mode) ue.mode = fe.mode;
+          if (fe.cx && ue.cx === undefined) ue.cx = fe.cx;
           if ((s.cv || 0) < 8 && ue.custom !== true) { if (!ue.poseSet) ue.pose = fe.pose; if (!ue.descSet) ue.desc = fe.desc; }
           ue.pose = ue.pose || fe.pose; ue.tool = ue.tool || fe.tool; ue.m = ue.m || fe.m; ue.desc = ue.desc || fe.desc; ue.custom = false; known.add(ue.id);
         }
@@ -1476,6 +1482,18 @@ const kindOf = (xid) => {
 const isBW = (xid) => kindOf(xid) === 'bw';
 const bodyKg = () => { const b = parseNum(S?.settings?.bw); return b > 20 && b < 300 ? b : 70; };
 const kmh = (s) => (s.km > 0 && s.reps > 0 ? s.km / (s.reps / 60) : 0);
+/* dato extra del cardio, además de los minutos */
+const CX = {
+  km: { label: 'Distancia', unit: 'km', field: 'Distancia (km)', dec: true, rate: 'km/h' },
+  cal: { label: 'Calorías', unit: 'kcal', field: 'Calorías', rate: 'kcal/min' },
+  jumps: { label: 'Saltos', unit: 'saltos', field: 'Saltos', rate: 'saltos/min' },
+  rounds: { label: 'Rounds', unit: 'rounds', field: 'Rounds' },
+  floors: { label: 'Pisos', unit: 'pisos', field: 'Pisos', rate: 'pisos/min' }
+};
+const cxOf = (xid) => { const e = X(xid)?.e; return e && e.mode === 'cardio' ? (e.cx === undefined ? 'km' : e.cx) : null; };
+const cxVal = (s) => (s.km > 0 ? s.km : s.cnt > 0 ? s.cnt : 0);
+const cxRate = (s) => (s.reps > 0 && cxVal(s) > 0 ? cxVal(s) / (s.reps / (s.km > 0 ? 60 : 1)) : 0);
+const cxTxt = (s) => (s.km > 0 ? `${nf(s.km, 2)} km` : s.cnt > 0 ? `${s.cnt} ${(CX[cxOf(s.x)] || CX.jumps).unit}` : '');
 const fmtT = (sec) => sec < 60 ? `${sec} s` : `${Math.floor(sec / 60)}:${pad(sec % 60)} min`;
 /* puntaje para decidir la mejor serie:
    kg     1RM estimado
@@ -1487,7 +1505,7 @@ const score = (s) => {
   const v = k === 'bw' ? (B + s.kg) * (1 + s.reps / 30)
     : k === 'assist' ? Math.max(B - s.kg, 1) * (1 + s.reps / 30)
     : k === 'time' ? s.reps * (B + s.kg) / B
-    : k === 'cardio' ? ((s.km || 0) > 0 ? 1000 + (s.km * 100) : 0) + s.reps / 1000
+    : k === 'cardio' ? (cxVal(s) > 0 ? 1e6 + cxVal(s) * 100 : 0) + s.reps / 1000
     : rm1(s);
   return v + s.reps * 1e-6;
 };
@@ -1495,7 +1513,7 @@ const setTxt = (s, short = false) => {
   const k = kindOf(s.x);
   if (k === 'bw') return s.kg > 0 ? `${s.reps} reps + ${nf(s.kg)} kg` : `${s.reps} reps`;
   if (k === 'time') return s.kg > 0 ? `${fmtT(s.reps)} + ${nf(s.kg)} kg` : fmtT(s.reps);
-  if (k === 'cardio') return s.km > 0 ? `${s.reps} min · ${nf(s.km, 2)} km` : `${s.reps} min`;
+  if (k === 'cardio') return cxTxt(s) ? `${s.reps} min · ${cxTxt(s)}` : `${s.reps} min`;
   if (k === 'assist') return s.kg > 0 ? (short ? `${s.reps} (ayuda ${nf(s.kg)})` : `${s.reps} reps, ayuda ${nf(s.kg)} kg`) : `${s.reps} reps sin ayuda`;
   return short ? `${nf(s.kg)} × ${s.reps}` : `${nf(s.kg)} kg × ${s.reps}`;
 };
@@ -1747,7 +1765,7 @@ function defaultDraft(xid) {
   return { w: s.kg > 0 || k === 'kg' || k === 'assist' ? inNum(w) : '', reps: String(s.reps) };
 }
 let draft = null, curFirst = 'fw', kmOpen = false;
-const lastKm = (xid) => { const l = S.logs.filter((x) => x.x === xid && x.km > 0).sort(byTs).pop(); return l ? l.km : 0; };
+const lastKm = (xid) => { const l = S.logs.filter((x) => x.x === xid && cxVal(x) > 0).sort(byTs).pop(); return l ? cxVal(l) : 0; };
 function vEx(r, xid) {
   const f = X(xid);
   if (!f) return null;
@@ -1771,7 +1789,7 @@ function vEx(r, xid) {
         kd === 'bw' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de lastre</span>` : '<span class="ns">sin lastre</span>')
         : kd === 'time' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg extra</span>` : '<span class="ns">sin peso extra</span>')
         : kd === 'assist' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de ayuda</span>` : '<span class="ns">¡sin ayuda!</span>')
-        : kd === 'cardio' ? (s.km > 0 ? `<span class="ns">${nf(s.km, 2)} km · ${nf(kmh(s))} km/h</span>` : '<span class="ns">sin distancia</span>')
+        : kd === 'cardio' ? (s.km > 0 ? `<span class="ns">${nf(s.km, 2)} km · ${nf(kmh(s))} km/h</span>` : s.cnt > 0 ? `<span class="ns">${cxTxt(s)}${CX[cxOf(s.x)]?.rate ? ` · ${nf(cxRate(s))} ${CX[cxOf(s.x)].rate}` : ''}</span>` : '')
         : s.kg > 0 ? `<span class="ns">1RM estimado ${nf(rm1(s))} kg</span>` : ''}</div>`;
     };
     notes = Math.abs(score(lb) - score(hb)) < 1e-9
@@ -1803,19 +1821,19 @@ function vEx(r, xid) {
           const W = (label, opt, first) => `<label class="fld${opt ? ' opt' : ''}"><span>${label}</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>`;
           const Rr = (label, first) => `<label class="fld"><span>${label}</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.reps)}"></label>`;
           if (kd === 'bw') return Rr('Repeticiones', true) + W(`Lastre (${u})`, true, false);
-          if (kd === 'cardio') return Rr('Minutos', !!kmOpen) + (kmOpen ? `<label class="fld opt"><span>Distancia (km)</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>` : '');
+          if (kd === 'cardio') { const cx = CX[cxOf(xid)]; return Rr('Minutos', !!kmOpen) + (kmOpen && cx ? `<label class="fld opt"><span>${cx.field}</span><input id="fw" class="num" type="text" inputmode="${cx.dec ? 'decimal' : 'numeric'}" enterkeyhint="done" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>` : ''); }
           if (kd === 'time') return Rr('Segundos', true) + W(`Peso extra (${u})`, true, false);
           if (kd === 'assist') return W(`Ayuda (${u})`, false, true) + Rr('Repeticiones', false);
           return W(`Peso (${u})`, false, true) + Rr('Repeticiones', false);
         })()}
       </div>
-      ${kd === 'cardio' ? (kmOpen
-        ? `<button class="kmbtn" data-act="kmtoggle">${ic('x', 16)} Quitar distancia</button>`
-        : `<button class="kmbtn add" data-act="kmtoggle">${ic('plus', 16)} Agregar distancia${lastKm(xid) ? `<span>última: ${nf(lastKm(xid), 2)} km</span>` : ''}</button>`) : ''}
-      ${kd === 'time' ? `<button class="stopw${swOn ? ' on' : ''}" data-act="stopw" id="stopw">${swOn ? `Detener <b id="swt">${fmtClock(swSec())}</b>` : `${ic('clock', 18)} Usar cronómetro`}</button>` : ''}
+      ${kd === 'cardio' && CX[cxOf(xid)] ? (kmOpen
+        ? `<button class="kmbtn" data-act="kmtoggle">${ic('x', 16)} Quitar ${CX[cxOf(xid)].label.toLowerCase()}</button>`
+        : `<button class="kmbtn add" data-act="kmtoggle">${ic('plus', 16)} Agregar ${CX[cxOf(xid)].label.toLowerCase()}${lastKm(xid) ? `<span>última: ${nf(lastKm(xid), 2)} ${CX[cxOf(xid)].unit}</span>` : ''}</button>`) : ''}
+      ${kd === 'time' || kd === 'cardio' ? `<button class="stopw${swOn ? ' on' : ''}" data-act="stopw" id="stopw">${swOn ? `Detener <b id="swt">${fmtClock(swSec())}</b>` : `${ic('clock', 18)} Usar cronómetro`}</button>` : ''}
       ${{ bw: '<p class="bwhint">Peso corporal: basta con las repeticiones. El lastre es opcional: anótalo solo si usas disco, cinturón con peso o chaleco.</p>',
           time: '<p class="bwhint">Anota cuántos segundos aguantaste, o usa el cronómetro y se llena solo. El peso extra es opcional (por ejemplo, un disco en la espalda).</p>',
-          cardio: '<p class="bwhint">Anota los minutos. Si la máquina o tu reloj muestra la distancia, agrégala y la app calcula tu velocidad.</p>',
+          cardio: `<p class="bwhint">Anota los minutos o usa el cronómetro.${{ km: ' Si la máquina o tu reloj muestra la distancia, agrégala y la app calcula tu velocidad.', cal: ' Si la máquina muestra las calorías, puedes agregarlas.', jumps: ' Si cuentas los saltos, agrégalos y verás cuántos haces por minuto.', rounds: ' Puedes agregar cuántos rounds hiciste.', floors: ' Si la máquina muestra los pisos, agrégalos.' }[cxOf(xid)] || ''}</p>`,
           assist: '<p class="bwhint">En la máquina asistida el peso te ayuda: mientras menos ayuda uses, mejor. Pon 0 si lo hiciste sin ayuda.</p>' }[kd] || ''}
       <button class="cta" data-act="add">${kd === 'cardio' ? 'Guardar registro' : 'Guardar serie'}</button>
       ${sets ? `<div class="sets">${sets}</div>` : ''}
@@ -1825,7 +1843,7 @@ function vEx(r, xid) {
         ${(() => { const md = chartModes(xid); const cm = md.includes(chartM) ? chartM : md[0];
           return md.length > 1 ? `<div class="seg" role="group" aria-label="Qué mostrar">${md.map((k) => `<button data-act="cm" data-m="${k}" class="${cm === k ? 'on' : ''}" aria-pressed="${cm === k}">${modeLabel(xid, k)}</button>`).join('')}</div>` : ''; })()}
       </div>
-      <p class="chelp">Cada punto es ${kd === 'cardio' ? 'la mejor marca' : 'la mejor serie'} del día.${kd === 'cardio' ? ' Km y Km/h solo muestran los días con distancia.' : ''} Toca uno para ver el detalle.${kd === 'assist' ? ' En Ayuda, que la línea baje es avanzar.' : ''}</p>
+      <p class="chelp">Cada punto es ${kd === 'cardio' ? 'la mejor marca' : 'la mejor serie'} del día.${kd === 'cardio' && CX[cxOf(xid)] ? ` Las pestañas de ${CX[cxOf(xid)].label.toLowerCase()} solo muestran los días en que la anotaste.` : ''} Toca uno para ver el detalle.${kd === 'assist' ? ' En Ayuda, que la línea baje es avanzar.' : ''}</p>
       <div id="chart" class="chart">${chartHTML(xid)}</div>
     </div>
     ${hist}`;
@@ -1935,19 +1953,24 @@ function chartModes(xid) {
   const k = kindOf(xid);
   if (k === 'kg') return ['peso', 'reps', 'rm'];
   if (k === 'assist') return ['peso', 'reps'];
-  if (k === 'cardio') return S.logs.some((l) => l.x === xid && l.km > 0) ? ['reps', 'km', 'spd'] : ['reps'];
+  if (k === 'cardio') {
+    const md = ['reps'];
+    if (S.logs.some((l) => l.x === xid && l.km > 0)) md.push('km', 'spd');
+    else if (S.logs.some((l) => l.x === xid && l.cnt > 0)) { md.push('cnt'); if (CX[cxOf(xid)]?.rate) md.push('cntr'); }
+    return md;
+  }
   return S.logs.some((l) => l.x === xid && l.kg > 0) ? ['reps', 'peso'] : ['reps'];
 }
-const modeLabel = (xid, m) => { const k = kindOf(xid); if (m === 'km') return 'Km'; if (m === 'spd') return 'Km/h'; if (k === 'cardio' && m === 'reps') return 'Min'; return m === 'peso' ? ({ bw: 'Lastre', time: 'Peso extra', assist: 'Ayuda' }[k] || 'Peso') : m === 'reps' ? (k === 'time' ? 'Tiempo' : 'Reps') : '1RM'; };
+const modeLabel = (xid, m) => { const k = kindOf(xid); if (m === 'km') return 'Km'; if (m === 'spd') return 'Km/h'; if (m === 'cnt') return (CX[cxOf(xid)] || CX.jumps).label; if (m === 'cntr') return 'Ritmo'; if (k === 'cardio' && m === 'reps') return 'Min'; return m === 'peso' ? ({ bw: 'Lastre', time: 'Peso extra', assist: 'Ayuda' }[k] || 'Peso') : m === 'reps' ? (k === 'time' ? 'Tiempo' : 'Reps') : '1RM'; };
 const modeOf = (xid) => { const md = chartModes(xid); return md.includes(chartM) ? chartM : md[0]; };
 function chartPoints(xid) {
   const days = byDay(S.logs.filter((l) => l.x === xid)).slice(-24);
   const M = modeOf(xid);
   return days.map(({ d, sets }) => {
     const b = topSet(sets);
-    const v = M === 'reps' ? b.reps : M === 'rm' ? rm1(b) : M === 'km' ? (b.km || 0) : M === 'spd' ? kmh(b) : b.kg;
+    const v = M === 'reps' ? b.reps : M === 'rm' ? rm1(b) : M === 'km' ? (b.km || 0) : M === 'spd' ? kmh(b) : M === 'cnt' ? (b.cnt || 0) : M === 'cntr' ? cxRate(b) : b.kg;
     return { d, v, s: b, i: sets.indexOf(b) + 1, n: sets.length };
-  }).filter((pt) => !((M === 'km' || M === 'spd') && !(pt.s.km > 0)));
+  }).filter((pt) => !((M === 'km' || M === 'spd') && !(pt.s.km > 0)) && !((M === 'cnt' || M === 'cntr') && !(pt.s.cnt > 0)));
 }
 function chartHTML(xid) {
   const pts = chartPoints(xid);
@@ -1981,14 +2004,14 @@ function chartHTML(xid) {
   let trend = '';
   if (n > 1) {
     const k = kindOf(xid), dv = pts[n - 1].v - pts[0].v;
-    const unit = M === 'reps' ? (k === 'time' ? ' s' : k === 'cardio' ? ' min' : ' reps') : M === 'km' ? ' km' : M === 'spd' ? ' km/h' : ' kg';
+    const unit = M === 'reps' ? (k === 'time' ? ' s' : k === 'cardio' ? ' min' : ' reps') : M === 'km' ? ' km' : M === 'spd' ? ' km/h' : M === 'cnt' ? ' ' + (CX[cxOf(xid)] || CX.jumps).unit : M === 'cntr' ? ' ' + ((CX[cxOf(xid)] || CX.jumps).rate || '') : ' kg';
     const lessIsBetter = k === 'assist' && M === 'peso';
     const good = lessIsBetter ? dv < 0 : dv > 0, bad = lessIsBetter ? dv > 0 : dv < 0;
     const what = lessIsBetter ? `${nf(Math.abs(dv))} kg de ayuda` : `${nf(Math.abs(dv))}${unit}`;
     trend = `<p class="csum ${good ? 'up' : bad ? 'down' : ''}">${dv > 0 ? `Subiste ${what}` : dv < 0 ? `Bajaste ${what}` : 'Te mantienes igual'} desde el ${fShort(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
   }
   return `${trend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xl}${hits}</svg>
-    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">${kindOf(xid) === 'cardio' ? 'Mejor marca' : 'Mejor serie'}: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${kindOf(xid) === 'cardio' ? (sp.n > 1 ? `${sp.i}.º registro de ${sp.n}` : 'Único registro del día') : sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}${kindOf(xid) === 'cardio' && sp.s.km > 0 ? ` · ${nf(kmh(sp.s))} km/h` : ''}</span></div>`;
+    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">${kindOf(xid) === 'cardio' ? 'Mejor marca' : 'Mejor serie'}: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${kindOf(xid) === 'cardio' ? (sp.n > 1 ? `${sp.i}.º registro de ${sp.n}` : 'Único registro del día') : sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}${kindOf(xid) === 'cardio' && sp.s.km > 0 ? ` · ${nf(kmh(sp.s))} km/h` : ''}${kindOf(xid) === 'cardio' && sp.s.cnt > 0 && CX[cxOf(xid)]?.rate ? ` · ${nf(cxRate(sp.s))} ${CX[cxOf(xid)].rate}` : ''}</span></div>`;
 }
 
 /* ---------- hojas inferiores ---------- */
@@ -2105,8 +2128,8 @@ function editEx(pid, xid) {
   const e = xid && p.ex.find((x) => x.id === xid);
   const fm = filt[pid]?.m || '';
   EX = e
-    ? { pid, id: e.id, name: e.name, m: e.m || '', pose: e.pose || 'gen', tool: e.tool || 'n', mode: e.mode || 'reps', desc: e.desc || '', newM: false, open: false, all: false, auto: {} }
-    : { pid, id: null, name: filt[pid]?.q || '', m: fm || p.muscles[0]?.n || '', pose: 'gen', tool: 'n', mode: 'reps', desc: '', newM: false, open: true, all: false, auto: { pose: true, tool: true, m: !fm, mode: true } };
+    ? { pid, id: e.id, name: e.name, m: e.m || '', pose: e.pose || 'gen', tool: e.tool || 'n', mode: e.mode || 'reps', cx: e.mode === 'cardio' ? (e.cx === undefined ? 'km' : e.cx) : '', desc: e.desc || '', newM: false, open: false, all: false, auto: {} }
+    : { pid, id: null, name: filt[pid]?.q || '', m: fm || p.muscles[0]?.n || '', pose: 'gen', tool: 'n', mode: pid === 'cardio' ? 'cardio' : 'reps', cx: pid === 'cardio' ? 'km' : '', desc: '', newM: false, open: true, all: false, auto: { pose: true, tool: true, m: !fm, mode: true } };
   if (!EX.id && EX.name) applySuggest();
   renderEX();
 }
@@ -2115,7 +2138,8 @@ function applySuggest() {
   if (EX.auto.pose && s.pose) EX.pose = s.pose;
   if (EX.auto.tool && s.tool) EX.tool = s.tool;
   if (EX.auto.m && s.m) EX.m = s.m;
-  if (EX.auto.mode) EX.mode = s.mode || 'reps';
+  if (EX.auto.mode) EX.mode = s.mode || (EX.pid === 'cardio' ? 'cardio' : 'reps');
+  if (EX.auto.cx !== false && EX.mode === 'cardio') { const n = norm(EX.name); EX.cx = /cuerda|salto/.test(n) ? 'jumps' : /boxeo|saco|sombra|kick/.test(n) ? 'rounds' : /escalera|escaladora/.test(n) ? 'floors' : /spinning|air ?bike|eliptic|assault/.test(n) ? 'cal' : /baile|zumba|clase|hiit|aerobic/.test(n) ? '' : 'km'; }
   EX.sug = !!(s.pose || s.tool || s.m);
 }
 const exParts = {
@@ -2125,7 +2149,8 @@ const exParts = {
     : `Escribe el nombre y te sugiero el dibujo, el ${grpWord(EX.pid).one} y con qué se hace.`,
   mus: () => P(EX.pid).muscles.map((m) => `<button class="chip${EX.m === m.n ? ' on' : ''}" data-act="exm" data-m="${esc(m.n)}" aria-pressed="${EX.m === m.n}">${esc(m.n)}</button>`).join('') + `<button class="chip add" data-act="exnm">${ic('plus', 16)} Otro</button>`,
   mode: () => [['reps', 'Repeticiones'], ['time', 'Tiempo'], ['assist', 'Asistida'], ['cardio', 'Cardio']].map(([k, l]) => `<button class="chip${(EX.mode || 'reps') === k ? ' on' : ''}" data-act="exmd" data-k="${k}" aria-pressed="${(EX.mode || 'reps') === k}">${l}</button>`).join(''),
-  modeh: () => ({ reps: 'Lo normal: peso y repeticiones (o solo repeticiones si es peso corporal).', time: 'Se anota cuántos segundos aguantas, con cronómetro incluido. Ej: plancha.', assist: 'Máquinas donde el peso te ayuda, como las dominadas asistidas: mientras menos ayuda, mejor.', cardio: 'Se anotan minutos y distancia opcional (km); la app calcula tu velocidad.' })[EX.mode || 'reps'],
+  modeh: () => ({ reps: 'Lo normal: peso y repeticiones (o solo repeticiones si es peso corporal).', time: 'Se anota cuántos segundos aguantas, con cronómetro incluido. Ej: plancha.', assist: 'Máquinas donde el peso te ayuda, como las dominadas asistidas: mientras menos ayuda, mejor.', cardio: 'Se anotan los minutos (con cronómetro) y, si quieres, un dato extra: distancia, calorías, saltos, rounds o pisos.' })[EX.mode || 'reps'],
+  cx: () => EX.mode !== 'cardio' ? '' : `<p class="lbl">Además del tiempo, registrar</p><div class="chips">${[['', 'Solo tiempo'], ['km', 'Distancia'], ['cal', 'Calorías'], ['jumps', 'Saltos'], ['rounds', 'Rounds'], ['floors', 'Pisos']].map(([k, l]) => `<button class="chip${(EX.cx || '') === k ? ' on' : ''}" data-act="excx" data-k="${k}" aria-pressed="${(EX.cx || '') === k}">${l}</button>`).join('')}</div>`,
   tools: () => TOOLS.map(([k, l]) => `<button class="chip${EX.tool === k ? ' on' : ''}" data-act="ext" data-t="${k}" aria-pressed="${EX.tool === k}">${l}</button>`).join(''),
   grid: () => {
     if (!EX.open) return '';
@@ -2139,7 +2164,7 @@ const exParts = {
 };
 function refreshEX() {
   const set = (id, k) => { const el = $('#' + id); if (el) el.innerHTML = exParts[k](); };
-  set('expv', 'pv'); set('exhint', 'hint'); set('exmus', 'mus'); set('extools', 'tools'); set('exgrid', 'grid'); set('exmode', 'mode'); set('exmodeh', 'modeh');
+  set('expv', 'pv'); set('exhint', 'hint'); set('exmus', 'mus'); set('extools', 'tools'); set('exgrid', 'grid'); set('exmode', 'mode'); set('exmodeh', 'modeh'); set('excx', 'cx');
   const b = $('#exopen'); if (b) b.textContent = EX.open ? 'Ocultar' : 'Cambiar';
 }
 function renderEX() {
@@ -2157,6 +2182,7 @@ function renderEX() {
     <p class="lbl">Cómo se mide</p>
     <div class="chips" id="exmode">${exParts.mode()}</div>
     <p class="exhint" id="exmodeh">${exParts.modeh()}</p>
+    <div id="excx">${exParts.cx()}</div>
     <div class="lbl pickh"><span>Dibujo del movimiento</span><button class="txtbtn sm" id="exopen" data-act="expick">${EX.open ? 'Ocultar' : 'Cambiar'}</button></div>
     <div id="exgrid">${exParts.grid()}</div>
     <label class="lbl" for="exd">Cómo se hace <span class="mu">(opcional)</span></label>
@@ -2311,7 +2337,8 @@ function stopSW(fill) {
   if (!swOn) return;
   clearInterval(swIv); swOn = false;
   if (fill) {
-    const s = Math.max(1, swSec());
+    const s0 = Math.max(1, swSec());
+    const s = kindOf(curX()) === 'cardio' ? Math.max(1, Math.round(s0 / 60)) : s0;
     const f = $('#fr'); if (f) f.value = String(s);
     draft = { x: curX(), w: $('#fw')?.value || '', reps: String(s) };
     try { navigator.vibrate?.(60); } catch (e) {}
@@ -2411,8 +2438,9 @@ const A = {
   ext: (el) => { EX.tool = el.dataset.t; EX.auto.tool = false; refreshEX(); },
   expose: (el) => { EX.pose = el.dataset.k; EX.auto.pose = false; refreshEX(); },
   expick: () => { EX.open = !EX.open; refreshEX(); },
-  exmd: (el) => { EX.mode = el.dataset.k; EX.auto.mode = false; if (EX.mode === 'assist' && EX.auto.tool !== false) EX.tool = 'm'; if (EX.mode === 'time' && EX.auto.tool !== false && EX.tool !== 'd') EX.tool = 'n'; refreshEX(); },
+  exmd: (el) => { EX.mode = el.dataset.k; EX.auto.mode = false; if (EX.mode === 'cardio' && EX.cx === '') EX.cx = 'km'; if (EX.mode === 'assist' && EX.auto.tool !== false) EX.tool = 'm'; if (EX.mode === 'time' && EX.auto.tool !== false && EX.tool !== 'd') EX.tool = 'n'; refreshEX(); },
   exall: () => { EX.all = !EX.all; refreshEX(); },
+  excx: (el) => { EX.cx = el.dataset.k; EX.auto.cx = false; refreshEX(); },
   exhide: (el) => {
     const f = X(el.dataset.id); if (!f) return;
     const e = f.e, fromSheet = sheetOpen();
@@ -2444,12 +2472,13 @@ const A = {
         if (EX.pose !== e.pose) e.poseSet = true;
         if (EX.desc.trim() !== (e.desc || '')) e.descSet = true;
         e.name = name; e.m = EX.m; e.pose = EX.pose; e.tool = EX.tool; e.desc = EX.desc.trim(); e.mode = EX.mode === 'reps' ? undefined : EX.mode;
+        if (EX.mode === 'cardio') e.cx = EX.cx || ''; else delete e.cx;
         S.logs.forEach((l) => { if (l.x === e.id) l.name = name; });
         save(); closeSheet(); toast('Cambios guardados');
       } });
       return;
     }
-    p.ex.push({ id: p.id + '_' + slug(name) + '-' + uid().slice(0, 4), name, m: EX.m, pose: EX.pose, tool: EX.tool, desc: EX.desc.trim(), mode: EX.mode === 'reps' ? undefined : EX.mode, custom: true });
+    p.ex.push({ id: p.id + '_' + slug(name) + '-' + uid().slice(0, 4), name, m: EX.m, pose: EX.pose, tool: EX.tool, desc: EX.desc.trim(), mode: EX.mode === 'reps' ? undefined : EX.mode, cx: EX.mode === 'cardio' ? (EX.cx || '') : undefined, custom: true });
     filt[p.id] = { q: '', m: '' };
     save(); closeSheet(); toast('Ejercicio agregado');
   },
@@ -2480,10 +2509,10 @@ const A = {
 
   unit: (el) => {
     const u = el.dataset.u; if (u === S.settings.unit) return;
-    const raw = $('#fw').value; const w = parseNum(raw);
+    const raw = $('#fw')?.value || ''; const w = parseNum(raw);
     let nw = '';
     if (raw !== '' && !isNaN(w)) nw = inNum(u === 'lb' ? Math.round((w / LB) * 2) / 2 : Math.round(w * LB * 2) / 2);
-    draft = { x: curX(), w: nw, reps: $('#fr').value };
+    draft = { x: curX(), w: nw, reps: $('#fr')?.value || '' };
     S.settings.unit = u; save(); render();
   },
   add: () => {
@@ -2501,16 +2530,19 @@ const A = {
     const nSet = before.filter((l) => l.d === today()).length + 1;
     const hadPast = before.some((l) => l.d !== today());
     const prevBest = before.length ? score(topSet(before)) : 0;
-    const km = cardio ? (w > 0 ? w : 0) : undefined;
-    const pr = hadPast && score({ kg: kgv, reps, x: xid, km }) > prevBest + 1e-9;
+    const cx = cardio ? cxOf(xid) : null;
+    const km = cardio && cx === 'km' && w > 0 ? w : undefined;
+    const cnt = cardio && cx && cx !== 'km' && w > 0 ? Math.round(w) : undefined;
+    const pr = hadPast && score({ kg: kgv, reps, x: xid, km, cnt }) > prevBest + 1e-9;
     const log = { id: uid(), d: today(), ts: Date.now(), x: xid, name: f.e.name, r: rid, rn: R(rid)?.name, kg: kgv, raw: cardio ? 0 : w, u, reps, pr };
-    if (cardio && km) log.km = km;
+    if (km) log.km = km;
+    if (cnt) log.cnt = cnt;
     S.logs.push(log);
     save();
     draft = null;
     document.activeElement?.blur();
     try { navigator.vibrate?.(pr ? [60, 60, 120] : 40); } catch (e) {}
-    const st = setTxt({ kg: kgv, reps, x: xid, km });
+    const st = setTxt({ kg: kgv, reps, x: xid, km, cnt });
     const msg = pr ? `¡Nueva ${cardio ? 'mejor marca' : 'mejor serie histórica'}! ${st}` : `${cardio ? 'Registro' : 'Serie'} ${nSet} guardad${cardio ? 'o' : 'a'}: ${st}`;
     back(`/r/${rid}/p/${f.p.id}`);
     setTimeout(() => toast(msg, { label: 'Deshacer', fn: () => { S.logs = S.logs.filter((l) => l.id !== log.id); save(); render(); } }), 60);
@@ -2524,14 +2556,15 @@ const A = {
     if (kmOpen) setTimeout(() => { const f = $('#fw'); if (f) { f.focus(); f.select(); } }, 60);
   },
   stopw: () => {
-    if (swOn) { stopSW(true); render(); toast(`Tiempo: ${fmtT(parseInt($('#fr').value, 10) || 0)}. Revisa y guarda la serie.`); return; }
+    if (swOn) { const card = kindOf(curX()) === 'cardio', real = fmtClock(swSec()); stopSW(true); render(); toast(card ? `Tiempo: ${real} → ${$('#fr').value} min. Revisa y guarda.` : `Tiempo: ${fmtT(parseInt($('#fr').value, 10) || 0)}. Revisa y guarda la serie.`); return; }
     swOn = true; swStart = Date.now();
     draft = { x: curX(), w: $('#fw')?.value || '', reps: $('#fr')?.value || '' };
     render();
-    swIv = setInterval(() => { const t = $('#swt'), f = $('#fr'); if (!t) { stopSW(false); return; } t.textContent = fmtClock(swSec()); if (f) f.value = String(swSec()); }, 250);
+    const card = kindOf(curX()) === 'cardio';
+    swIv = setInterval(() => { const t = $('#swt'), f = $('#fr'); if (!t) { stopSW(false); return; } t.textContent = fmtClock(swSec()); if (f) f.value = String(card ? Math.floor(swSec() / 60) : swSec()); }, 250);
   },
   tact: () => { const f = TA; TA = null; $('#toast').classList.remove('on'); f?.(); },
-  cm: (el) => { chartM = el.dataset.m; chartSel = null; draft = { x: curX(), w: $('#fw').value, reps: $('#fr').value }; render(); },
+  cm: (el) => { chartM = el.dataset.m; chartSel = null; draft = { x: curX(), w: $('#fw')?.value || '', reps: $('#fr')?.value || '' }; render(); },
   pt: (el) => { chartSel = Number(el.dataset.i); $('#chart').innerHTML = chartHTML(curX()); },
 
   today: (el) => openToday(el.dataset.r),
