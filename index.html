@@ -90,6 +90,8 @@ h1.title{font-family:var(--cond);font-weight:800;font-size:52px;line-height:.92;
 .tile .sub{display:block;color:rgba(0,0,0,.66);font-size:14px;font-weight:500;margin-top:6px}
 .tile .when{display:inline-block;margin-top:12px;font-size:13px;font-weight:600;color:rgba(0,0,0,.66);border-top:1.5px solid rgba(0,0,0,.18);padding-top:6px}
 .tag{display:inline-block;background:#000;color:var(--yl);font-weight:700;font-size:12px;letter-spacing:.03em;border-radius:999px;padding:4px 10px;margin-bottom:8px}
+.tag+.tag{margin-left:6px}
+.tag.plan{background:var(--ac);color:#000}
 .fig{display:flex;gap:1px;flex:none}
 .fig svg{display:block}
 .figc{display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -120,7 +122,13 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .item.ex .badge{background:#000;color:var(--ac)}
 .item.ex .iconbtn.sm{background:rgba(0,0,0,.14);color:#000}
 .item.part .main{padding-left:12px}
-.editbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--s1);border:1.5px solid var(--ac);border-radius:16px;padding:10px 10px 10px 14px;margin:0 0 12px;font-size:14px;color:var(--mu)}
+.editbar{display:flex;flex-direction:column;gap:8px;background:var(--s1);border:1.5px solid var(--ac);border-radius:16px;padding:8px;margin:0 0 12px;font-size:14px;color:var(--mu)}
+.hseg{display:flex;width:100%}
+.hseg button{flex:1;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.hseg button i{font-style:normal;font-size:12px;font-weight:700;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--s2);color:var(--tx);display:inline-grid;place-items:center}
+.hseg button.on i{background:#000;color:var(--tx)}
+.ehint{margin:0 4px 2px;display:flex;align-items:center;gap:5px;font-size:13px;color:var(--mu)}
+.ehint svg{color:var(--ac)}
 .editbar .txtbtn{background:var(--ac);color:#000;flex:none}
 .txtbtn.on{background:var(--ac);color:#000}
 .item .sub{display:block;color:var(--mu);font-size:14px;margin-top:3px}
@@ -179,7 +187,9 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .set .v{font-family:var(--cond);font-size:24px;font-weight:700;white-space:nowrap}
 .set .lb{white-space:nowrap;color:var(--mu);font-size:14px}
 .pr{color:var(--ac);font-size:12px;font-weight:700;border:1.5px solid var(--ac);border-radius:7px;padding:1px 6px}
-.del{margin-left:auto;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--mu);flex:none}
+.del{margin-left:auto;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:var(--red);background:rgba(255,122,122,.13);border:1px solid rgba(255,122,122,.28);flex:none}
+.del svg{stroke-width:2.6}
+.del:active{background:rgba(255,122,122,.26)}
 .card{background:var(--s1);border-radius:26px;padding:16px 16px 14px;margin-top:12px}
 .chart svg{width:100%;height:auto;display:block;margin-top:6px}
 .cinfo{font-size:15px;text-align:center;min-height:22px;margin:2px 0 0}
@@ -434,6 +444,7 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .planh{display:flex;align-items:center;gap:8px}
 .planh b{display:block;font-family:var(--cond);font-weight:800;font-size:26px;line-height:1}
 .planh small{color:var(--mu);font-size:13px}
+.planh small.pmk{display:block;color:var(--ac);font-size:12px;font-weight:600;margin-top:2px}
 .planbar{height:6px;background:#000;border-radius:3px;overflow:hidden;margin:10px 0 8px}
 .planbar i{display:block;height:100%;background:#7BE08A;border-radius:3px}
 .planit{display:flex;align-items:center;gap:10px;width:100%;padding:8px 4px;border-top:1px solid var(--line);text-align:left}
@@ -606,6 +617,11 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 
 /* estadísticas */
 .iconbtn.inst{background:var(--ac);color:#000}
+.iconbtn.tstat{background:var(--ac);color:#000}
+.iconbtn.tcal{background:rgba(255,106,31,.2);color:#FF9A5C;border:1px solid rgba(255,106,31,.32)}
+.pbtn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:13px;background:var(--ac);color:#000;font-weight:700;font-size:15px;flex:none}
+.pbtn.sq{width:40px;padding:0;justify-content:center;background:rgba(255,106,31,.18);color:var(--ac);border:1px solid rgba(255,106,31,.4)}
+.dock .btn2.danger{display:flex;align-items:center;justify-content:center;gap:8px;background:#2a1414;color:var(--red);border:1px solid rgba(255,122,122,.35)}
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
 .scard{background:var(--s1);border-radius:20px;padding:14px 16px}
 .scard b{display:block;font-family:var(--cond);font-weight:800;font-size:34px;line-height:1.05}
@@ -661,6 +677,19 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .sesrow i{color:var(--mu);font-style:normal;font-size:13px}
 .sesrow em{display:inline-flex;align-items:center;gap:4px;font-style:normal;color:var(--ac);font-weight:700;font-size:14px}
 .sesin{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 6px}
+.tpks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:4px 0 0}
+.tpk{background:#000;border-radius:18px;padding:8px 4px 6px;text-align:center}
+.tpk>span{display:block;color:var(--mu);font-size:13px;font-weight:600;margin:2px 0 0}
+.tpkr{display:flex;align-items:center;justify-content:center}
+.tcol{display:flex;flex-direction:column;align-items:center}
+.tcol button{width:54px;height:40px;display:grid;place-items:center;color:var(--ac);border-radius:12px}
+.tcol button:active{background:var(--s2)}
+.tcol input{width:54px;height:48px;text-align:center;font-family:var(--cond);font-weight:800;font-size:36px;background:transparent;border:0;color:var(--tx);border-radius:12px;padding:0;caret-color:var(--ac)}
+.tcol input:focus{background:var(--s2);outline:none}
+.tpkr>b{font-family:var(--cond);font-size:32px;font-weight:800;margin:0 1px 3px}
+.tdur{text-align:center;color:var(--mu);font-size:14px;margin:10px 0 0}
+.tdur b{color:var(--tx)}
+.tdur.warn,.tdur.warn b{color:var(--red)}
 .sesin span{display:block;color:var(--mu);font-size:13px;margin-bottom:6px}
 .sesin .inp{width:100%;min-width:0;height:54px;font-size:19px;font-weight:700;text-align:center;color-scheme:dark;padding:0 6px}
 .seserr{color:var(--red);font-size:14px;margin:4px 0 10px}
@@ -795,6 +824,7 @@ const I = {
   cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   set: '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
   edit: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+  trash: '<path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/>',
   clock: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/>',
   filter: '<path d="M4 5h16l-6.2 7.6V18l-3.6 2v-7.4z"/>',
   stats: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
@@ -2044,12 +2074,19 @@ async function install() {
 }
 
 /* ---------- navegación ---------- */
-let edit = false, lastPath = null, altOpen = false;
+let edit = false, hidView = false, lastPath = null, altOpen = false;
 let chartM = 'peso', chartSel = null;
 const filt = {};
 const showHid = {};
 function parse() { return (location.hash.replace(/^#/, '') || '/').split('/').filter(Boolean); }
 function go(p) { history.pushState({ d: (history.state?.d || 0) + 1 }, '', '#' + p); render(); }
+const NAVS = [];
+/* vuelve a una pantalla anterior (sin apilar historial); si no está en el historial, la reemplaza */
+function backTo(p) {
+  const d = history.state?.d || 0, i = NAVS.lastIndexOf(p);
+  if (i >= 0 && i < d) history.go(i - d);
+  else { history.replaceState({ d }, '', '#' + p); render(); }
+}
 function back(parent) {
   if ((history.state?.d || 0) > 0) history.back();
   else { history.replaceState({ d: 0 }, '', '#' + parent); render(); }
@@ -2061,8 +2098,15 @@ function goHome() {
 }
 window.addEventListener('popstate', () => {
   if (TOUR) { history.replaceState({ d: 0 }, '', location.hash); tourShow(TOUR.i); return; }
-  if ($('#dlg').classList.contains('on')) hideDlg();
+  const hadDlg = $('#dlg').classList.contains('on');
+  if (hadDlg) hideDlg();
   if (sheetOpen() && !history.state?.sheet) hideSheet();
+  const m = /^r\/([^/]+)\/plan$/.exec(lastPath || '');
+  if (m && S && planDirty(m[1]) && !location.hash.startsWith(`#/r/${m[1]}/pick`)) {
+    history.pushState({ d: (history.state?.d || 0) + 1 }, '', `#/r/${m[1]}/plan`);
+    if (!hadDlg) planLeave(m[1], () => back('/r/' + m[1]));
+    return;
+  }
   render();
 });
 
@@ -2079,10 +2123,12 @@ function render() {
     wake(false);
     return;
   }
+  planRoll();
   const s = parse();
   const path = s.join('/');
   const changed = path !== lastPath;
-  if (changed) { edit = false; chartSel = null; kmOpen = false; if (s[2] === 'x') chartM = null; if (s[0] === 'stats') { statsP = 90; heatW = 0; } }
+  if (!history.state?.sheet) { const dd = history.state?.d || 0; NAVS[dd] = '/' + path; NAVS.length = dd + 1; }
+  if (changed) { edit = false; hidView = false; chartSel = null; kmOpen = false; if (s[2] === 'x') chartM = null; if (s[0] === 'stats') { statsP = 90; heatW = 0; } }
   lastPath = path;
   let html = null, rid = null;
   if (!s.length) html = vHome();
@@ -2104,13 +2150,14 @@ function render() {
   // barra inferior: comenzar, en curso (hoy / terminar) o terminado
   let dk = '';
   if (rid && (s.length === 2 || s[2] === 'plan' || s[2] === 'sug')) {
-    const ws = wState(rid), one = (b) => `<div class="dock"><div class="in one">${b}</div></div>`;
+    const ws = wState(rid), nT = todayR(rid).length;
     const start = `<button class="cta" data-act="wstart" data-r="${rid}">${ic('play', 20)} Comenzar entrenamiento</button>`;
-    if (s.length === 2) dk = ws === 'ready' ? one(start)
-      : ws === 'live' ? `<div class="dock"><div class="in"><button class="btn2" data-act="today" data-r="${rid}">Hoy: ${plural(todayR(rid).length, 'serie', 'series')}</button><button class="cta" data-act="finish" data-r="${rid}">Terminar</button></div></div>`
-      : ws === 'done' ? one(`<button class="btn2" data-act="wresume" data-r="${rid}">Seguir entrenando</button>`) : '';
-    else dk = ws === 'ready' ? one(start) : one(`<button class="${ws === 'live' ? 'cta' : 'btn2'}" data-act="back" data-to="/r/${rid}">${ws === 'live' ? 'Volver al entrenamiento' : 'Listo'}</button>`);
-  }
+    if (s.length === 2) dk = ws === 'ready' ? dock1(start)
+      : ws === 'live' ? (nT ? `<div class="dock"><div class="in"><button class="btn2" data-act="today" data-r="${rid}">Hoy: ${plural(nT, 'serie', 'series')}</button><button class="cta" data-act="finish" data-r="${rid}">Terminar</button></div></div>`
+        : dock1(`<button class="btn2 danger" data-act="finish" data-r="${rid}">${ic('x', 20)} Cancelar entrenamiento</button>`))
+      : ws === 'done' ? dock1(`<button class="cta" data-act="wresume" data-r="${rid}">${ic('play', 20)} Volver al entrenamiento</button>`) : '';
+    else dk = ws === 'ready' ? dock1(`<button class="cta" data-act="plok" data-r="${rid}">${ic('check', 20)} ${S.plans[rid]?.draft ? 'Confirmar plan de hoy' : 'Guardar cambios'}</button>`) : dock1(wBackBtn(rid));
+  } else if (rid && (s[2] === 'e' || s[2] === 'p' || s[2] === 'v') && wState(rid) === 'live') dk = dock1(wBackBtn(rid));
   $('#dockwrap').innerHTML = dk;
   clearInterval(wIv); wIv = null;
   if (rid && s.length === 2 && wState(rid) === 'live') wIv = setInterval(() => { const el = $('#wclock'), pl = planOf(rid); if (!el || !pl || !pl.st) { clearInterval(wIv); return; } el.textContent = elapsed(pl.st); }, 20000);
@@ -2119,6 +2166,8 @@ function render() {
   wake(s[2] === 'x');
 }
 
+const dock1 = (b) => `<div class="dock"><div class="in one">${b}</div></div>`;
+const wBackBtn = (rid) => `<button class="cta" data-act="wback" data-r="${rid}">${ic('back', 20)} Volver al entrenamiento</button>`;
 const hdr = (parent, title = '', right = '') =>
   `<div class="hdr"><button class="iconbtn" data-act="back" data-to="${esc(parent)}" aria-label="Volver">${ic('back')}</button><div class="ttl">${esc(title)}</div>${right || '<span class="sp"></span>'}</div>`;
 
@@ -2139,7 +2188,7 @@ function week() {
 const favStar = (r) => `<button class="favstar${r.fav ? ' on' : ''}" data-act="favstar" data-r="${r.id}" aria-label="${r.fav ? 'Sacar de favoritos' : 'Agregar a favoritos'}: ${esc(r.name)}" aria-pressed="${!!r.fav}">${ic(r.fav ? 'starf' : 'star', 24)}</button>`;
 function tile(r, sug) {
   const l = lastRoutine(r.id);
-  return `<div class="tile" role="button" tabindex="0" data-act="open" data-r="${r.id}"><span class="grow">${wState(r.id) === 'live' ? '<span class="tag live">En curso</span>' : sug ? '<span class="tag">Te toca</span>' : ''}<span class="nm">${esc(r.name)}</span><span class="sub">${esc(partsLabel(r))}</span><span class="when">${l ? rel(l) : 'Sin registros'}</span></span><span class="tright">${favStar(r)}${body(regsFor(r.parts), TH.yl, 92)}</span></div>`;
+  return `<div class="tile" role="button" tabindex="0" data-act="open" data-r="${r.id}"><span class="grow">${wState(r.id) === 'live' ? '<span class="tag live">En curso</span>' : sug ? '<span class="tag">Te toca</span>' : ''}${wState(r.id) === 'ready' && !S.plans[r.id].draft ? '<span class="tag plan">Plan listo</span>' : ''}<span class="nm">${esc(r.name)}</span><span class="sub">${esc(partsLabel(r))}</span><span class="when">${l ? rel(l) : 'Sin registros'}</span></span><span class="tright">${favStar(r)}${body(regsFor(r.parts), TH.yl, 92)}</span></div>`;
 }
 /* rutina que toca, siguiendo el orden de las favoritas (Ajustes → Orden de tus rutinas):
    - si haces la que toca, toca la siguiente
@@ -2175,8 +2224,8 @@ function vHome() {
     <div class="brand">${logo(34)}GymRat</div>
     <div class="tools">
       ${isStandalone() ? '' : `<button class="iconbtn inst" data-act="install" aria-label="Instalar app">${ic('dl')}</button>`}
-      <button class="iconbtn" data-act="nav" data-to="/stats" aria-label="Estadísticas">${ic('stats')}</button>
-      <button class="iconbtn" data-act="cal" aria-label="Calendario">${ic('cal')}</button>
+      <button class="iconbtn tstat" data-act="nav" data-to="/stats" aria-label="Estadísticas">${ic('stats')}</button>
+      <button class="iconbtn tcal" data-act="cal" aria-label="Calendario">${ic('cal')}</button>
       <button class="iconbtn" data-act="settings" aria-label="Ajustes">${ic('set')}</button>
     </div>
   </div>
@@ -2206,7 +2255,7 @@ function vPart(r, p) {
   S.logs.forEach((l) => { if (l.d === today()) tdIds[l.x] = (tdIds[l.x] || 0) + 1; });
   const order = p.ex.map((e, i) => ({ e, i })).sort((a, b) => (edit ? 0 : (a.e.hidden ? 1 : 0) - (b.e.hidden ? 1 : 0)) || (c[b.e.id] || 0) - (c[a.e.id] || 0) || a.i - b.i).map((o) => o.e);
   const md = f.m && p.muscles.find((m) => m.n === f.m);
-  const nHid = p.ex.filter((e) => e.hidden).length;
+  const nHid = p.ex.filter((e) => e.hidden).length, hv = edit && hidView;
   const pl = S.plans?.[r.id], inPlan = new Set(pl && pl.d === today() ? pl.items.map((it) => it.x) : []);
   const items = order.map((e) => {
     const nT = tdIds[e.id] || 0;
@@ -2221,32 +2270,35 @@ function vPart(r, p) {
   }).join('');
   return `${hdr('/r/' + r.id + '/e', 'Ejercicios', `<button class="txtbtn${edit ? ' on' : ''}" data-act="edit">${edit ? 'Listo' : 'Editar'}</button>`)}
     <h2 class="pt">${esc(p.name)}</h2>
-    ${edit ? `<div class="editbar"><span>El ojo oculta los ejercicios que no haces (tampoco se sugieren); tócalo de nuevo para mostrarlos. El lápiz los edita.</span><button class="txtbtn" data-act="edit">Salir</button></div>` : ''}
+    ${edit ? `<div class="editbar"><div class="seg hseg" role="group" aria-label="Qué ejercicios ver"><button data-act="hidv" data-v="0" class="${hv ? '' : 'on'}" aria-pressed="${!hv}">Todos</button><button data-act="hidv" data-v="1" class="${hv ? 'on' : ''}" aria-pressed="${hv}">${ic('eyeoff', 16)} Ocultos<i>${nHid}</i></button></div>
+      <p class="ehint">${ic('eye', 15)} oculta o muestra · ${ic('edit', 15)} edita</p></div>` : ''}
     <div class="search">${ic('search', 20)}<input id="q" type="search" placeholder="Buscar ejercicio" value="${esc(f.q)}" autocomplete="off" aria-label="Buscar ejercicio"></div>
     ${p.muscles.length ? `<div class="fbar">
       <button class="fbtn${f.m ? ' act' : ''}" data-act="fopen" aria-expanded="${!!f.open}">${ic('filter', 18)}<span class="grow">${f.m ? `${grpWord(p.id).One}: <b>${esc(f.m)}</b>` : `Filtrar por ${grpWord(p.id).one}`}</span>${ic(f.open ? 'up' : 'down', 18)}</button>
       ${f.m ? `<button class="fclr" data-act="fm" data-m="" aria-label="Quitar filtro">${ic('x', 18)}</button>` : ''}
     </div>
     ${f.open ? `<div class="flist" role="listbox" aria-label="${grpWord(p.id).many}">${[['', grpWord(p.id).all]].concat(p.muscles.map((m) => [m.n, m.n])).map(([v, l]) => {
-      const n = p.ex.filter((e) => !e.hidden && (!v || e.m === v)).length;
+      const n = p.ex.filter((e) => (hv ? e.hidden : edit || !e.hidden) && (!v || e.m === v)).length;
+      if (hv && v && !n && f.m !== v) return '';
       return `<button class="fopt${(f.m || '') === v ? ' on' : ''}" role="option" aria-selected="${(f.m || '') === v}" data-act="fm" data-m="${esc(v)}"><i></i><span class="grow">${esc(l)}</span><span class="fn">${n}</span></button>`;
     }).join('')}</div>` : ''}` : ''}
     ${md && md.d ? `<p class="mdesc"><b>${esc(md.n)}.</b> ${esc(md.d)}</p>` : ''}
     <div class="list" id="exlist">${items}</div>
-    <p class="empty" id="nores" hidden>No hay ejercicios con ese nombre. Agrégalo abajo.</p>
+    <p class="empty" id="nores" hidden></p>
     ${nHid && !edit ? `<button class="alt-toggle" data-act="showhid" data-p="${p.id}" aria-expanded="${!!showHid[p.id]}">${showHid[p.id] ? 'Esconder ocultos' : `Ver ${plural(nHid, 'ejercicio oculto', 'ejercicios ocultos')}`} ${ic(showHid[p.id] ? 'up' : 'down', 18)}</button>` : ''}
-    <button class="addbtn" data-act="newEx" data-p="${p.id}">${ic('plus', 18)} Agregar ejercicio</button>`;
+    ${hv ? '' : `<button class="addbtn" data-act="newEx" data-p="${p.id}">${ic('plus', 18)} Agregar ejercicio</button>`}`;
 }
 function applyFilter() {
   const p = P(parse()[3]); if (!p) return;
   const f = filt[p.id]; const q = norm(f.q.trim());
   let shown = 0;
-  const hidOk = edit || showHid[p.id] || !!q;
+  const hidOk = edit || showHid[p.id] || !!q, hv = edit && hidView;
   document.querySelectorAll('#exlist .item').forEach((el) => {
-    const ok = (!q || el.dataset.n.includes(q)) && (!f.m || el.dataset.m === f.m) && (hidOk || el.dataset.h !== '1');
+    const ok = (!q || el.dataset.n.includes(q)) && (!f.m || el.dataset.m === f.m) && (hv ? el.dataset.h === '1' : hidOk || el.dataset.h !== '1');
     el.hidden = !ok; if (ok) shown++;
   });
-  const nr = $('#nores'); if (nr) nr.hidden = shown > 0;
+  const nr = $('#nores');
+  if (nr) { nr.hidden = shown > 0; nr.textContent = hv ? (q ? 'Ningún oculto con ese nombre.' : `No tienes ejercicios ocultos${f.m ? ` de ${f.m.toLowerCase()}` : ''}.`) : 'No hay ejercicios con ese nombre. Agrégalo abajo.'; }
 }
 
 /* la serie que sirve de referencia: la misma serie (1.ª, 2.ª…) de la vez anterior; si hoy llevas más series que esa vez, tu última de hoy */
@@ -2308,7 +2360,7 @@ function vEx(r, xid, view = false) {
   }
   const u = S.settings.unit;
   const dr = (draft && draft.x === xid) ? draft : defaultDraft(xid);
-  const sets = td.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${setTxt(s)}</span>${s.side ? `<span class="lb">2×${nf(s.raw / 2)}</span>` : s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}${s.pr ? '<span class="pr">Récord</span>' : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1}">${ic('x', 18)}</button></div>`).join('');
+  const sets = td.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${setTxt(s)}</span>${s.side ? `<span class="lb">2×${nf(s.raw / 2)}</span>` : s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}${s.pr ? '<span class="pr">Récord</span>' : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1}">${ic('x', 22)}</button></div>`).join('');
   const hist = days.length ? `<details class="hist"><summary>Historial <span class="mu small">${plural(days.length, 'día', 'días')}</span></summary>
     <p class="hnote">En verde, la mejor serie de cada día.</p>
     ${days.slice().reverse().map((dd) => `<div class="hrow"><span class="hd">${fShort(dd.d)}</span><span class="hs">${dd.sets.map((s) => `<span${isBest(s, dd.sets) ? ' class="hb"' : ''}>${setTxt(s, true)}</span>`).join('')}</span></div>`).join('')}
@@ -2319,7 +2371,7 @@ function vEx(r, xid, view = false) {
   const gate = view ? (plan && ws !== 'done' && !inPlan ? `<button class="btn2 gateadd" data-act="pkdirect" data-r="${r.id}" data-x="${xid}">${ic('plus', 18)} Agregar al plan de hoy</button>` : '')
     : ws === 'live' ? '' : `<div class="gate">${ws === 'none' ? `<b>Primero arma tu plan de hoy</b><button class="cta" data-act="back" data-to="/r/${r.id}">Ir al plan</button>`
       : ws === 'ready' ? `<b>¿Listo?</b><button class="cta" data-act="wstart" data-r="${r.id}">${ic('play', 20)} Comenzar entrenamiento</button>`
-      : `<b>Entrenamiento terminado</b><button class="btn2" data-act="wresume" data-r="${r.id}">Seguir entrenando</button>`}</div>`;
+      : `<b>Entrenamiento terminado</b><button class="cta" data-act="wresume" data-r="${r.id}">${ic('play', 20)} Volver al entrenamiento</button>`}</div>`;
   return `${view ? hdr(`/r/${r.id}/p/${p.id}`, p.name, `<button class="iconbtn" data-act="editEx" data-p="${p.id}" data-id="${xid}" aria-label="Editar ${esc(e.name)}">${ic('edit', 20)}</button>`) : hdr(`/r/${r.id}`, 'Plan de hoy')}
     <h2 class="pt">${esc(e.name)}</h2>
     <div class="exhead">
@@ -2380,12 +2432,12 @@ function tourBuild() {
   const pl = planOf('tour_pt');
   if (pl && !pl.st) { sugReady(R('tour_pt')); return; }
   tourReset(); S.planCfg = { tour_pt: { pecho: 4, triceps: 3 } };
-  sugInit(R('tour_pt')); planSync();
+  sugInit(R('tour_pt')); planSync(); S.plans.tour_pt.draft = 1;
 }
 function tourLive() {
   if (wState('tour_pt') !== 'live') {
     if (!planOf('tour_pt')) tourBuild();
-    const pl = planOf('tour_pt'); pl.st = Date.now() - 50 * 60000; delete pl.en;
+    const pl = planOf('tour_pt'); pl.st = Date.now() - 50 * 60000; delete pl.en; delete pl.draft;
     if (!pl.items.some((it) => it.x === TX)) pl.items.unshift({ x: TX, p: 'pecho' });
     S.sessions = S.sessions || {}; S.sessions[today() + '|tour_pt'] = { start: pl.st };
   }
@@ -2396,7 +2448,7 @@ function tourLive() {
   SUG = null;
 }
 const tgo = (p) => { if (location.hash !== '#' + p) history.replaceState({ d: 0 }, '', '#' + p); };
-const tb = () => { tourBuild(); tgo('/r/tour_pt/plan'); render(); }, tl = () => { tourLive(); render(); };
+const tb = () => { tourBuild(); S.plans.tour_pt.draft = 1; tgo('/r/tour_pt/plan'); render(); }, tl = () => { tourLive(); render(); };
 /* en el mapa muscular muestra la semana pasada si esta semana recién empieza */
 /* estadísticas del recorrido: período, secciones abiertas y, si esta semana recién empieza, la semana pasada */
 function tourStats(p, open) { statsP = p; TOUR.open = open || {}; const m = iso(monday(today())); heatW = new Set(S.logs.filter((l) => l.d >= m).map((l) => l.d)).size >= 2 ? 0 : 1; render(); }
@@ -2442,7 +2494,7 @@ function tourDemo() {
 const TOUR_STEPS = [
   { center: true, hero: true, title: '¡Bienvenido a GymRat!', text: 'Te muestro en un par de minutos cómo usar la app, con datos de ejemplo. Nada de esto se guarda ni cambia tus datos.' },
   { go: '/', el: () => [document.querySelector('.hellorow'), document.querySelector('.title')], title: 'Tu pantalla de inicio', text: 'Aquí eliges qué entrenar hoy. Arriba a la derecha anotas tu peso corporal cuando quieras.' },
-  { go: '/', el: '.tools', title: 'Barra superior', text: 'Instalar la app, estadísticas, calendario y ajustes.' },
+  { go: '/', el: '.tools', title: 'Barra superior', text: 'Estadísticas, calendario y ajustes.' },
   { go: '/', el: '.week', title: 'Tu semana', text: 'En naranjo, los días que entrenaste. Tócala para abrir el calendario.' },
   { go: '/', el: () => document.querySelector('.tile .tag')?.closest('.tile') || document.querySelector('.tile'), title: 'Tus rutinas', text: 'El monito marca en rojo los músculos de cada rutina. "Te toca" te dice cuál sigue según el orden que definas en Ajustes.' },
   { go: '/', el: '.tile .favstar', title: 'Favoritas', text: 'La estrella agrega o saca una rutina de favoritas. Las demás quedan abajo, como alternativas.' },
@@ -2454,7 +2506,8 @@ const TOUR_STEPS = [
   { go: '/r/tour_pt/plan', prep: tb, el: '.sgpart .sgitem', title: 'Cada ejercicio', text: 'Su motivo y lo que te toca hoy: peso y repeticiones. La flecha verde indica que subes.' },
   { go: '/r/tour_pt/plan', prep: tb, el: () => { const its = document.querySelectorAll('.sgpart:first-of-type .sgitem'); return [its[its.length - 1], document.querySelector('.sgpart .sgadd')]; }, title: 'Ajusta el plan', text: 'Toca un ejercicio para cambiarlo. El ojo lo oculta para que no se vuelva a sugerir, la × lo quita y "Agregar" suma uno sugerido.' },
   { go: '/r/tour_pt/pick', prep: () => { tourBuild(); PICK = { rid: 'tour_pt', mode: 'swap', pid: 'pecho', i: 1, q: '', m: '' }; tgo('/r/tour_pt/pick'); render(); }, el: () => [document.querySelector('#pksug'), document.querySelector('.fbar')], title: 'Cambiar un ejercicio', text: 'Arriba, los sugeridos con su motivo. Abajo buscas cualquiera o filtras por músculo.' },
-  { go: '/r/tour_pt/plan', prep: tb, el: '.dock', title: 'Comenzar entrenamiento', text: 'Ya en el gym, toca aquí: empieza a correr tu tiempo y puedes anotar series.' },
+  { go: '/r/tour_pt/plan', prep: tb, el: '.dock', title: 'Confirmar el plan', text: 'Confírmalo para guardarlo; después lo puedes editar. Si sales sin confirmar, no se guarda.' },
+  { go: '/r/tour_pt', prep: () => { tourBuild(); delete S.plans.tour_pt.draft; tgo('/r/tour_pt'); render(); }, el: '.dock', title: 'Comenzar entrenamiento', text: 'Ya en el gym, toca "Comenzar": corre tu tiempo y anotas series. Si no lo entrenas hoy, el plan queda guardado.' },
   { go: '/r/tour_pt', prep: tl, el: () => [document.querySelector('.wbar'), document.querySelectorAll('.planit')[2] || document.querySelector('.plan')], title: 'Entrenamiento en curso', text: 'Toca un ejercicio para anotarlo. En naranjo, las series que llevas hoy.' },
   { go: '/r/tour_pt', prep: tl, el: () => { const its = document.querySelectorAll('.planit'); return [its[its.length - 1], document.querySelector('.planadd')]; }, title: 'Cambios sobre la marcha', text: '"Agregar ejercicio" suma uno y "Editar" cambia el plan, también a mitad del entrenamiento.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.exhead', title: 'El ejercicio', text: 'Su dibujo y cómo hacerlo, con un consejo clave.' },
@@ -2464,12 +2517,12 @@ const TOUR_STEPS = [
   { go: '/r/tour_pt/x/' + AX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.siderow')], title: 'Dos mancuernas o poleas', text: 'Anota el peso de un lado y la app lo multiplica por dos.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Cada punto es tu mejor serie del día. Toca uno para ver el detalle.' },
   { go: '/r/tour_pt/x/abdominales_plancha', prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.stopw')], title: 'Por tiempo y cardio', text: 'Se anotan en minutos y segundos, con cronómetro incluido.' },
-  { go: '/r/tour_pt', prep: tl, el: '.dock', title: 'Hoy y Terminar', text: '"Hoy" muestra tus series para corregir alguna. "Terminar" detiene el tiempo.' },
-  { go: '/r/tour_pt', prep: () => { tourLive(); finish('tour_pt'); }, el: () => [document.querySelector('#sheet .stats'), document.querySelector('.sesrow')], title: 'Resumen', text: 'Series, kilos, duración y récords. Si el horario quedó mal, lo corriges con "Editar".' },
+  { go: '/r/tour_pt', prep: tl, el: '.dock', title: 'Hoy y Terminar', text: '"Hoy" muestra tus series para borrar alguna con la ×. "Terminar" detiene el tiempo; si aún no anotas nada, aparece "Cancelar".' },
+  { go: '/r/tour_pt', prep: () => { tourLive(); finish('tour_pt'); }, el: () => [document.querySelector('#sheet .stats'), document.querySelector('.sesrow')], title: 'Resumen', text: 'Series, kilos, duración y récords. Si el horario quedó mal, lo corriges con "Editar" y las flechas.' },
   { go: '/r/tour_pt', prep: async () => { tourLive(); await openShare(today(), 'tour_pt'); $('#sheet .shprev')?.classList.add('mini'); }, el: '#sheet .shprev', title: 'Compártelo', text: 'Crea esta imagen de tu entrenamiento para WhatsApp o Instagram.' },
-  { go: '/r/tour_pt/e', el: '.list', title: 'Ver y editar ejercicios', text: 'Entras por parte del cuerpo.' },
+  { go: '/r/tour_pt/e', el: '.list', title: 'Ver y editar ejercicios', text: 'Entras por parte del cuerpo. Si estás entrenando, "Volver al entrenamiento" te regresa.' },
   { go: '/r/tour_pt/p/pecho', prep: () => { filt.pecho = { q: '', m: '', open: true }; render(); }, el: () => [document.querySelector('.search'), document.querySelector('.flist')], title: 'Buscar y filtrar', text: 'Busca por nombre o filtra por músculo. Hay más de 200 ejercicios, cada uno con su dibujo.' },
-  { go: '/r/tour_pt/p/pecho', prep: () => { edit = true; render(); }, el: () => [document.querySelector('.editbar'), document.querySelector('#exlist .item')], title: 'Ocultar y editar', text: 'En "Editar", el ojo oculta un ejercicio (no se sugiere más) o lo vuelve a mostrar, y el lápiz lo edita.' },
+  { go: '/r/tour_pt/p/pecho', prep: () => { edit = true; hidView = false; if (filt.pecho) filt.pecho.open = false; render(); }, el: () => [document.querySelector('.editbar'), document.querySelector('#exlist .item')], title: 'Ocultar y editar', text: 'En "Editar", el ojo oculta un ejercicio (no se sugiere más) y el lápiz lo edita. "Ocultos" muestra solo esos, también por músculo.' },
   { prep: () => { editEx('pecho', TX); EX.open = true; refreshEX(); }, el: () => [document.querySelector('#sheet .erhead'), document.querySelector('#exgrid')], title: 'Editar un ejercicio', text: 'Nombre, músculo, implemento, cómo se mide y su dibujo.' },
   { prep: () => { editEx('espalda', null); EX.name = 'Remo sentado con cuerda'; $('#exn').value = EX.name; applySuggest(); refreshEX(); }, el: () => [document.querySelector('#sheet .erhead'), document.querySelector('#exhint')], title: 'Crear tu propio ejercicio', text: 'Escribe el nombre y la app sugiere el dibujo, el músculo y el implemento.' },
   { go: '/r/tour_pt/v/' + TX, el: () => [document.querySelector('.hdr'), document.querySelector('.notes')], title: 'Su progreso', text: 'Al tocar un ejercicio ves su progreso e historial. El lápiz de arriba lo edita.' },
@@ -2500,7 +2553,7 @@ function endTour(done) {
   $('#tour')?.remove();
   hideSheet(); hideDlg();
   S = snap; S.settings.tourSeen = true; bwCache = null;
-  altOpen = false; edit = false; draft = null; kmOpen = false; calSel = null; SUG = null; PICK = null; heatW = 0; bwListOpen = false; shareTok++;
+  altOpen = false; edit = false; hidView = false; draft = null; kmOpen = false; calSel = null; SUG = null; PICK = null; heatW = 0; bwListOpen = false; shareTok++;
   Object.keys(filt).forEach((k) => delete filt[k]);
   history.replaceState({ d: 0 }, '', '#/'); lastPath = null; render(); save();
   toast(done ? '¡Listo! Ya conoces GymRat.' : 'Recorrido omitido. Lo encuentras al final de Ajustes.');
@@ -2512,7 +2565,7 @@ async function tourShow(i) {
   hideDlg();
   if (!st.keepSheet) hideSheet();
   if (st.go !== undefined) { history.replaceState({ d: 0 }, '', '#' + st.go); render(); }
-  edit = false; altOpen = false; if (st.go !== undefined) render();
+  edit = false; hidView = false; altOpen = false; if (st.go !== undefined) render();
   drawTour(null, st, i, true);
   if (st.prep) { const pr = st.prep(); if (pr && pr.then) { try { await pr; } catch (e) {} } }
   if (!TOUR || TOUR.i !== i) return;
@@ -3316,6 +3369,39 @@ const ROLE_IC = { basico: 'starf', vuelve: 'swap', nuevo: 'spark', hoy: 'check',
    Sin plan no se anotan series; el plan se arma, se ajusta y se puede cambiar durante el entrenamiento. */
 const planOf = (rid) => { const p = S.plans?.[rid]; return p && p.d === today() ? p : null; };
 const wState = (rid) => { const p = planOf(rid); return !p ? 'none' : !p.st ? 'ready' : p.en ? 'done' : 'live'; };
+/* un plan recién armado es borrador hasta "Confirmar"; al editar uno confirmado se guarda una copia por si se descartan los cambios */
+let PLSNAP = null;
+function planDirty(rid) {
+  const p = S.plans?.[rid]; if (!p || p.d !== today()) return false;
+  if (p.draft) return true;
+  return !!(PLSNAP && PLSNAP.rid === rid && !p.st && JSON.stringify(p.items) !== PLSNAP.items);
+}
+function planLeave(rid, next) {
+  const p = S.plans?.[rid];
+  if (!planDirty(rid)) { PLSNAP = null; next(); return; }
+  if (p.draft) confirmS({ title: '¿Salir sin confirmar?', text: 'El plan que estás armando no se guardará.', cta: 'Salir', ok: () => { delete S.plans[rid]; SUG = null; PICK = null; save(); next(); } });
+  else confirmS({ title: '¿Descartar los cambios?', text: 'Tu plan queda como estaba.', cta: 'Descartar', ok: () => {
+    p.items = JSON.parse(PLSNAP.items); S.planCfg = S.planCfg || {};
+    if (PLSNAP.cfg) S.planCfg[rid] = JSON.parse(PLSNAP.cfg); else delete S.planCfg[rid];
+    PLSNAP = null; SUG = null; PICK = null; save(); next();
+  } });
+}
+/* cambio de día: el plan que se entrenó se reinicia (hay que armarlo de nuevo);
+   el que no se entrenó queda guardado para cuando toque esa rutina */
+let rollS = null, rollD = '';
+function planRoll() {
+  const t = today(); if (rollS === S && rollD === t) return;
+  rollS = S; rollD = t;
+  if (!S.plans) return;
+  let ch = false;
+  Object.keys(S.plans).forEach((rid) => {
+    const p = S.plans[rid]; if (!p || p.d === t) return;
+    if (p.draft) { delete S.plans[rid]; ch = true; return; }
+    if (!R(rid) || p.d > t || S.logs.some((l) => l.d === p.d && l.r === rid)) return;
+    p.mk = p.mk || p.d; p.d = t; delete p.st; delete p.en; delete p.ev; ch = true;
+  });
+  if (ch) save();
+}
 /* series de hoy anotadas antes de esta versión (sin plan): se convierten en un plan en curso */
 function planFix(rid) {
   const td = todayR(rid); if (!td.length) return;
@@ -3401,6 +3487,7 @@ function sugWhy(r) {
 
 /* ---------- rutina: armar el plan, entrenar y terminar ---------- */
 function vRoutine(r) {
+  if (S.plans?.[r.id]?.draft) { delete S.plans[r.id]; SUG = null; save(); }
   planFix(r.id);
   const ws = wState(r.id), plan = planOf(r.id);
   let h = `${hdr('/', '', `<button class="iconbtn" data-act="editR" data-r="${r.id}" aria-label="Editar rutina">${ic('edit', 20)}</button>`)}
@@ -3429,7 +3516,7 @@ function vRoutine(r) {
     return `<button class="planit${n ? ' ok' : ''}" data-act="nav" data-to="/r/${r.id}/x/${x}"><span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, f.p.id), 40, e.mode)}</span><span class="grow"><b>${esc(e.name)}</b><small class="ptgt">${t && !t.first ? `${ic('target', 12)} ${tgtTxt(t)}${tgtChip(t)}` : `${esc(f.p.name)}${e.m ? ' · ' + esc(e.m) : ''}`}</small></span>${n ? `<span class="badge" aria-label="${plural(n, 'serie', 'series')} hoy">${n}</span>` : ic('chev', 18)}</button>`;
   };
   return h + status + `<div class="plan">
-      <div class="planh"><div class="grow"><b>Plan de hoy</b><small>${plural(all.length, 'ejercicio', 'ejercicios')}</small></div><button class="txtbtn sm" data-act="nav" data-to="/r/${r.id}/plan">Editar</button>${ws === 'ready' ? `<button class="txtbtn sm" data-act="planoff" data-r="${r.id}" aria-label="Borrar el plan de hoy">${ic('x', 16)}</button>` : ''}</div>
+      <div class="planh"><div class="grow"><b>Plan de hoy</b><small>${plural(all.length, 'ejercicio', 'ejercicios')}</small>${plan.mk && plan.mk !== today() ? `<small class="pmk">Armado el ${fShort(plan.mk)}</small>` : ''}</div><button class="pbtn" data-act="pledit" data-r="${r.id}">${ic('edit', 17)} Editar</button>${ws === 'ready' ? `<button class="pbtn sq" data-act="planoff" data-r="${r.id}" aria-label="Borrar el plan de hoy">${ic('trash', 19)}</button>` : ''}</div>
       ${all.map(row).join('')}
       ${ws !== 'done' ? `<button class="planadd" data-act="pkadd" data-r="${r.id}">${ic('plus', 16)} Agregar ejercicio</button>` : ''}
     </div>${browse}`;
@@ -3451,7 +3538,7 @@ function vPlan(r) {
       <button class="sgadd" data-act="padd" data-p="${p.id}">${ic('plus', 16)} Agregar</button>
     </section>`;
   }).join('');
-  return `${hdr('/r/' + r.id, r.name)}
+  return `${hdr('/r/' + r.id, r.name).replace('data-act="back"', `data-act="plback" data-r="${r.id}"`)}
     <h2 class="pt">Plan de hoy</h2>
     ${w ? `<div class="card why">
       <div class="whyhd"><div class="whyfig">${body(w.regs, TH.dk, 92)}</div>
@@ -3711,12 +3798,32 @@ function editSession(d, rid, from) {
   const dlg = $('#dlg');
   dlg.innerHTML = `<div class="dbg" data-act="dno"></div><div class="dbox" role="dialog" aria-modal="true" aria-labelledby="sest">
     <h3 id="sest">Horario del entrenamiento</h3>
-    <p>${esc(R(rid)?.name || arr[0].rn || 'Rutina')}, ${fLong(d)}. Tu primera serie fue a las ${hhmm(arr[0].ts)} y la última a las ${hhmm(arr[arr.length - 1].ts)}.</p>
-    <div class="sesin"><label><span>Inicio</span><input id="sesS" class="inp" type="time" value="${hhmm(t.start)}"></label><label><span>Término</span><input id="sesE" class="inp" type="time" value="${hhmm(t.end)}"></label></div>
+    <p>${esc(R(rid)?.name || arr[0].rn || 'Rutina')} · ${fShort(d)}<br><span class="mu">Primera serie ${hhmm(arr[0].ts)} · última ${hhmm(arr[arr.length - 1].ts)}</span></p>
+    <div class="tpks">${tPick('sesS', 'Inicio', t.start)}${tPick('sesE', 'Término', t.end)}</div>
+    <p class="tdur" id="sesdur"></p>
     <p class="seserr" id="seserr" hidden></p>
     <div class="dbtns"><button class="btn2" data-act="dno">Cancelar</button><button class="cta" data-act="sessok" data-d="${d}" data-r="${rid}" data-from="${from}">Guardar</button></div></div>`;
   dlg.classList.add('on');
-
+  sesDur();
+}
+/* selector de hora: flechas (±1 h, ±5 min) y números que se pueden escribir */
+function tPick(id, label, ts) {
+  const d = new Date(ts), col = (u, v, nm) => `<div class="tcol"><button data-act="tstep" data-f="${id}" data-u="${u}" data-d="1" aria-label="${label}: más ${nm}">${ic('up', 22)}</button><input id="${id}${u}" class="num" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" value="${pad(v)}" aria-label="${label}: ${u === 'h' ? 'hora' : 'minutos'}"><button data-act="tstep" data-f="${id}" data-u="${u}" data-d="-1" aria-label="${label}: menos ${nm}">${ic('down', 22)}</button></div>`;
+  return `<div class="tpk"><span>${label}</span><div class="tpkr">${col('h', d.getHours(), 'una hora')}<b>:</b>${col('m', d.getMinutes(), '5 minutos')}</div></div>`;
+}
+function tRead(id) {
+  const H = $('#' + id + 'h')?.value ?? '', M = $('#' + id + 'm')?.value ?? '';
+  if (H === '') return null;
+  const hh = parseInt(H, 10), mm = M === '' ? 0 : parseInt(M, 10);
+  return hh > 23 || mm > 59 || isNaN(hh) || isNaN(mm) ? NaN : hh * 60 + mm;
+}
+function sesDur() {
+  const el = $('#sesdur'); if (!el) return;
+  const a = tRead('sesS'), b = tRead('sesE');
+  if (a === null || b === null || isNaN(a) || isNaN(b)) { el.innerHTML = ''; return; }
+  const m = b >= a ? b - a : b + 1440 - a;
+  el.classList.toggle('warn', m > 360);
+  el.innerHTML = `Duración: <b>${m ? fmtDur(m) : '0 min'}</b>`;
 }
 function bwDialog() {
   const l = lastBW(), td = S.bw.find((x) => x.d === today());
@@ -3892,7 +3999,7 @@ function openToday(rid) {
   td.forEach((l) => { let g = groups.find((x) => x.x === l.x); if (!g) groups.push((g = { x: l.x, name: X(l.x)?.e.name || l.name, sets: [] })); g.sets.push(l); });
   openSheet(`<h2 class="sh-t">Hoy</h2>
     <p class="mu" style="margin:-6px 0 14px">${esc(r.name)}, ${plural(td.length, 'serie', 'series')}. Toca la × para borrar una serie mal anotada.</p>
-    ${groups.map((g) => `<div class="tx"><div class="tn">${esc(g.name)}</div>${g.sets.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${setTxt(s)}</span>${s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1} de ${esc(g.name)}">${ic('x', 18)}</button></div>`).join('')}</div>`).join('')}
+    ${groups.map((g) => `<div class="tx"><div class="tn">${esc(g.name)}</div>${g.sets.map((s, i) => `<div class="set"><span class="n">Serie ${i + 1}</span><span class="v">${setTxt(s)}</span>${s.u === 'lb' ? `<span class="lb">${nf(s.raw)} lb</span>` : ''}<button class="del" data-act="delset" data-id="${s.id}" aria-label="Borrar serie ${i + 1} de ${esc(g.name)}">${ic('x', 22)}</button></div>`).join('')}</div>`).join('')}
     <button class="cta" data-act="finish" data-r="${rid}">Terminar entrenamiento</button>`, () => openToday(rid));
 }
 
@@ -4066,7 +4173,8 @@ const A = {
   settings: () => openSettings(),
   install: () => install(),
   close: () => closeSheet(),
-  edit: () => { edit = !edit; render(); },
+  edit: () => { edit = !edit; hidView = false; render(); },
+  hidv: (el) => { hidView = el.dataset.v === '1'; render(); },
   amode: (el) => { loginDraft = { u: $('#lu').value, pw: $('#lp').value }; authMode = el.dataset.m; authErr = ''; render(); },
   auth: () => doAuth(),
   logout: () => {
@@ -4173,13 +4281,28 @@ const A = {
   pbuild: (el) => {
     const r = R(el.dataset.r); if (!r) return;
     if (S.plans) delete S.plans[r.id];
-    SUG = null; sugInit(r); planSync();
-    const c = coach();
-    const mark = (k) => { const o = c.m[k] || (c.m[k] = [0, '']); o[2] = today(); };
-    r.parts.forEach((pid) => (SUG.neg[pid] || new Set()).forEach((m) => { if ((SUG.picks[pid] || []).some((x) => X(x)?.e.m === m)) { mark(pid + '|' + m); if (SUG.rare?.[pid]) mark(pid + '|*'); } }));
+    SUG = null; PLSNAP = null; sugInit(r); planSync();
+    Object.assign(S.plans[r.id], { draft: 1, mk: today() });
     save();
     go(`/r/${r.id}/plan`);
   },
+  plok: (el) => {
+    const rid = el.dataset.r, pl = planOf(rid); if (!pl) return;
+    const wasDraft = !!pl.draft; delete pl.draft; PLSNAP = null;
+    if (wasDraft && SUG && SUG.rid === rid) {
+      const c = coach(), r = R(rid);
+      const mark = (k) => { const o = c.m[k] || (c.m[k] = [0, '']); o[2] = today(); };
+      r.parts.forEach((pid) => (SUG.neg[pid] || new Set()).forEach((m) => { if ((SUG.picks[pid] || []).some((x) => X(x)?.e.m === m)) { mark(pid + '|' + m); if (SUG.rare?.[pid]) mark(pid + '|*'); } }));
+    }
+    save(); backTo('/r/' + rid);
+    setTimeout(() => toast(wasDraft ? 'Plan de hoy listo' : 'Cambios guardados'), 60);
+  },
+  pledit: (el) => {
+    const rid = el.dataset.r, pl = planOf(rid);
+    PLSNAP = pl && !pl.st ? { rid, items: JSON.stringify(pl.items), cfg: S.planCfg?.[rid] ? JSON.stringify(S.planCfg[rid]) : null } : null;
+    go(`/r/${rid}/plan`);
+  },
+  plback: (el) => { const rid = el.dataset.r; planLeave(rid, () => back('/r/' + rid)); },
   pkswap: (el) => openPick(SUG.rid, 'swap', el.dataset.p, Number(el.dataset.i)),
   pkadd: (el) => { const r = R(el.dataset.r); if (!r) return; sugReady(r); openPick(r.id, 'add', r.parts.find((pid) => P(pid)) || r.parts[0]); },
   pkpart: (el) => { PICK.pid = el.dataset.p; PICK.m = ''; PICK.q = ''; render(); },
@@ -4228,6 +4351,17 @@ const A = {
     setTimeout(() => toast('¡A entrenar! Ya corre tu tiempo'), 60);
   },
   wresume: (el) => { const pl = planOf(el.dataset.r); if (!pl) return; delete pl.en; save(); render(); },
+  wback: (el) => backTo('/r/' + el.dataset.r),
+  tstep: (el) => {
+    const f = el.dataset.f, H = $('#' + f + 'h'), Mi = $('#' + f + 'm'); if (!H || !Mi) return;
+    let t = tRead(f); if (t === null || isNaN(t)) t = 0;
+    const dd = Number(el.dataset.d);
+    if (el.dataset.u === 'h') t += 60 * dd;
+    else { const r5 = t % 5; t += dd > 0 ? 5 - r5 : -(r5 || 5); }
+    t = (t + 1440) % 1440;
+    H.value = pad(Math.floor(t / 60)); Mi.value = pad(t % 60);
+    $('#seserr').hidden = true; sesDur();
+  },
   summary: (el) => showSummary(el.dataset.r),
   sgdel: (el) => {
     const pid = el.dataset.p, i = Number(el.dataset.i), picks = SUG.picks[pid], x = picks[i], wasMan = SUG.man.has(x);
@@ -4309,9 +4443,10 @@ const A = {
   editsess: (el) => editSession(el.dataset.d, el.dataset.r, el.dataset.from),
   sessok: (el) => {
     const d = el.dataset.d, rid = el.dataset.r, from = el.dataset.from;
-    const sv = $('#sesS').value, ev = $('#sesE').value, err = $('#seserr');
-    const toTs = (v) => { const [hh, mm] = v.split(':').map(Number); const x = pd(d); x.setHours(hh, mm, 0, 0); return x.getTime(); };
-    if (!sv || !ev) { err.textContent = 'Completa la hora de inicio y de término.'; err.hidden = false; return; }
+    const sv = tRead('sesS'), ev = tRead('sesE'), err = $('#seserr');
+    const toTs = (v) => { const x = pd(d); x.setHours(Math.floor(v / 60), v % 60, 0, 0); return x.getTime(); };
+    if (sv === null || ev === null) { err.textContent = 'Completa la hora de inicio y de término.'; err.hidden = false; return; }
+    if (isNaN(sv) || isNaN(ev)) { err.textContent = 'Revisa las horas: van de 0 a 23 y los minutos de 0 a 59.'; err.hidden = false; return; }
     const start = toTs(sv); let end = toTs(ev);
     if (end <= start) end += 864e5; // terminaste pasada la medianoche
     if (end - start > 6 * 3600e3) { err.textContent = 'Revisa las horas: el entrenamiento quedaría de más de 6 horas.'; err.hidden = false; return; }
@@ -4472,6 +4607,7 @@ document.addEventListener('input', (e) => {
   if (t.id === 'pkq' && PICK) { PICK.q = t.value; applyPick(); }
   if (t.id === 'fw') { t.value = t.value.replace(/[^0-9.,]/g, ''); const st = $('#sidetot'); if (st && sideOn(X(curX())?.e)) st.innerHTML = sideTot(t.value, S.settings.unit); }
   if (t.id === 'fr') t.value = t.value.replace(/[^0-9]/g, '');
+  if (/^ses[SE][hm]$/.test(t.id)) { t.value = t.value.replace(/[^0-9]/g, '').slice(0, 2); $('#seserr').hidden = true; sesDur(); }
   if (t.id === 'ftm' || t.id === 'fts') {
     t.value = t.value.replace(/[^0-9]/g, '');
     if (t.id === 'fts' && t.value.length > 2) t.value = t.value.slice(0, 2);
@@ -4495,6 +4631,7 @@ document.addEventListener('keydown', (e) => {
   else if (id === 'fw') { e.preventDefault(); if (curFirst === 'fr') A.add(); else $('#fr').focus(); }
   else if (id === 'fr') { e.preventDefault(); if (curFirst === 'fr' && $('#fw')) $('#fw').focus(); else A.add(); }
   else if (id === 'q') e.target.blur();
+  else if (/^ses[SE][hm]$/.test(id)) { e.preventDefault(); const nx = { sesSh: 'sesSm', sesSm: 'sesEh', sesEh: 'sesEm' }[id]; if (nx) $('#' + nx).focus(); else e.target.blur(); }
 });
 document.addEventListener('focusin', (e) => { if (e.target.classList?.contains('num')) setTimeout(() => e.target.select(), 0); });
 document.addEventListener('change', (e) => {
