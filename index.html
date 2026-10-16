@@ -481,7 +481,9 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .whyfig{flex:none;background:#000;border-radius:16px;padding:6px 8px}
 .whyfig .fig{gap:4px}
 .whyt{display:block;font-family:var(--cond);font-weight:800;font-size:22px;line-height:1.1;margin-bottom:8px}
-.whyst{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:6px}
+.whyst{display:grid;grid-template-columns:1.2fr 1fr;gap:6px}
+.whyset{margin:3px 0 0;font-size:12px;color:#77726c}
+.whyadd{display:inline-flex;align-items:center;gap:3px;margin-left:4px;padding:2px 9px;border-radius:99px;background:#2a1307;color:var(--ac);font-size:12px;font-weight:700;vertical-align:1px}
 .whyst span{background:#000;border-radius:12px;padding:6px 8px;font-size:11px;color:var(--mu);line-height:1.2}
 .whyst b{display:block;font-family:var(--cond);font-weight:800;font-size:18px;color:var(--tx);white-space:nowrap}
 .whymix{margin:8px 0 0;font-size:12px;color:var(--mu)}
@@ -798,6 +800,7 @@ const I = {
   check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   minus: '<path d="M5 12h14"/>',
   target: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  alert: '<path d="M12 4.5 21 19.5H3z"/><path d="M12 10v4.5"/><circle cx="12" cy="17" r=".8" fill="currentColor"/>',
   list: '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/>',
   heart: '<path d="M12 20.3s-7.6-4.6-7.6-10.4A4.2 4.2 0 0 1 12 7.5a4.2 4.2 0 0 1 7.6 2.4c0 5.8-7.6 10.4-7.6 10.4z"/>',
   body: '<circle cx="12" cy="4.8" r="2.3"/><path d="M12 8.2v6.3M6.5 10.2l5.5-1.6 5.5 1.6M9 21.5l3-7 3 7"/>',
@@ -2055,7 +2058,7 @@ window.addEventListener('popstate', () => {
 });
 
 function render() {
-  bwCache = null;
+  bwCache = null; TGC = new Map(); RST = null;
   const v0 = $('#view');
   if (booting) { v0.innerHTML = `<div class="login"><div class="lg-logo">${logo(76)}</div><p class="mu" style="text-align:center">Cargando…</p></div>`; $('#dockwrap').innerHTML = ''; return; }
   if (!USER || !S) {
@@ -2302,7 +2305,7 @@ function vEx(r, xid, view = false) {
     ${days.slice().reverse().map((dd) => `<div class="hrow"><span class="hd">${fShort(dd.d)}</span><span class="hs">${dd.sets.map((s) => `<span${isBest(s, dd.sets) ? ' class="hb"' : ''}>${setTxt(s, true)}</span>`).join('')}</span></div>`).join('')}
   </details>` : '';
   if (!view) planFix(r.id);
-  const ws = wState(r.id), tgt0 = exTarget(xid), tsets = tgt0 && !tgt0.first && kd !== 'cardio' ? tgt0.sets : 0;
+  const ws = wState(r.id);
   const plan = planOf(r.id), inPlan = plan ? plan.items.some((it) => it.x === xid) : false;
   const gate = view ? (plan && ws !== 'done' && !inPlan ? `<button class="btn2 gateadd" data-act="pkdirect" data-r="${r.id}" data-x="${xid}">${ic('plus', 18)} Agregar al plan de hoy</button>` : '')
     : ws === 'live' ? '' : `<div class="gate">${ws === 'none' ? `<b>Primero arma tu plan de hoy</b><button class="cta" data-act="back" data-to="/r/${r.id}">Ir al plan</button>`
@@ -2317,11 +2320,11 @@ function vEx(r, xid, view = false) {
     ${notes}
     ${view || gate ? gate : `
     <div class="logger">
-      <div class="lhead"><span class="h3">${kd === 'cardio' ? 'Registro' : 'Serie'} ${td.length + 1}${tsets ? `<small> de ${tsets}</small>` : ''}</span>
+      <div class="lhead"><span class="h3">${kd === 'cardio' ? 'Registro' : 'Serie'} ${td.length + 1}</span>
         ${kd === 'cardio' ? '' : `<div class="seg" role="group" aria-label="Unidad de peso"><button data-act="unit" data-u="kg" class="${u === 'kg' ? 'on' : ''}" aria-pressed="${u === 'kg'}">kg</button><button data-act="unit" data-u="lb" class="${u === 'lb' ? 'on' : ''}" aria-pressed="${u === 'lb'}">lb</button></div>`}
       </div>
       ${(() => { const t = exTarget(xid); if (!t) return ''; if (t.first) return `<p class="tgtfirst">${ic('target', 15)}<span>${esc(t.why)}</span></p>`;
-        return `<div class="tgt ${t.dir}"><div class="grow"><small>${ic('target', 13)} Objetivo de hoy${t.k !== 'cardio' ? ` · ${plural(t.sets, 'serie', 'series')}` : ''}</small><div class="tgtv"><b>${tgtTxt(t)}</b>${tgtChip(t, true)}</div><p>${esc(t.why)}</p></div><button class="tgtuse" data-act="usetgt">Usar</button></div>`; })()}
+        return `<div class="tgt ${t.dir}"><div class="grow"><small>${ic('target', 13)} Objetivo de hoy</small><div class="tgtv"><b>${tgtTxt(t)}</b>${tgtChip(t, true)}</div><p>${esc(t.why)}</p></div><button class="tgtuse" data-act="usetgt">Usar</button></div>`; })()}
       ${(() => { const rf = refSet(xid); return rf.same ? `<p class="refhint">${ic('prev', 15)}<span class="rt">La vez anterior, ${kd === 'cardio' ? 'registro' : 'serie'} ${rf.n}: <b>${setTxt(rf.s)}</b>${rf.s.side ? ` <i>(${nf(rf.s.raw / 2)} ${rf.s.u} por lado)</i>` : ''}</span></p>` : ''; })()}
       <div class="fields${kd === 'cardio' && !kmOpen ? ' one' : ''}">
         ${(() => {
@@ -2438,16 +2441,16 @@ const TOUR_STEPS = [
   { prep: () => { editRoutine(null); ER.name = 'Mi rutina'; ER.parts = ['pecho', 'triceps', 'cardio']; ER.fav = true; renderER(); }, el: () => [document.querySelector('.erhead'), document.querySelector('#sheet .chips.yl')], title: 'Crear una rutina', text: 'Ponle nombre y elige las partes del cuerpo. Para editar una rutina, usa el lápiz dentro de ella.' },
   { go: '/r/tour_pt', prep: () => { tourReset(); S.planCfg = { tour_pt: { pecho: 4, triceps: 3 } }; render(); }, el: '.build', title: 'Arma tu plan de hoy', text: 'Todo entrenamiento parte aquí: elige cuántos ejercicios quieres de cada parte y toca "Armar plan".' },
   { go: '/r/tour_pt', prep: () => { tourReset(); render(); }, el: '.rowbtn', title: 'Ver y editar ejercicios', text: 'Para ver el progreso de un ejercicio, editarlo u ocultarlo. Las series se anotan solo en el plan.' },
-  { go: '/r/tour_pt/plan', prep: tb, el: '.why', title: 'Por qué este plan', text: 'Los músculos que trabaja, cuánto dura y sus razones: tus básicos, alguna variante, lo nuevo y en qué te toca subir.' },
-  { go: '/r/tour_pt/plan', prep: tb, el: '.sgpart .sgitem', title: 'Cada ejercicio', text: 'Su motivo y lo que te toca hoy: peso, repeticiones y series. La flecha verde indica que subes.' },
+  { go: '/r/tour_pt/plan', prep: tb, el: '.why', title: 'Por qué este plan', text: 'Músculos, duración y la razón de cada elección. Si falta algo que sueles entrenar, te avisa y lo agregas con un toque.' },
+  { go: '/r/tour_pt/plan', prep: tb, el: '.sgpart .sgitem', title: 'Cada ejercicio', text: 'Su motivo y lo que te toca hoy: peso y repeticiones. La flecha verde indica que subes.' },
   { go: '/r/tour_pt/plan', prep: tb, el: () => { const its = document.querySelectorAll('.sgpart:first-of-type .sgitem'); return [its[its.length - 1], document.querySelector('.sgpart .sgadd')]; }, title: 'Ajusta el plan', text: 'Toca un ejercicio para cambiarlo. El ojo lo oculta para que no se vuelva a sugerir, la × lo quita y "Agregar" suma uno sugerido.' },
-  { go: '/r/tour_pt/pick', prep: () => { tourBuild(); PICK = { rid: 'tour_pt', mode: 'swap', pid: 'pecho', i: 1, q: '', m: '' }; tgo('/r/tour_pt/pick'); render(); }, el: () => [document.querySelector('#pksug'), document.querySelector('.mchips')], title: 'Cambiar un ejercicio', text: 'Arriba, los sugeridos con su motivo. Abajo buscas cualquiera o filtras por músculo.' },
+  { go: '/r/tour_pt/pick', prep: () => { tourBuild(); PICK = { rid: 'tour_pt', mode: 'swap', pid: 'pecho', i: 1, q: '', m: '' }; tgo('/r/tour_pt/pick'); render(); }, el: () => [document.querySelector('#pksug'), document.querySelector('.fbar')], title: 'Cambiar un ejercicio', text: 'Arriba, los sugeridos con su motivo. Abajo buscas cualquiera o filtras por músculo.' },
   { go: '/r/tour_pt/plan', prep: tb, el: '.dock', title: 'Comenzar entrenamiento', text: 'Ya en el gym, toca aquí: empieza a correr tu tiempo y puedes anotar series.' },
-  { go: '/r/tour_pt', prep: tl, el: () => [document.querySelector('.wbar'), document.querySelectorAll('.planit')[2] || document.querySelector('.plan')], title: 'Entrenamiento en curso', text: 'Toca un ejercicio para anotarlo. A la derecha, cuántas series llevas de las que te tocan.' },
+  { go: '/r/tour_pt', prep: tl, el: () => [document.querySelector('.wbar'), document.querySelectorAll('.planit')[2] || document.querySelector('.plan')], title: 'Entrenamiento en curso', text: 'Toca un ejercicio para anotarlo. En naranjo, las series que llevas hoy.' },
   { go: '/r/tour_pt', prep: tl, el: () => { const its = document.querySelectorAll('.planit'); return [its[its.length - 1], document.querySelector('.planadd')]; }, title: 'Cambios sobre la marcha', text: '"Agregar ejercicio" suma uno y "Editar" cambia el plan, también a mitad del entrenamiento.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.exhead', title: 'El ejercicio', text: 'Su dibujo y cómo hacerlo, con un consejo clave.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.notes', title: 'Última vez y mejor serie', text: 'Lo que hiciste la última vez y tu mejor serie histórica (según el 1RM estimado).' },
-  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo de hoy', text: 'Si llegaste al tope de repeticiones, sube el peso; si no, una repetición más. "Usar" lo carga en la serie.' },
+  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo de hoy', text: 'Sale de tu historial: sube al llegar al tope de repeticiones, mantiene si entrenaste esa parte ayer y baja si estás estancado. "Usar" lo carga.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: () => [document.querySelector('.refhint'), document.querySelector('.logger .cta')], title: 'Anotar la serie', text: 'Viene lleno con lo que hiciste en esa misma serie la vez anterior. Ajusta y toca "Guardar serie": vuelves al plan.' },
   { go: '/r/tour_pt/x/' + AX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.siderow')], title: 'Dos mancuernas o poleas', text: 'Anota el peso de un lado y la app lo multiplica por dos.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Cada punto es tu mejor serie del día. Toca uno para ver el detalle.' },
@@ -2845,6 +2848,31 @@ const equipList = () => S.settings.equip || EQUIP.map((x) => x[0]);
 const equipOK = (e, pid) => pid === 'cardio' || equipList().includes(e.tool || 'n');
 const usable = (e, pid) => !e.hidden && equipOK(e, pid);
 let SUG = null;
+/* ---------- lo que la app va aprendiendo de ti (no se muestra en ningún lado) ----------
+   S.coach.x[id] = [rechazos, fecha]: ejercicios que quitas, cambias o te saltas.
+   S.coach.m[parte|músculo] = [rechazos, fecha, última vez que se te propuso por equilibrio].
+   S.coach.g = { nr: ejercicios nuevos que rechazas, na: ejercicios nuevos que sí haces }.
+   Todo pesa la mitad cada 45 días: tus gustos pueden cambiar y la app se ajusta. */
+const half = (n, d) => (d ? n * Math.pow(0.5, Math.max(0, daysAgo(d)) / 45) : 0);
+const coach = () => { const c = S.coach || (S.coach = {}); c.x = c.x || {}; c.m = c.m || {}; c.g = c.g || {}; return c; };
+function coachBump(map, key, w) { const o = map[key] || (map[key] = [0, '']); o[0] = half(o[0], o[1]) + w; o[1] = today(); }
+const rejX = (x) => { const o = S.coach?.x?.[x]; return o ? half(o[0], o[1]) : 0; };
+const rejM = (pid, m) => { const o = S.coach?.m?.[pid + '|' + m]; return o ? half(o[0], o[1]) : 0; };
+const promoAgo = (pid, m) => { const d = S.coach?.m?.[pid + '|' + m]?.[2]; return d ? daysAgo(d) : 999; };
+function coachRej(x, pid, w = 1, muscle = false) {
+  const c = coach(), f = X(x); if (!f) return;
+  coachBump(c.x, x, w);
+  if (muscle) coachBump(c.m, pid + '|' + f.e.m, w);
+  if (!S.logs.some((l) => l.x === x && l.d < today())) coachBump(c.g, 'nr', w);
+}
+/* qué tanto te gusta probar ejercicios nuevos (0 a 1), según lo que haces con los que te propone */
+const exploreRate = () => { const g = S.coach?.g || {}; const nr = g.nr ? half(g.nr[0], g.nr[1]) : 0, na = g.na ? half(g.na[0], g.na[1]) : 0; return (na + 1) / (na + nr + 2); };
+/* días desde la última vez que entrenaste cada parte (sin contar hoy), para respetar el descanso */
+let RST = null;
+function restDays(pid) {
+  if (!RST) { RST = {}; const XM = new Map(); S.parts.forEach((p) => p.ex.forEach((e) => XM.set(e.id, p.id))); const t = today(); S.logs.forEach((l) => { const q = XM.get(l.x); if (q && l.d < t && (!RST[q] || l.d > RST[q])) RST[q] = l.d; }); }
+  return RST[pid] ? daysAgo(RST[pid]) : 99;
+}
 /* ---------- historial que usan las sugerencias ----------
    info: por ejercicio, cuántos días lo hiciste (total y últimos 90) y cuándo fue la última vez.
    mus: series por músculo en las últimas 2 semanas (para equilibrar).
@@ -2852,7 +2880,7 @@ let SUG = null;
    recent: lo que hiciste la última vez en esta rutina. done: lo que ya hiciste hoy. */
 function sugCtx(rid) {
   const t = today(), d90 = iso(new Date(Date.now() - 89 * 864e5)), d14 = iso(new Date(Date.now() - 13 * 864e5));
-  const info = {}, mus = {}, tool = {}, pdays = {}, seen = new Set(), done = new Set();
+  const info = {}, mus = {}, mus90 = {}, tot90 = {}, mlast = {}, tool = {}, pdays = {}, seen = new Set(), done = new Set();
   const XM = new Map(); S.parts.forEach((p) => p.ex.forEach((e) => XM.set(e.id, { p, e })));
   let ld = '';
   S.logs.forEach((l) => {
@@ -2863,15 +2891,18 @@ function sugCtx(rid) {
     if (l.d > o.last) o.last = l.d;
     if (l.r === rid && l.d > ld) ld = l.d;
     const f = XM.get(l.x); if (!f) return;
-    if (l.d >= d14) { const mk = f.p.id + '|' + f.e.m; mus[mk] = (mus[mk] || 0) + 1; }
+    const mk = f.p.id + '|' + f.e.m;
+    if (l.d >= d14) mus[mk] = (mus[mk] || 0) + 1;
+    if (!mlast[mk] || l.d > mlast[mk]) mlast[mk] = l.d;
     if (l.d >= d90) {
+      mus90[mk] = (mus90[mk] || 0) + 1; tot90[f.p.id] = (tot90[f.p.id] || 0) + 1;
       const tp = tool[f.p.id] || (tool[f.p.id] = { n: 0 }), tk = f.e.tool || 'n';
       tp[tk] = (tp[tk] || 0) + 1; tp.n++;
       (pdays[f.p.id] || (pdays[f.p.id] = new Set())).add(l.d);
     }
   });
   const recent = new Set(ld ? S.logs.filter((l) => l.d === ld && l.r === rid).map((l) => l.x) : []);
-  return { info, mus, tool, pdays, recent, done };
+  return { info, mus, mus90, tot90, mlast, tool, pdays, recent, done };
 }
 const sctx = () => SUG.ctx || (SUG.ctx = sugCtx(SUG.rid));
 /* qué tan típico es un ejercicio: su lugar en el catálogo dentro de su músculo (los primeros son los más usados) */
@@ -2908,21 +2939,49 @@ function sugScore(e, p, ctx, st, slotF) {
   if (slotF && fn === slotF) s += 3;
   if (st.poses.has(e.pose)) s -= 2.5;
   if (e.mode === 'assist') s -= 0.5;
+  s -= Math.min(3.5, rejX(e.id) * 1.3);                       // lo que sueles quitar o saltarte
   return s;
 }
-/* orden de los "espacios" de una parte: el principal primero; si un músculo casi no tuvo series en 2 semanas, sube */
+/* orden de los "espacios" de una parte.
+   Con historial suficiente se arma a tu medida: primero los músculos que de verdad entrenas, al final los que casi
+   nunca haces (o que sueles quitar). Además se prioriza UN músculo descuidado: uno que sueles entrenar y dejaste de
+   lado en 2 semanas; los que casi nunca haces solo se proponen de vez en cuando (y cada vez menos si los rechazas). */
 function orderSlots(p, ctx) {
   const all = slotsFor(p);
+  if (p.id === 'cardio') return { slots: all, neg: new Set() };
   const ms = [...new Set(all.map((s) => s[0]).filter(Boolean))];
+  const t90 = ctx.tot90[p.id] || 0, pn = ctx.pdays[p.id]?.size || 0, known = pn >= 4 && t90 >= 20;
+  const sh = Object.fromEntries(ms.map((m) => [m, t90 ? (ctx.mus90[p.id + '|' + m] || 0) / t90 : 0]));
+  let slots = all;
+  if (known) {
+    /* reparto proporcional (D'Hondt) sobre la raíz de cuánto entrenas cada músculo: lo que más haces tiene más
+       espacios, pero cada músculo que sueles trabajar entra antes de repetir el principal por tercera vez */
+    const occ = {}; all.forEach((s) => (occ[s[0]] || (occ[s[0]] = [])).push(s));
+    const w = Object.fromEntries(ms.map((m) => [m, sh[m] < 0.04 ? 0 : Math.sqrt(sh[m]) / (1 + rejM(p.id, m))]));
+    const cnt = {}, seq = [];
+    for (let k = 0; k < 12; k++) {
+      let best = null, bv = 0;
+      ms.forEach((m) => { const v = w[m] / ((cnt[m] || 0) + 1); if (v > bv + 1e-9) { bv = v; best = m; } });
+      if (!best) break;
+      const i = cnt[best] || 0; cnt[best] = i + 1;
+      seq.push(occ[best]?.[i] || [best, null]);
+    }
+    slots = seq.concat(ms.filter((m) => !w[m]).map((m) => occ[m][0]), all);
+  }
   const rec = Object.fromEntries(ms.map((m) => [m, ctx.mus[p.id + '|' + m] || 0]));
-  const tot = ms.reduce((a, m) => a + rec[m], 0), mx = Math.max(0, ...Object.values(rec));
-  /* el músculo más descuidado de la parte (uno solo, para no desplazar tus básicos) */
-  const low = p.id !== 'cardio' && tot >= 6 ? ms.filter((m) => rec[m] <= mx * 0.2 && p.ex.some((e) => e.m === m && usable(e, p.id))).sort((a, b) => rec[a] - rec[b])[0] : null;
-  const neg = new Set(low ? [low] : []);
-  if (!neg.size) return { slots: all, neg };
-  const out = [all[0]], rest = all.slice(1);
-  neg.forEach((m) => { if (all[0][0] === m) return; const i = rest.findIndex((s) => s[0] === m); if (i >= 0) out.push(rest.splice(i, 1)[0]); });
-  return { slots: out.concat(rest), neg };
+  const r14 = ms.reduce((a, m) => a + rec[m], 0);
+  let neg = null, rare = false;
+  if (r14 >= 6) {
+    const mx = Math.max(...ms.map((m) => rec[m]));
+    const cand = ms.filter((m) => rec[m] <= mx * 0.2 && p.ex.some((e) => e.m === m && usable(e, p.id)) && promoAgo(p.id, m) >= 10);
+    const usual = cand.filter((m) => !known || sh[m] >= 0.06).sort((a, b) => (sh[b] - rec[b] / r14) - (sh[a] - rec[a] / r14));
+    if (usual.length) neg = usual[0];
+    else if (promoAgo(p.id, '*') >= 14) { neg = cand.filter((m) => promoAgo(p.id, m) >= 28 * (1 + rejM(p.id, m))).sort((a, b) => rejM(p.id, a) - rejM(p.id, b))[0] || null; rare = !!neg; }
+  }
+  if (!neg) return { slots, neg: new Set() };
+  const out = [slots[0]], rest = slots.slice(1);
+  if (slots[0][0] !== neg) { const i = rest.findIndex((s) => s[0] === neg); if (i >= 0) out.push(rest.splice(i, 1)[0]); }
+  return { slots: out.concat(rest), neg: new Set([neg]), rare };
 }
 /* el primer espacio que todavía no cubre ningún ejercicio del plan */
 function nextSlot(pid, picks) {
@@ -2977,7 +3036,7 @@ function sugVariety() {
     if (o.i === 0 || o.pid === 'cardio' || ['hoy', 'man', 'basico'].includes(sugRole(o.x, o.pid).r)) continue;
     const e = X(o.x).e, p = P(o.pid);
     const others = SUG.picks[o.pid].filter((y) => y !== o.x), poses = new Set(others.map((y) => X(y)?.e.pose));
-    const c = p.ex.filter((f) => usable(f, p.id) && f.m === e.m && f.id !== o.x && !others.includes(f.id) && !poses.has(f.pose) && (!ctx.info[f.id] || daysAgo(ctx.info[f.id].last) >= 10));
+    const c = p.ex.filter((f) => usable(f, p.id) && f.m === e.m && f.id !== o.x && !others.includes(f.id) && !poses.has(f.pose) && rejX(f.id) < 1 && (ctx.info[f.id] ? daysAgo(ctx.info[f.id].last) >= 10 : exploreRate() >= 0.35));
     if (!c.length) continue;
     const st = { jit: 0.6, poses, newLeft: 1, hasHist: true };
     SUG.picks[o.pid][o.i] = c.map((f) => [f, sugScore(f, p, ctx, st, fnOf(e, p.id))]).sort((a, b) => b[1] - a[1])[0][0].id;
@@ -2988,10 +3047,12 @@ function sugInit(r) {
   const plan = S.plans?.[r.id], cfg = (S.planCfg || {})[r.id] || {};
   SUG = { rid: r.id, d: today(), counts: {}, picks: {}, skip: {}, man: new Set(), slots: {}, neg: {}, ctx: null, eqOpen: false };
   const ctx = sctx();
-  r.parts.forEach((pid) => { const p = P(pid); if (!p) return; const o = orderSlots(p, ctx); SUG.slots[pid] = o.slots; SUG.neg[pid] = o.neg; });
+  SUG.rare = {};
+  r.parts.forEach((pid) => { const p = P(pid); if (!p) return; const o = orderSlots(p, ctx); SUG.slots[pid] = o.slots; SUG.neg[pid] = o.neg; SUG.rare[pid] = !!o.rare; });
   r.parts.forEach((pid) => { SUG.counts[pid] = cfg[pid] ?? defCount(pid, r.parts.length); });
   const total = r.parts.reduce((a, pid) => a + (SUG.counts[pid] || 0), 0);
-  SUG.newLeft = Math.max(1, Math.round(total * 0.2));
+  const xr = exploreRate();
+  SUG.newLeft = Math.max(Math.random() < xr ? 1 : 0, Math.floor(total * 0.4 * xr + 0.3));
   if (plan && plan.d === today() && plan.items.length) {
     r.parts.forEach((pid) => { const its = plan.items.filter((it) => it.p === pid && X(it.x)); SUG.picks[pid] = its.map((it) => it.x); its.forEach((it) => { if (it.man) SUG.man.add(it.x); }); SUG.counts[pid] = SUG.picks[pid].length; });
   } else { r.parts.forEach((pid) => sugFill(pid)); sugStaples(); sugVariety(); }
@@ -3017,7 +3078,9 @@ function incOf(e, pid, w, u) {
   return e.tool === 'b' ? (legs ? 5 : 2.5) : e.tool === 'd' ? 2 : e.tool === 'm' ? (w >= 100 ? 10 : 5) : 2.5;
 }
 const roundTo = (v, st) => Math.max(0, Math.round(v / st) * st);
-function exTarget(xid) {
+let TGC = new Map();
+function exTarget(xid) { if (!TGC.has(xid)) TGC.set(xid, exTarget0(xid)); return TGC.get(xid); }
+function exTarget0(xid) {
   const f = X(xid); if (!f) return null;
   const { e, p } = f, k = kindOf(xid), u = S.settings.unit;
   const hist = byDay(S.logs.filter((l) => l.x === xid && l.d < today()));
@@ -3049,6 +3112,7 @@ function exTarget(xid) {
     const lastre = W > 0 ? ` + ${nf(disp(W))} ${u}` : '';
     if (ago > 28) return { ...base, w: disp(W), reps: Math.max(1, R - 2), dir: 'eq', why: `Vuelves después de ${ago} días: apunta a unas ${Math.max(1, R - 2)} repeticiones y retoma el ritmo.` };
     if (ago > 14) return { ...base, w: disp(W), reps: R, dir: 'eq', why: `Hace ${ago} días que no lo haces: apunta a las ${R} repeticiones de la última vez.` };
+    if (restDays(p.id) <= 1) return { ...base, w: disp(W), reps: R, dir: 'eq', why: `Entrenaste ${p.name.toLowerCase()} ayer: apunta a las mismas ${R} repeticiones.` };
     if (R >= 15 && W === 0) return { ...base, w: 0, reps: R, dir: 'eq', why: `Ya llegas a ${R}: para seguir progresando agrega lastre (un disco o mochila con peso) o pasa a una variante más difícil.` };
     return { ...base, w: disp(W), reps: R + 1, dir: 'up', delta: '+1 rep', why: `La última vez hiciste ${R}${lastre}: intenta una repetición más.` };
   }
@@ -3058,8 +3122,19 @@ function exTarget(xid) {
     return { ...base, w: disp(W), reps: Math.min(hi, R + 1), dir: 'eq', delta: '+1 rep', why: `Misma ayuda y una repetición más. Al llegar a ${hi}, bajas la ayuda.` };
   }
   // ejercicios con peso
-  const W = Math.max(...last.sets.map((s) => s.kg)), R = Math.max(...last.sets.filter((s) => s.kg === W).map((s) => s.reps));
-  const Wd = disp(W), inc = incOf(e, p.id, Wd, u) * (base.side ? 2 : 1), step = u === 'lb' ? 5 : e.tool === 'd' ? (base.side ? 2 : 1) : incOf(e, p.id, Wd, u);
+  const maxW = (d) => Math.max(...d.sets.map((s) => s.kg)), repsAt = (d, w) => Math.max(0, ...d.sets.filter((s) => s.kg === w).map((s) => s.reps));
+  const W = maxW(last), R = repsAt(last, W);
+  const Wd = disp(W), inc0 = incOf(e, p.id, Wd, u) * (base.side ? 2 : 1), step = u === 'lb' ? 5 : e.tool === 'd' ? (base.side ? 2 : 1) : incOf(e, p.id, Wd, u);
+  /* el salto que tú sueles hacer en este ejercicio (así calza con los pesos de tu gym) */
+  const jumps = []; for (let i = 1; i < hist.length; i++) { const dj = Math.round((disp(maxW(hist[i])) - disp(maxW(hist[i - 1]))) * 100) / 100; if (dj > 0 && dj <= inc0 * 4) jumps.push(dj); }
+  const jc = {}; jumps.forEach((j) => { jc[j] = (jc[j] || 0) + 1; });
+  const jm = Object.entries(jc).sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];
+  const inc = jm && jm[1] >= 2 ? Number(jm[0]) : inc0;
+  /* si cuando subes de peso las repeticiones se te caen bajo el rango, se sube con más calma */
+  let ups = 0, fails = 0; for (let i = 1; i < hist.length; i++) { const w1 = maxW(hist[i - 1]), w2 = maxW(hist[i]); if (w2 > w1) { ups++; if (repsAt(hist[i], w2) < lo) fails++; } }
+  const careful = ups >= 2 && fails / ups >= 0.5;
+  const prev = hist.length >= 2 ? hist[hist.length - 2] : null, prevR = prev && maxW(prev) === W ? repsAt(prev, W) : 0;
+  const rest = restDays(p.id);
   const rms = hist.map((d) => rm1(topSet(d.sets)));
   const stall = hist.length >= 6 && Math.max(...rms.slice(-4)) <= Math.max(...rms.slice(0, -4)) * 1.005;
   const wl = (w) => (base.side ? `${nf(w / 2)} ${u} por lado` : `${nf(w)} ${u}`);
@@ -3067,9 +3142,12 @@ function exTarget(xid) {
   if (ago > 28) { const w = roundTo(Wd * 0.9, step); return out(w, R, w < Wd ? 'down' : 'eq', `Vuelves después de ${ago} días: parte un poco más liviano y retoma el ritmo.`); }
   if (ago > 14) return out(Wd, Math.max(lo, R - 1), 'eq', `Hace ${ago} días que no lo haces: repite el peso de la última vez.`);
   if (stall) { const w = roundTo(Wd * 0.9, step); return out(w, hi, w < Wd ? 'down' : 'eq', `Llevas 4 sesiones sin superar tu mejor marca: baja un 10 % y apunta a ${hi} repeticiones para destrabarte.`); }
+  if (rest <= 1) return out(Wd, R, 'eq', `Entrenaste ${p.name.toLowerCase()} ayer: mantén el peso y busca las mismas ${R} repeticiones.`);
+  if (prevR && prevR - R >= 3) return out(Wd, Math.min(prevR, R + 2), 'eq', `La última vez bajaste de ${prevR} a ${R} repeticiones con el mismo peso: repítelo y busca recuperarlas.`);
   if (R >= hi) {
+    if (careful && !(prevR >= hi)) return out(Wd, R, 'eq', `Llegaste a ${R}: repite el peso una vez más para consolidar. Cuando subes muy rápido te cuesta.`);
     const w = Wd + inc, rm = rm1({ kg: Wd, reps: R }), reps = Math.max(lo, Math.min(hi - 1, Math.floor(30 * (rm / w - 1))));
-    return out(w, reps, 'up', `La última vez llegaste a ${R} repeticiones con ${wl(Wd)}: toca subir el peso.`);
+    return out(w, reps, 'up', `La última vez llegaste a ${R} repeticiones con ${wl(Wd)}: toca subir el peso${jm && jm[1] >= 2 ? ' (tu salto habitual)' : ''}.`);
   }
   if (R < lo) {
     const prevLow = hist.length >= 2 && (() => { const pl = hist[hist.length - 2].sets, pw = Math.max(...pl.map((s) => s.kg)); return pw >= W && Math.max(...pl.filter((s) => s.kg === pw).map((s) => s.reps)) < lo; })();
@@ -3139,37 +3217,57 @@ function sugWhy(r) {
   const ctx = sctx(), items = [];
   r.parts.forEach((pid) => (SUG.picks[pid] || []).forEach((x) => { const f = X(x); if (f) items.push({ x, pid, e: f.e, fn: fnOf(f.e, pid), role: sugRole(x, pid), t: exTarget(x) }); }));
   if (!items.length) return null;
-  const nm = (l, n = 2) => l.slice(0, n).map((i) => `<b>${esc(i.e.name)}</b>`).join(', ') + (l.length > n ? ` y ${l.length - n} más` : '');
+  const B = (s) => `<b>${esc(s)}</b>`, lc = (s) => s.toLowerCase();
   const strength = items.filter((i) => i.pid !== 'cardio');
   const regs = new Set(); items.forEach((i) => regsForMuscle(i.e.m, i.pid).forEach((k) => regs.add(k)));
   const mus = new Set(strength.map((i) => i.pid + '|' + i.e.m)).size;
   const nC = strength.filter((i) => i.fn === 'C').length, nI = strength.filter((i) => i.fn === 'I').length;
   const L = [];
+  // descanso: si entrenaste alguna parte ayer, hoy se mantienen los pesos
+  const tired = r.parts.filter((pid) => pid !== 'cardio' && (SUG.picks[pid] || []).length && restDays(pid) <= 1).map((pid) => lc(P(pid).name));
+  if (tired.length) L.push(['clock', `Entrenaste ${B(tired.join(' y '))} ayer: hoy mantén los pesos y cuida la técnica`]);
+  // equilibrio
   const eq = items.filter((i) => i.role.r === 'equil');
-  if (eq.length) L.push(['body', `<b>Equilibra</b> ${esc(eq.map((i) => i.e.m.toLowerCase()).join(' y '))}: casi sin series en 2 semanas`]);
+  if (eq.length) { const i = eq[0], ld = ctx.mlast[i.pid + '|' + i.e.m]; L.push(['body', `${B(i.e.name)} para ${lc(i.e.m)}: ${ld ? `${daysAgo(ld)} días sin trabajarlo` : 'casi no lo trabajas'}`]); }
+  // lo que falta: músculos que sueles entrenar, que no están en el plan y llevan 7 días o más sin trabajo
+  const miss = [];
+  r.parts.forEach((pid) => {
+    const p = P(pid), t90 = ctx.tot90[pid] || 0; if (!p || pid === 'cardio' || t90 < 20) return;
+    const inPlan = new Set((SUG.picks[pid] || []).map((x) => X(x)?.e.m));
+    p.muscles.forEach(({ n: m }) => { if (inPlan.has(m) || (ctx.mus90[pid + '|' + m] || 0) / t90 < 0.1) return; const ld = ctx.mlast[pid + '|' + m], ago = ld ? daysAgo(ld) : 99; if (ago >= 7) miss.push({ pid, m, ago }); });
+  });
+  if (miss.length) { const o = miss.sort((a, b) => b.ago - a.ago)[0]; L.push(['alert', `Falta ${B(lc(o.m))}: lo sueles entrenar y van ${o.ago} días${miss.length > 1 ? ` (y ${miss.length - 1} más)` : ''}`, o]); }
+  // básicos, con cuánto han subido
   const bas = items.filter((i) => i.role.r === 'basico');
-  if (bas.length) L.push(['starf', `<b>Tus básicos</b> para seguir progresando: ${nm(bas)}`]);
-  const vu = items.filter((i) => i.role.r === 'vuelve');
-  if (vu.length) L.push(['swap', `<b>Vuelve</b> ${nm(vu, 1)} después de ${vu[0].role.ago} días`]);
-  const nu = items.filter((i) => i.role.r === 'nuevo');
-  if (nu.length) L.push(['spark', `<b>Nuevo</b>: <b>${esc(nu[0].e.name)}</b>${nu[0].role.rel ? `, parecido a tu ${esc(nu[0].role.rel.name)}` : ''}${nu.length > 1 ? ` y ${nu.length - 1} más` : ''}`]);
-  const up = items.filter((i) => i.t && i.t.dir === 'up' && kindOf(i.x) !== 'cardio');
-  if (up.length) L.push(['up', `<b>Te toca subir</b> en ${nm(up)}`]);
-  const st = items.filter((i) => i.t && i.t.stall);
-  if (st.length) L.push(['down', `<b>Para destrabar</b> ${nm(st, 1)}: baja un 10 %`]);
-  // contexto: la semana y la última vez que hiciste esta rutina
-  const mon = iso(monday(today()));
-  const wk = S.logs.filter((l) => l.d >= mon && l.d < today() && r.parts.includes(X(l.x)?.p.id)).length;
+  if (bas.length) {
+    const tr = (x) => { const hs = byDay(S.logs.filter((l) => l.x === x && l.d < today())); if (hs.length < 2 || kindOf(x) !== 'kg') return 0; const lim = iso(new Date(Date.now() - 28 * 864e5)); const old = hs.filter((d) => d.d <= lim).pop(); return old ? rm1(topSet(hs[hs.length - 1].sets)) - rm1(topSet(old.sets)) : 0; };
+    const best = bas.map((i) => ({ i, d: tr(i.x) })).sort((a, b) => b.d - a.d)[0];
+    L.push(['starf', `Tus básicos, para seguir progresando: ${bas.slice(0, 2).map((i) => B(i.e.name)).join(' y ')}${bas.length > 2 ? ` (+${bas.length - 2})` : ''}`]);
+    if (best.d >= 2) L.push(['up', `${B(best.i.e.name)} va +${nf(best.d, 0)} kg de 1RM en 4 semanas`]);
+  }
+  // variedad: lo que vuelve y lo nuevo
+  const vu = items.filter((i) => i.role.r === 'vuelve'), nu = items.filter((i) => i.role.r === 'nuevo');
+  if (vu.length) L.push(['swap', `Para variar el estímulo vuelve ${B(vu[0].e.name)}: ${vu[0].role.ago} días sin hacerlo`]);
+  if (nu.length) L.push(['spark', `Nuevo: ${B(nu[0].e.name)}${nu[0].role.rel ? `, trabaja lo mismo que tu ${esc(nu[0].role.rel.name)} con otro implemento` : `, de los más usados para ${esc(lc(nu[0].e.m || ''))}`}`]);
+  // progresión de cargas
+  const up = items.filter((i) => i.t && i.t.dir === 'up' && kindOf(i.x) !== 'cardio'), st = items.filter((i) => i.t && i.t.stall);
+  if (up.length) L.push(['up', `Hoy toca subir en ${up.slice(0, 2).map((i) => B(i.e.name)).join(' y ')}${up.length > 2 ? ` y ${up.length - 2} más` : ''}: la última vez llegaste al tope de repeticiones`]);
+  if (st.length) L.push(['down', `${B(st[0].e.name)} lleva 4 sesiones sin mejorar: baja un 10 % para destrabarlo`]);
+  // la semana
+  const mon = iso(monday(today())), byP = {};
+  S.logs.forEach((l) => { if (l.d >= mon && l.d < today()) { const q = X(l.x)?.p.id; if (q && r.parts.includes(q)) (byP[q] || (byP[q] = new Set())).add(l.d); } });
   const lr = S.logs.reduce((m, l) => (l.r === r.id && l.d < today() && l.d > m ? l.d : m), '');
-  if (!wk) L.push(['cal', `<b>Esta semana</b> aún no entrenas ${esc(partsLabel(r).toLowerCase())}`]);
-  else if (lr && daysAgo(lr) >= 7) L.push(['cal', `<b>Hace ${daysAgo(lr)} días</b> que no haces esta rutina`]);
+  const twice = r.parts.filter((pid) => byP[pid]?.size).map((pid) => lc(P(pid).name));
+  if (!twice.length) L.push(['cal', `Esta semana aún no entrenas ${B(lc(partsLabel(r)))}`]);
+  else { const q = r.parts.find((pid) => byP[pid]?.size); L.push(['cal', `Con hoy, ${B(lc(P(q).name))} suma ${byP[q].size + 1} días esta semana`]); }
+  if (lr && daysAgo(lr) >= 8) L.push(['cal', `Hace ${daysAgo(lr)} días que no haces esta rutina`]);
   // duración estimada con tu ritmo (minutos por serie de tus últimas sesiones)
   let mins = 0, setsIn = 0;
   Object.entries(S.sessions || {}).slice(-20).forEach(([k, s]) => { if (!s || !(s.end > s.start)) return; const [d, rid] = k.split('|'); const n = S.logs.filter((l) => l.d === d && l.r === rid && kindOf(l.x) !== 'cardio').length; if (n) { mins += (s.end - s.start) / 60000; setsIn += n; } });
   const perSet = setsIn >= 20 && mins > 0 ? Math.min(6, Math.max(1.5, mins / setsIn)) : 3;
-  let est = 0, sets = 0;
-  items.forEach((i) => { if (kindOf(i.x) === 'cardio') est += i.t?.sec ? i.t.sec / 60 : 20; else { const n = i.t?.sets || 3; est += n * perSet; sets += n; } });
-  return { regs, lines: L.slice(0, 5), est: Math.max(5, Math.round(est / 5) * 5), sets, n: items.length, mus, nC, nI };
+  let est = 0; const ns = [];
+  items.forEach((i) => { if (kindOf(i.x) === 'cardio') est += i.t?.sec ? i.t.sec / 60 : 20; else { const n = i.t?.sets || 3; est += n * perSet; ns.push(n); } });
+  return { regs, lines: L.slice(0, 6), est: Math.max(5, Math.round(est / 5) * 5), n: items.length, mus, nC, nI, sets: ns.length ? Math.round(median(ns)) : 0 };
 }
 
 /* ---------- rutina: armar el plan, entrenar y terminar ---------- */
@@ -3194,18 +3292,15 @@ function vRoutine(r) {
   const extra = [...new Set(td.map((l) => l.x))].filter((x) => !items.includes(x) && X(x));
   const all = items.concat(extra);
   const tg = {}; all.forEach((x) => { tg[x] = exTarget(x); });
-  const tsets = (x) => (tg[x] && !tg[x].first && kindOf(x) !== 'cardio' ? tg[x].sets : kindOf(x) === 'cardio' ? 1 : 3);
-  const done = all.filter((x) => (cnt[x] || 0) >= tsets(x)).length;
   const ses = S.sessions?.[today() + '|' + r.id];
   const status = ws === 'live' ? `<div class="wbar live"><i class="dot"></i><b>En curso</b><span id="wclock">${elapsed(plan.st)}</span><span class="grow"></span><span>${plural(td.length, 'serie', 'series')}</span></div>`
     : ws === 'done' ? `<div class="wbar done">${ic('check', 18)}<b>Terminado</b><span>${ses?.end ? elapsed(ses.start + Date.now() - ses.end) : ''}</span><span class="grow"></span><button class="txtbtn sm" data-act="summary" data-r="${r.id}">Resumen</button></div>` : '';
   const row = (x) => {
-    const f = X(x), e = f.e, n = cnt[x] || 0, t = tg[x], ts = tsets(x);
-    return `<button class="planit${n >= ts ? ' ok' : ''}" data-act="nav" data-to="/r/${r.id}/x/${x}"><span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, f.p.id), 40, e.mode)}</span><span class="grow"><b>${esc(e.name)}</b><small class="ptgt">${t && !t.first ? `${ic('target', 12)} ${tgtTxt(t)}${tgtChip(t)}` : `${esc(f.p.name)}${e.m ? ' · ' + esc(e.m) : ''}`}</small></span>${n >= ts ? `<span class="pdone">${ic('check', 14)}${n}/${ts}</span>` : n ? `<span class="pprog">${n}/${ts}</span>` : ic('chev', 18)}</button>`;
+    const f = X(x), e = f.e, n = cnt[x] || 0, t = tg[x];
+    return `<button class="planit${n ? ' ok' : ''}" data-act="nav" data-to="/r/${r.id}/x/${x}"><span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, f.p.id), 40, e.mode)}</span><span class="grow"><b>${esc(e.name)}</b><small class="ptgt">${t && !t.first ? `${ic('target', 12)} ${tgtTxt(t)}${tgtChip(t)}` : `${esc(f.p.name)}${e.m ? ' · ' + esc(e.m) : ''}`}</small></span>${n ? `<span class="badge" aria-label="${plural(n, 'serie', 'series')} hoy">${n}</span>` : ic('chev', 18)}</button>`;
   };
   return h + status + `<div class="plan">
-      <div class="planh"><div class="grow"><b>Plan de hoy</b><small>${done} de ${all.length} listos</small></div><button class="txtbtn sm" data-act="nav" data-to="/r/${r.id}/plan">Editar</button>${ws === 'ready' ? `<button class="txtbtn sm" data-act="planoff" data-r="${r.id}" aria-label="Borrar el plan de hoy">${ic('x', 16)}</button>` : ''}</div>
-      <div class="planbar"><i style="width:${all.length ? Math.min(100, (done / all.length) * 100) : 0}%"></i></div>
+      <div class="planh"><div class="grow"><b>Plan de hoy</b><small>${plural(all.length, 'ejercicio', 'ejercicios')}</small></div><button class="txtbtn sm" data-act="nav" data-to="/r/${r.id}/plan">Editar</button>${ws === 'ready' ? `<button class="txtbtn sm" data-act="planoff" data-r="${r.id}" aria-label="Borrar el plan de hoy">${ic('x', 16)}</button>` : ''}</div>
       ${all.map(row).join('')}
       ${ws !== 'done' ? `<button class="planadd" data-act="pkadd" data-r="${r.id}">${ic('plus', 16)} Agregar ejercicio</button>` : ''}
     </div>${browse}`;
@@ -3222,7 +3317,7 @@ function vPlan(r) {
         return `<div class="sgitem">
           <div class="sgtop"><button class="sgmain" data-act="pkswap" data-p="${p.id}" data-i="${i}" aria-label="Cambiar ${esc(e.name)}"><span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 54, e.mode)}</span><span class="grow"><b>${esc(e.name)}</b><small>${esc(e.m || '')}${fn ? ` · ${FN_LABEL[fn]}` : ''}</small></span></button>
             <button class="iconbtn sm" data-act="sghide" data-p="${p.id}" data-i="${i}" aria-label="Ocultar ${esc(e.name)}">${ic('eyeoff', 18)}</button><button class="iconbtn sm" data-act="sgdel" data-p="${p.id}" data-i="${i}" aria-label="Quitar ${esc(e.name)}">${ic('x', 18)}</button></div>
-          <div class="sgmeta"><span class="sgwhy ${ro.r}">${ic(ROLE_IC[ro.r] || 'spark', 13)}${esc(ro.t)}</span>${t && !t.first ? `<span class="sgtgt">${ic('target', 13)}<b>${tgtTxt(t)}</b>${kindOf(x) !== 'cardio' ? ` · ${plural(t.sets, 'serie', 'series')}` : ''}${tgtChip(t)}</span>` : ''}</div>
+          <div class="sgmeta"><span class="sgwhy ${ro.r}">${ic(ROLE_IC[ro.r] || 'spark', 13)}${esc(ro.t)}</span>${t && !t.first ? `<span class="sgtgt">${ic('target', 13)}<b>${tgtTxt(t)}</b>${tgtChip(t)}</span>` : ''}</div>
         </div>`; }).join('')}
       <button class="sgadd" data-act="padd" data-p="${p.id}">${ic('plus', 16)} Agregar</button>
     </section>`;
@@ -3232,9 +3327,10 @@ function vPlan(r) {
     ${w ? `<div class="card why">
       <div class="whyhd"><div class="whyfig">${body(w.regs, TH.dk, 92)}</div>
         <div class="grow"><b class="whyt">Por qué este plan</b>
-          <div class="whyst"><span><b>~${fmtDur(w.est)}</b>duración</span><span><b>${w.n}</b>${w.n === 1 ? 'ejercicio' : 'ejercicios'}</span><span><b>${w.sets}</b>series</span></div>
-          ${w.mus ? `<p class="whymix">${plural(w.mus, 'músculo', 'músculos')}${w.nC ? ` · ${w.nC} ${w.nC === 1 ? 'compuesto' : 'compuestos'}` : ''}${w.nI ? ` · ${w.nI} de aislamiento` : ''}</p>` : ''}</div></div>
-      ${w.lines.length ? `<div class="whyl">${w.lines.map(([i, t]) => `<p>${ic(i, 16)}<span>${t}</span></p>`).join('')}</div>` : ''}
+          <div class="whyst"><span><b>~${fmtDur(w.est)}</b>duración</span><span><b>${w.n}</b>${w.n === 1 ? 'ejercicio' : 'ejercicios'}</span></div>
+          ${w.mus ? `<p class="whymix">${plural(w.mus, 'músculo', 'músculos')}${w.nC ? ` · ${w.nC} ${w.nC === 1 ? 'compuesto' : 'compuestos'}` : ''}${w.nI ? ` · ${w.nI} de aislamiento` : ''}</p>` : ''}
+          ${w.sets ? `<p class="whyset">Sugerido: unas ${w.sets} series por ejercicio</p>` : ''}</div></div>
+      ${w.lines.length ? `<div class="whyl">${w.lines.map(([i, t, o]) => `<p>${ic(i, 16)}<span>${t}${o ? ` <button class="whyadd" data-act="paddm" data-p="${o.pid}" data-m="${esc(o.m)}">${ic('plus', 13)} Agregar</button>` : ''}</span></p>`).join('')}</div>` : ''}
     </div>` : '<p class="empty">Agrega ejercicios a tu plan.</p>'}
     <div id="sgres">${res}</div>
     <div class="plfoot"><button class="btn2 sgreroll" data-act="sgreroll">${ic('swap', 18)} Otra combinación</button>
@@ -3261,7 +3357,11 @@ function vPick(r) {
     ${sug.length ? `<div id="pksug"><p class="lbl">Sugeridos</p><div class="pklist">${sug.map((e) => row(e, sugRole(e.id, p.id))).join('')}</div></div>` : ''}
     <p class="lbl">Todos</p>
     <div class="search">${ic('search', 20)}<input id="pkq" type="search" placeholder="Buscar ejercicio" value="${esc(PICK.q)}" autocomplete="off" aria-label="Buscar ejercicio"></div>
-    ${p.muscles.length > 1 ? `<div class="mchips">${[['', 'Todos'], ...p.muscles.map((m) => [m.n, m.n])].map(([v, l]) => `<button class="chip${PICK.m === v ? ' on' : ''}" data-act="pkm" data-m="${esc(v)}">${esc(l)}</button>`).join('')}</div>` : ''}
+    ${p.muscles.length > 1 ? `<div class="fbar">
+      <button class="fbtn${PICK.m ? ' act' : ''}" data-act="pkfopen" aria-expanded="${!!PICK.open}">${ic('filter', 18)}<span class="grow">${PICK.m ? `${grpWord(p.id).One}: <b>${esc(PICK.m)}</b>` : `Filtrar por ${grpWord(p.id).one}`}</span>${ic(PICK.open ? 'up' : 'down', 18)}</button>
+      ${PICK.m ? `<button class="fclr" data-act="pkm" data-m="" aria-label="Quitar filtro">${ic('x', 18)}</button>` : ''}
+    </div>
+    ${PICK.open ? `<div class="flist" role="listbox">${[['', grpWord(p.id).all]].concat(p.muscles.map((m) => [m.n, m.n])).map(([v, l]) => `<button class="fopt${(PICK.m || '') === v ? ' on' : ''}" role="option" aria-selected="${(PICK.m || '') === v}" data-act="pkm" data-m="${esc(v)}"><i></i><span class="grow">${esc(l)}</span><span class="fn">${p.ex.filter((e) => !e.hidden && (!v || e.m === v)).length}</span></button>`).join('')}</div>` : ''}` : ''}
     <div class="pklist" id="pkall">${list.map((e) => row(e)).join('')}</div>
     <p class="empty" id="pknores" hidden>Sin resultados.</p>
     <button class="addbtn" data-act="newEx" data-p="${p.id}">${ic('plus', 18)} Crear ejercicio</button>`;
@@ -3298,7 +3398,16 @@ function finish(rid) {
     if (end - lastTs > 45 * 60000) end = lastTs + 10 * 60000; // si se te olvidó tocar "Terminar", corta en tu última serie
     S.sessions[key] = { start: Math.min(prev?.start ?? plan?.st ?? td[0].ts, td[0].ts), end };
   }
-  if (plan) plan.en = S.sessions[key].end;
+  if (plan) {
+    plan.en = S.sessions[key].end;
+    /* lo que te saltaste del plan cuenta como "no me gustó"; los ejercicios nuevos que hiciste, como "me gusta probar" */
+    if (!plan.ev) {
+      plan.ev = 1;
+      const doneX = new Set(td.map((l) => l.x)), c = coach();
+      plan.items.forEach((it) => { const f = X(it.x); if (!f || doneX.has(it.x)) return; coachRej(it.x, it.p, 0.7, !td.some((l) => X(l.x)?.p.id === it.p && X(l.x)?.e.m === f.e.m)); });
+      doneX.forEach((x) => { if (!S.logs.some((l) => l.x === x && l.d < today())) coachBump(c.g, 'na', 1); });
+    }
+  }
   save(); render();
   showSummary(rid);
 }
@@ -3936,19 +4045,32 @@ const A = {
     const r = R(el.dataset.r); if (!r) return;
     if (S.plans) delete S.plans[r.id];
     SUG = null; sugInit(r); planSync();
+    const c = coach();
+    const mark = (k) => { const o = c.m[k] || (c.m[k] = [0, '']); o[2] = today(); };
+    r.parts.forEach((pid) => (SUG.neg[pid] || new Set()).forEach((m) => { if ((SUG.picks[pid] || []).some((x) => X(x)?.e.m === m)) { mark(pid + '|' + m); if (SUG.rare?.[pid]) mark(pid + '|*'); } }));
+    save();
     go(`/r/${r.id}/plan`);
   },
   pkswap: (el) => openPick(SUG.rid, 'swap', el.dataset.p, Number(el.dataset.i)),
   pkadd: (el) => { const r = R(el.dataset.r); if (!r) return; sugReady(r); openPick(r.id, 'add', r.parts.find((pid) => P(pid)) || r.parts[0]); },
   pkpart: (el) => { PICK.pid = el.dataset.p; PICK.m = ''; PICK.q = ''; render(); },
-  pkm: (el) => { PICK.m = el.dataset.m; document.querySelectorAll('.mchips .chip').forEach((b) => b.classList.toggle('on', b.dataset.m === PICK.m)); applyPick(); },
+  pkm: (el) => { PICK.m = el.dataset.m; PICK.open = false; render(); },
+  pkfopen: () => { PICK.open = !PICK.open; render(); },
+  paddm: (el) => {
+    const pid = el.dataset.p, m = el.dataset.m, alt = sugAlts(pid, null, m, 1)[0];
+    if (!alt) { toast('No hay ejercicios disponibles para ese músculo'); return; }
+    (SUG.picks[pid] || (SUG.picks[pid] = [])).push(alt.id); SUG.counts[pid] = SUG.picks[pid].length; planSync(); render();
+    toast(`Agregado: ${alt.name}`);
+  },
   pkpick: (el) => {
     if (!PICK || !SUG) return;
     const { rid, mode, pid, i } = PICK, x = el.dataset.x, picks = SUG.picks[pid] || (SUG.picks[pid] = []);
     if (Object.values(SUG.picks).flat().includes(x)) return;
     if (mode === 'swap' && picks[i]) {
       if (todayR(rid).some((l) => l.x === picks[i])) { toast('Ese ya tiene series de hoy. Agrega otro en su lugar.'); return; }
-      SUG.man.delete(picks[i]); picks[i] = x;
+      const old = picks[i];
+      if (!SUG.man.has(old)) coachRej(old, pid, 1, X(old)?.e.m !== X(x)?.e.m);
+      SUG.man.delete(old); picks[i] = x;
     } else picks.push(x);
     SUG.man.add(x); SUG.counts[pid] = picks.length; planSync(); PICK = null;
     const name = X(x).e.name;
@@ -3981,7 +4103,9 @@ const A = {
   sgdel: (el) => {
     const pid = el.dataset.p, i = Number(el.dataset.i), picks = SUG.picks[pid], x = picks[i], wasMan = SUG.man.has(x);
     if (todayR(SUG.rid).some((l) => l.x === x)) { toast('Ya tiene series de hoy: bórralas en "Hoy" para quitarlo'); return; }
-    picks.splice(i, 1); SUG.counts[pid] = picks.length; SUG.man.delete(x); planSync(); render();
+    const role = sugRole(x, pid).r;
+    picks.splice(i, 1);
+    if (!wasMan) coachRej(x, pid, 0.6, role === 'equil' || !picks.some((y) => X(y)?.e.m === X(x)?.e.m)); SUG.counts[pid] = picks.length; SUG.man.delete(x); planSync(); render();
     toast(`${X(x)?.e.name || 'Ejercicio'} quitado`, { label: 'Deshacer', fn: () => { picks.splice(i, 0, x); SUG.counts[pid] = picks.length; if (wasMan) SUG.man.add(x); planSync(); render(); } });
   },
   sghide: (el) => {
@@ -4012,7 +4136,7 @@ const A = {
     const before = JSON.stringify(SUG.picks);
     if (todayR(r.id).length) SUG.man = new Set([...SUG.man, ...todayR(r.id).map((l) => l.x)]);
     SUG.ctx = null;
-    SUG.newLeft = Math.max(1, Math.round(Object.values(SUG.counts).reduce((a, n) => a + n, 0) * 0.2));
+    SUG.newLeft = Math.max(1, Math.floor(Object.values(SUG.counts).reduce((a, n) => a + n, 0) * 0.4 * exploreRate() + 0.3));
     Object.keys(SUG.picks).forEach((pid) => {
       const n = SUG.counts[pid] || 0, keep = [], skip = SUG.skip[pid] || (SUG.skip[pid] = new Set());
       SUG.picks[pid].forEach((x) => { if (['man', 'hoy', 'basico'].includes(sugRole(x, pid).r)) keep.push(x); else skip.add(x); });
