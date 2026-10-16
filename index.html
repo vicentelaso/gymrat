@@ -498,6 +498,15 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .plfoot .sgeqbtn{margin-top:8px}
 /* elegir ejercicio */
 .pkparts{margin:0 0 12px}
+.pkbox{background:linear-gradient(135deg,#2a1307,#141414 75%);border:1.5px solid #4a2610;border-radius:22px;padding:12px;margin:4px 0 20px}
+.pkbh{display:flex;align-items:center;gap:8px;margin:2px 4px 10px}
+.pkbh svg{color:var(--yl)}
+.pkbh b{font-family:var(--cond);font-weight:800;font-size:21px}
+.pkbox .pkrow{background:#000}
+.pkallh{display:flex;align-items:center;gap:8px;margin:0 2px 10px;padding-top:18px;border-top:1px solid var(--line)}
+.pkallh svg{color:var(--mu)}
+.pkallh b{font-family:var(--cond);font-weight:800;font-size:21px}
+.pkallh span{margin-left:auto;color:var(--mu);font-size:13px}
 .mchips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:0 0 10px;scrollbar-width:none}
 .mchips::-webkit-scrollbar{display:none}
 .mchips .chip{flex:none;min-height:38px;padding:0 14px;font-size:14px}
@@ -2259,8 +2268,8 @@ function defaultDraft(xid) {
   else w = s.u === 'lb' ? s.raw : Math.round((s.kg / LB) * 2) / 2;
   if (sideOn(e)) w = w / 2; // en modo por lado se propone la mitad del total
   const k = kindOf(xid);
-  if (k === 'cardio') return { w: '', reps: String(s.reps) };
-  return { w: s.kg > 0 || k === 'kg' || k === 'assist' ? inNum(w) : '', reps: String(s.reps) };
+  if (k === 'cardio') return { w: '', reps: '' };
+  return { w: s.kg > 0 || k === 'kg' || k === 'assist' ? inNum(w) : '', reps: '' };
 }
 let draft = null, curFirst = 'fw', kmOpen = false;
 const sideTot = (v, u) => { const w = parseNum(v); return v !== '' && !isNaN(w) && w > 0 ? `Total: <b>2 × ${nf(w)} = ${nf(w * 2)} ${u}</b>` : 'Anota el peso de un lado y la app lo suma'; };
@@ -2305,7 +2314,7 @@ function vEx(r, xid, view = false) {
     ${days.slice().reverse().map((dd) => `<div class="hrow"><span class="hd">${fShort(dd.d)}</span><span class="hs">${dd.sets.map((s) => `<span${isBest(s, dd.sets) ? ' class="hb"' : ''}>${setTxt(s, true)}</span>`).join('')}</span></div>`).join('')}
   </details>` : '';
   if (!view) planFix(r.id);
-  const ws = wState(r.id);
+  const ws = wState(r.id), st = view ? null : setTarget(xid), sr = st?.srange;
   const plan = planOf(r.id), inPlan = plan ? plan.items.some((it) => it.x === xid) : false;
   const gate = view ? (plan && ws !== 'done' && !inPlan ? `<button class="btn2 gateadd" data-act="pkdirect" data-r="${r.id}" data-x="${xid}">${ic('plus', 18)} Agregar al plan de hoy</button>` : '')
     : ws === 'live' ? '' : `<div class="gate">${ws === 'none' ? `<b>Primero arma tu plan de hoy</b><button class="cta" data-act="back" data-to="/r/${r.id}">Ir al plan</button>`
@@ -2320,19 +2329,19 @@ function vEx(r, xid, view = false) {
     ${notes}
     ${view || gate ? gate : `
     <div class="logger">
-      <div class="lhead"><span class="h3">${kd === 'cardio' ? 'Registro' : 'Serie'} ${td.length + 1}</span>
+      <div class="lhead"><span class="h3">${kd === 'cardio' ? 'Registro' : 'Serie'} ${td.length + 1}${sr && kd !== 'cardio' ? `<small>${st.extra ? ' · extra' : ` de ${sr[0] === sr[1] ? sr[0] : `${sr[0]}–${sr[1]}`}`}</small>` : ''}</span>
         ${kd === 'cardio' ? '' : `<div class="seg" role="group" aria-label="Unidad de peso"><button data-act="unit" data-u="kg" class="${u === 'kg' ? 'on' : ''}" aria-pressed="${u === 'kg'}">kg</button><button data-act="unit" data-u="lb" class="${u === 'lb' ? 'on' : ''}" aria-pressed="${u === 'lb'}">lb</button></div>`}
       </div>
-      ${(() => { const t = exTarget(xid); if (!t) return ''; if (t.first) return `<p class="tgtfirst">${ic('target', 15)}<span>${esc(t.why)}</span></p>`;
-        return `<div class="tgt ${t.dir}"><div class="grow"><small>${ic('target', 13)} Objetivo de hoy</small><div class="tgtv"><b>${tgtTxt(t)}</b>${tgtChip(t, true)}</div><p>${esc(t.why)}</p></div><button class="tgtuse" data-act="usetgt">Usar</button></div>`; })()}
-      ${(() => { const rf = refSet(xid); return rf.same ? `<p class="refhint">${ic('prev', 15)}<span class="rt">La vez anterior, ${kd === 'cardio' ? 'registro' : 'serie'} ${rf.n}: <b>${setTxt(rf.s)}</b>${rf.s.side ? ` <i>(${nf(rf.s.raw / 2)} ${rf.s.u} por lado)</i>` : ''}</span></p>` : ''; })()}
+      ${(() => { if (!st) return ''; if (st.first && st.w === undefined) return `<p class="tgtfirst">${ic('target', 15)}<span>${esc(st.why)}</span></p>`;
+        const canUse = kd !== 'cardio' && (kd === 'kg' || kd === 'assist' || st.w > 0);
+        return `<div class="tgt ${st.dir}"><div class="grow"><small>${ic('target', 13)} Objetivo${kd === 'cardio' ? '' : ` · serie ${st.n}`}</small><div class="tgtv"><b>${tgtTxt(st)}</b>${tgtChip(st, true)}</div><p>${esc(st.short)}</p></div>${canUse ? `<button class="tgtuse" data-act="usetgt">Usar</button>` : ''}</div>`; })()}
       <div class="fields${kd === 'cardio' && !kmOpen ? ' one' : ''}">
         ${(() => {
           const W = (label, opt, first) => `<label class="fld${opt ? ' opt' : ''}"><span>${label}</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>`;
-          const Rr = (label, first) => `<label class="fld"><span>${label}</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.reps)}"></label>`;
+          const Rr = (label, first) => `<label class="fld"><span>${label}</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="${st && st.reps ? st.reps : 0}" value="${esc(dr.reps)}"></label>`;
           if (kd === 'bw') return Rr('Repeticiones', true) + W(`Lastre (${u})`, true, false);
           const TT = (first) => { const t = parseInt(dr.reps, 10) || 0; const mm = dr.reps === '' ? '' : String(Math.floor(t / 60)), ss = dr.reps === '' ? '' : pad(t % 60);
-            return `<div class="fld tfld"><span>Tiempo</span><div class="tin"><input id="ftm" class="num" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="0" value="${mm}" aria-label="Minutos"><b>:</b><input id="fts" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="00" value="${ss}" aria-label="Segundos"></div><small>min : seg</small><input id="fr" type="hidden" value="${esc(dr.reps)}"></div>`; };
+            return `<div class="fld tfld"><span>Tiempo</span><div class="tin"><input id="ftm" class="num" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="${st && st.sec ? Math.floor(st.sec / 60) : 0}" value="${mm}" aria-label="Minutos"><b>:</b><input id="fts" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="${st && st.sec ? pad(st.sec % 60) : '00'}" value="${ss}" aria-label="Segundos"></div><small>min : seg</small><input id="fr" type="hidden" value="${esc(dr.reps)}"></div>`; };
           if (kd === 'cardio') { const cx = CX[cxOf(xid)]; return TT(!!kmOpen) + (kmOpen && cx ? `<label class="fld opt"><span>${cx.field}</span><input id="fw" class="num" type="text" inputmode="${cx.dec ? 'decimal' : 'numeric'}" enterkeyhint="done" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>` : ''); }
           if (kd === 'time') return TT(true) + W(`Peso extra (${u})`, true, false);
           if (kd === 'assist') return W(`Ayuda (${u})`, false, true) + Rr('Repeticiones', false);
@@ -2450,8 +2459,8 @@ const TOUR_STEPS = [
   { go: '/r/tour_pt', prep: tl, el: () => { const its = document.querySelectorAll('.planit'); return [its[its.length - 1], document.querySelector('.planadd')]; }, title: 'Cambios sobre la marcha', text: '"Agregar ejercicio" suma uno y "Editar" cambia el plan, también a mitad del entrenamiento.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.exhead', title: 'El ejercicio', text: 'Su dibujo y cómo hacerlo, con un consejo clave.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.notes', title: 'Última vez y mejor serie', text: 'Lo que hiciste la última vez y tu mejor serie histórica (según el 1RM estimado).' },
-  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo de hoy', text: 'Sale de tu historial: sube al llegar al tope de repeticiones, mantiene si entrenaste esa parte ayer y baja si estás estancado. "Usar" lo carga.' },
-  { go: '/r/tour_pt/x/' + TX, prep: tl, el: () => [document.querySelector('.refhint'), document.querySelector('.logger .cta')], title: 'Anotar la serie', text: 'Viene lleno con lo que hiciste en esa misma serie la vez anterior. Ajusta y toca "Guardar serie": vuelves al plan.' },
+  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo por serie', text: 'Cada serie busca superar esa misma serie de la vez anterior, y se ajusta a cómo te fue en la anterior de hoy. "Usar" pone el peso.' },
+  { go: '/r/tour_pt/x/' + TX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.logger .cta')], title: 'Anotar la serie', text: 'La meta de repeticiones aparece en gris. Anota lo que hiciste y toca "Guardar serie": vuelves al plan.' },
   { go: '/r/tour_pt/x/' + AX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.siderow')], title: 'Dos mancuernas o poleas', text: 'Anota el peso de un lado y la app lo multiplica por dos.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Cada punto es tu mejor serie del día. Toca uno para ver el detalle.' },
   { go: '/r/tour_pt/x/abdominales_plancha', prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.stopw')], title: 'Por tiempo y cardio', text: 'Se anotan en minutos y segundos, con cronómetro incluido.' },
@@ -3080,86 +3089,206 @@ function incOf(e, pid, w, u) {
 const roundTo = (v, st) => Math.max(0, Math.round(v / st) * st);
 let TGC = new Map();
 function exTarget(xid) { if (!TGC.has(xid)) TGC.set(xid, exTarget0(xid)); return TGC.get(xid); }
+/* mediana ponderada: lo más reciente pesa más */
+function wmedian(vals, ws) {
+  const a = vals.map((v, i) => [v, ws[i] ?? 0.2]).sort((x, y) => x[0] - y[0]);
+  const tot = a.reduce((s, x) => s + x[1], 0); let acc = 0;
+  for (const [v, w] of a) { acc += w; if (acc >= tot / 2) return v; }
+  return a.length ? a[a.length - 1][0] : 0;
+}
+const RECW = [1, 0.8, 0.6, 0.45, 0.3, 0.2]; // peso de cada sesión, de la más nueva a la más antigua
+/* cuántas series sueles hacer en este ejercicio (rango personal; si recién partes, el típico) */
+function setRange(hist, k, fn) {
+  if (k === 'cardio') return [1, 1];
+  const base = k === 'time' ? [2, 3] : fn === 'C' ? [3, 4] : [2, 3];
+  const ns = hist.slice(-6).map((d) => d.sets.length).reverse();
+  if (ns.length < 2) return base;
+  const q = Math.round(wmedian(ns, RECW));
+  return [Math.max(1, q - (q >= 4 ? 1 : 0)), Math.min(6, q + 1)];
+}
+/* tu rango de repeticiones en este ejercicio, aprendido de cómo progresas:
+   el tope son las reps a las que sueles llegar antes de subir de peso, y el piso las que logras al subir.
+   Sin subidas en tu historial, se arma alrededor de tus reps habituales. */
+function repRange(hist, fn, k) {
+  const inv = k === 'assist';
+  const wOf = (d) => (inv ? -Math.min(...d.sets.map((s) => s.kg)) : Math.max(...d.sets.map((s) => s.kg)));
+  const rOf = (d) => { const w = inv ? Math.min(...d.sets.map((s) => s.kg)) : Math.max(...d.sets.map((s) => s.kg)); return Math.max(0, ...d.sets.filter((s) => s.kg === w).map((s) => s.reps)); };
+  let lo = fn === 'C' ? 6 : 10, hi = fn === 'C' ? 10 : 15;
+  const tops = [], bots = [];
+  for (let i = 1; i < hist.length; i++) if (wOf(hist[i]) > wOf(hist[i - 1]) + 1e-9) { tops.push(rOf(hist[i - 1])); bots.push(rOf(hist[i])); }
+  if (tops.length) { hi = Math.round(wmedian(tops.reverse(), RECW)); lo = Math.round(wmedian(bots.reverse(), RECW)); }
+  else if (hist.length) { const m = Math.round(median(hist.map(rOf))); if (m < lo - 1 || m > hi) { lo = m - 1; hi = lo + (fn === 'C' ? 3 : 4); } }
+  lo = Math.max(k === 'bw' ? 3 : 4, Math.min(lo, 25));
+  hi = Math.max(lo + 2, Math.min(hi, 30));
+  return [lo, hi];
+}
+/* ---------- objetivo del día por ejercicio ----------
+   Progresión doble dentro de tu rango de repeticiones (calculado con tus sesiones recientes):
+   bajo el tope, una repetición más; en el tope, sube el peso con tu salto habitual; estancado 4 sesiones o
+   volviendo de una pausa, baja; si entrenaste esa parte ayer, mantén. En peso corporal y por tiempo, al pasar
+   el rango ideal se propone sumar lastre en vez de seguir alargando. */
 function exTarget0(xid) {
   const f = X(xid); if (!f) return null;
-  const { e, p } = f, k = kindOf(xid), u = S.settings.unit;
+  const { e, p } = f, k = kindOf(xid), u = S.settings.unit, fn = fnOf(e, p.id);
   const hist = byDay(S.logs.filter((l) => l.x === xid && l.d < today()));
-  if (!hist.length) return { first: true, k, why: {
-    kg: `Primera vez: elige un peso con el que llegues a ${fnOf(e, p.id) === 'C' ? '8 a 10' : '12 a 15'} repeticiones con buena técnica.`,
-    bw: 'Primera vez: haz las repeticiones que puedas con buena técnica, dejando 1 o 2 en reserva.',
-    time: 'Primera vez: aguanta lo que puedas con buena postura y anótalo.',
-    assist: 'Primera vez: usa una ayuda con la que llegues a 8 a 12 repeticiones.',
-    cardio: 'Primera vez: anota el tiempo y, si la máquina lo muestra, la distancia.' }[k] };
-  const last = hist[hist.length - 1], ago = daysAgo(last.d);
-  const sets = Math.max(1, Math.min(6, Math.round(median(hist.slice(-3).map((d) => d.sets.length)))));
+  if (!hist.length) return { first: true, k, u, side: sideOn(e), srange: setRange([], k, fn), why: {
+    kg: `Primera vez: un peso con el que llegues a ${fn === 'C' ? '8–10' : '12–15'} reps con buena técnica.`,
+    bw: 'Primera vez: las reps que puedas con buena técnica.',
+    time: 'Primera vez: aguanta lo que puedas con buena postura.',
+    assist: 'Primera vez: una ayuda con la que llegues a 8–12 reps.',
+    cardio: 'Primera vez: anota el tiempo y, si puedes, la distancia.' }[k] };
+  const last = hist[hist.length - 1], ago = daysAgo(last.d), rest = restDays(p.id), pn = p.name.toLowerCase();
   const disp = (kg) => (u === 'lb' ? kg / LB : kg);
-  const base = { sets, u, k, side: sideOn(e), last: topSet(last.sets) };
+  const maxW = (d) => Math.max(...d.sets.map((s) => s.kg)), minW = (d) => Math.min(...d.sets.map((s) => s.kg));
+  const repsAt = (d, w) => Math.max(0, ...d.sets.filter((s) => s.kg === w).map((s) => s.reps));
+  const base = { k, u, side: sideOn(e), srange: setRange(hist, k, fn), last: topSet(last.sets), ago };
+  base.sets = base.srange[0];
+  const hold = (extra, short) => ({ ...base, mode: 'hold', dir: 'eq', ...extra, short });
+  const tired = rest <= 1 ? `Entrenaste ${pn} ayer: mantén` : '';
   if (k === 'cardio') {
     const T = Math.max(...last.sets.map((s) => s.reps)), km = Math.max(0, ...last.sets.map((s) => s.km || 0));
     const add = ago <= 14 && T < 1800 ? 60 : 0;
-    return { ...base, sets: 1, sec: T + add, km, dir: add ? 'up' : 'eq', delta: add ? '+1 min' : '', why: add ? `Suma un minuto a tu última vez (${fmtT(T)}).${km ? ` Intenta pasar los ${nf(km, 2)} km.` : ''}` : `Iguala tu última vez${km ? ` y trata de pasar los ${nf(km, 2)} km` : ''}.` };
+    return { ...base, mode: add ? 'up' : 'hold', sec: T + add, km, dir: add ? 'up' : 'eq', delta: add ? '+1 min' : '', short: add ? `Un minuto más que la vez anterior${km ? `; pasa los ${nf(km, 2)} km` : ''}` : 'Iguala tu última vez' };
   }
   if (k === 'time') {
-    const T = Math.max(...last.sets.map((s) => s.reps)), add = ago > 14 ? 0 : T < 60 ? 5 : 10;
-    return { ...base, sec: T + add, dir: add ? 'up' : 'eq', delta: add ? `+${add} s` : '', why: add ? `La última vez aguantaste ${fmtT(T)}: suma ${add} segundos.` : `Hace ${ago} días que no lo haces: iguala tu última marca (${fmtT(T)}).` };
+    const Wx = maxW(last), T = repsAt(last, Wx), load = u === 'lb' ? 5 : 2.5, first = u === 'lb' ? 10 : 5;
+    const noLoad = hist.slice(-3).length === 3 && hist.slice(-3).every((d) => maxW(d) === 0 && repsAt(d, 0) >= 90);
+    if (ago > 28) return { ...base, mode: 'back', w: disp(Wx), sec: Math.round(T * 0.85 / 5) * 5, dir: 'down', delta: '−15 %', short: `Vuelves tras ${ago} días: más suave` };
+    if (ago > 14 || tired) return hold({ w: disp(Wx), sec: T }, tired || `${ago} días sin hacerlo: iguala`);
+    if (Wx === 0 && T >= 90 && !noLoad) return { ...base, mode: 'load', w: first, sec: 45, dir: 'up', delta: `+${first} ${u}`, short: 'Pasas de 90 s: súmale peso y baja el tiempo' };
+    if (Wx > 0 && T >= 60) return { ...base, mode: 'load', w: disp(Wx) + load, sec: 40, dir: 'up', delta: `+${nf(load)} ${u}`, short: 'Llegaste a 60 s: sube el peso' };
+    const add = T < 60 ? 5 : 10;
+    return { ...base, mode: 'up', w: disp(Wx), sec: T + add, add, dir: 'up', delta: `+${add} s`, short: `${add} segundos más que la vez anterior` };
   }
-  // rango de repeticiones: alrededor de lo que sueles hacer en tu mejor serie (o el típico si recién partes)
-  const fn = fnOf(e, p.id), typ = median(hist.slice(-6).map((d) => topSet(d.sets).reps));
-  let lo = fn === 'C' ? 6 : 10, hi = fn === 'C' ? 10 : 15;
-  if (hist.length >= 2 && typ) { lo = Math.max(k === 'bw' ? 3 : 4, Math.round(typ) - 2); hi = Math.round(typ) + 2; }
+  let [lo, hi] = repRange(hist, fn, k);
   if (k === 'bw') {
-    const W = Math.max(...last.sets.map((s) => s.kg)), R = Math.max(...last.sets.filter((s) => s.kg === W).map((s) => s.reps));
-    const lastre = W > 0 ? ` + ${nf(disp(W))} ${u}` : '';
-    if (ago > 28) return { ...base, w: disp(W), reps: Math.max(1, R - 2), dir: 'eq', why: `Vuelves después de ${ago} días: apunta a unas ${Math.max(1, R - 2)} repeticiones y retoma el ritmo.` };
-    if (ago > 14) return { ...base, w: disp(W), reps: R, dir: 'eq', why: `Hace ${ago} días que no lo haces: apunta a las ${R} repeticiones de la última vez.` };
-    if (restDays(p.id) <= 1) return { ...base, w: disp(W), reps: R, dir: 'eq', why: `Entrenaste ${p.name.toLowerCase()} ayer: apunta a las mismas ${R} repeticiones.` };
-    if (R >= 15 && W === 0) return { ...base, w: 0, reps: R, dir: 'eq', why: `Ya llegas a ${R}: para seguir progresando agrega lastre (un disco o mochila con peso) o pasa a una variante más difícil.` };
-    return { ...base, w: disp(W), reps: R + 1, dir: 'up', delta: '+1 rep', why: `La última vez hiciste ${R}${lastre}: intenta una repetición más.` };
+    const Wl = maxW(last), R = repsAt(last, Wl), cap = fn === 'C' ? 15 : 25, inc = u === 'lb' ? 5 : 2.5;
+    hi = Math.min(hi, cap);
+    const noLoad = hist.slice(-3).length === 3 && hist.slice(-3).every((d) => maxW(d) === 0 && repsAt(d, 0) >= cap);
+    const o = { lo, hi, Wtop: Wl, inc };
+    if (ago > 28) return { ...base, ...o, mode: 'back', w: disp(Wl), reps: Math.max(1, R - 2), dir: 'down', short: `Vuelves tras ${ago} días: con calma` };
+    if (ago > 14 || tired) return hold({ ...o, w: disp(Wl), reps: R, adj: tired ? 0 : -1 }, tired || `${ago} días sin hacerlo: iguala`);
+    if (Wl === 0 && R >= cap && !noLoad) return { ...base, ...o, mode: 'load', w: inc, reps: fn === 'C' ? 8 : 12, dir: 'up', delta: `+${nf(inc)} ${u}`, short: `Pasas de ${cap}: súmale lastre` };
+    if (Wl > 0 && R >= hi) return { ...base, ...o, mode: 'up', w: disp(Wl) + inc, reps: lo, dir: 'up', delta: `+${nf(inc)} ${u}`, short: 'Llegaste al tope: sube el lastre' };
+    return { ...base, ...o, mode: 'reps', w: disp(Wl), reps: R + 1, dir: 'up', delta: '+1 rep', short: noLoad ? 'Una más (o súmale lastre)' : 'Una repetición más' };
   }
   if (k === 'assist') {
-    const W = Math.min(...last.sets.map((s) => s.kg)), R = Math.max(...last.sets.filter((s) => s.kg === W).map((s) => s.reps)), inc = u === 'lb' ? 10 : 5;
-    if (R >= hi && W > 0) { const w2 = Math.max(0, disp(W) - inc); return { ...base, w: w2, reps: lo, dir: 'up', delta: `−${nf(disp(W) - w2)} ${u} de ayuda`, why: `Llegaste a ${R} repeticiones: baja la ayuda a ${nf(w2)} ${u}.` }; }
-    return { ...base, w: disp(W), reps: Math.min(hi, R + 1), dir: 'eq', delta: '+1 rep', why: `Misma ayuda y una repetición más. Al llegar a ${hi}, bajas la ayuda.` };
+    const Wa = minW(last), R = repsAt(last, Wa), inc = u === 'lb' ? 10 : 5, o = { lo, hi, inc, Wtop: Wa };
+    if (ago > 28) return { ...base, ...o, mode: 'back', w: disp(Wa) + inc, reps: R, dir: 'down', short: `Vuelves tras ${ago} días: más ayuda` };
+    if (ago > 14 || tired) return hold({ ...o, w: disp(Wa), reps: R }, tired || `${ago} días sin hacerlo: iguala`);
+    if (R >= hi && Wa > 0) { const w2 = Math.max(0, disp(Wa) - inc); return { ...base, ...o, mode: 'up', w: w2, reps: lo, dir: 'up', delta: `−${nf(disp(Wa) - w2)} ${u} de ayuda`, short: 'Llegaste al tope: menos ayuda' }; }
+    return { ...base, ...o, mode: 'reps', w: disp(Wa), reps: Math.min(hi, R + 1), dir: 'eq', delta: '+1 rep', short: 'Una repetición más' };
   }
   // ejercicios con peso
-  const maxW = (d) => Math.max(...d.sets.map((s) => s.kg)), repsAt = (d, w) => Math.max(0, ...d.sets.filter((s) => s.kg === w).map((s) => s.reps));
   const W = maxW(last), R = repsAt(last, W);
   const Wd = disp(W), inc0 = incOf(e, p.id, Wd, u) * (base.side ? 2 : 1), step = u === 'lb' ? 5 : e.tool === 'd' ? (base.side ? 2 : 1) : incOf(e, p.id, Wd, u);
-  /* el salto que tú sueles hacer en este ejercicio (así calza con los pesos de tu gym) */
-  const jumps = []; for (let i = 1; i < hist.length; i++) { const dj = Math.round((disp(maxW(hist[i])) - disp(maxW(hist[i - 1]))) * 100) / 100; if (dj > 0 && dj <= inc0 * 4) jumps.push(dj); }
-  const jc = {}; jumps.forEach((j) => { jc[j] = (jc[j] || 0) + 1; });
+  /* tu salto habitual en este ejercicio (calza con los pesos de tu gym) */
+  const jc = {}; for (let i = 1; i < hist.length; i++) { const dj = Math.round((disp(maxW(hist[i])) - disp(maxW(hist[i - 1]))) * 100) / 100; if (dj > 0 && dj <= inc0 * 4) jc[dj] = (jc[dj] || 0) + 1; }
   const jm = Object.entries(jc).sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];
   const inc = jm && jm[1] >= 2 ? Number(jm[0]) : inc0;
   /* si cuando subes de peso las repeticiones se te caen bajo el rango, se sube con más calma */
   let ups = 0, fails = 0; for (let i = 1; i < hist.length; i++) { const w1 = maxW(hist[i - 1]), w2 = maxW(hist[i]); if (w2 > w1) { ups++; if (repsAt(hist[i], w2) < lo) fails++; } }
   const careful = ups >= 2 && fails / ups >= 0.5;
   const prev = hist.length >= 2 ? hist[hist.length - 2] : null, prevR = prev && maxW(prev) === W ? repsAt(prev, W) : 0;
-  const rest = restDays(p.id);
   const rms = hist.map((d) => rm1(topSet(d.sets)));
   const stall = hist.length >= 6 && Math.max(...rms.slice(-4)) <= Math.max(...rms.slice(0, -4)) * 1.005;
-  const wl = (w) => (base.side ? `${nf(w / 2)} ${u} por lado` : `${nf(w)} ${u}`);
-  const out = (w, reps, dir, why) => ({ ...base, w, reps, lo, hi, dir, stall: dir === 'down' && stall, delta: Math.abs(w - Wd) > 1e-9 ? `${w > Wd ? '+' : '−'}${nf(Math.abs(w - Wd) / (base.side ? 2 : 1))} ${u}${base.side ? ' por lado' : ''}` : 'mismo peso', why });
-  if (ago > 28) { const w = roundTo(Wd * 0.9, step); return out(w, R, w < Wd ? 'down' : 'eq', `Vuelves después de ${ago} días: parte un poco más liviano y retoma el ritmo.`); }
-  if (ago > 14) return out(Wd, Math.max(lo, R - 1), 'eq', `Hace ${ago} días que no lo haces: repite el peso de la última vez.`);
-  if (stall) { const w = roundTo(Wd * 0.9, step); return out(w, hi, w < Wd ? 'down' : 'eq', `Llevas 4 sesiones sin superar tu mejor marca: baja un 10 % y apunta a ${hi} repeticiones para destrabarte.`); }
-  if (rest <= 1) return out(Wd, R, 'eq', `Entrenaste ${p.name.toLowerCase()} ayer: mantén el peso y busca las mismas ${R} repeticiones.`);
-  if (prevR && prevR - R >= 3) return out(Wd, Math.min(prevR, R + 2), 'eq', `La última vez bajaste de ${prevR} a ${R} repeticiones con el mismo peso: repítelo y busca recuperarlas.`);
+  const o = { lo, hi, inc, step, Wtop: W };
+  const out = (mode, w, reps, dir, short, extra = {}) => ({ ...base, ...o, mode, w, reps, dir, ratio: Wd ? w / Wd : 1, short, ...extra,
+    delta: Math.abs(w - Wd) > 1e-9 ? `${w > Wd ? '+' : '−'}${nf(Math.abs(w - Wd) / (base.side ? 2 : 1))} ${u}${base.side ? ' por lado' : ''}` : 'mismo peso' });
+  if (ago > 28) { const w = roundTo(Wd * (ago > 60 ? 0.8 : 0.9), step); return out('back', w, R, w < Wd ? 'down' : 'eq', `Vuelves tras ${ago} días: más liviano`); }
+  if (ago > 14) return out('hold', Wd, Math.max(lo, R - 1), 'eq', `${ago} días sin hacerlo: repite el peso`, { adj: -1 });
+  if (stall) { const w = roundTo(Wd * 0.9, step); return out('down', w, hi, w < Wd ? 'down' : 'eq', 'Estancado: −10 % para destrabar', { stall: true }); }
+  if (tired) return out('hold', Wd, R, 'eq', tired);
+  if (prevR && prevR - R >= 3) return out('reps', Wd, Math.min(prevR, R + 2), 'eq', `Recupera las ${prevR} reps de antes`);
   if (R >= hi) {
-    if (careful && !(prevR >= hi)) return out(Wd, R, 'eq', `Llegaste a ${R}: repite el peso una vez más para consolidar. Cuando subes muy rápido te cuesta.`);
-    const w = Wd + inc, rm = rm1({ kg: Wd, reps: R }), reps = Math.max(lo, Math.min(hi - 1, Math.floor(30 * (rm / w - 1))));
-    return out(w, reps, 'up', `La última vez llegaste a ${R} repeticiones con ${wl(Wd)}: toca subir el peso${jm && jm[1] >= 2 ? ' (tu salto habitual)' : ''}.`);
+    if (careful && !(prevR >= hi)) return out('hold', Wd, R, 'eq', 'Consolida este peso una vez más');
+    const w = Wd + inc, rm = rm1({ kg: Wd, reps: R }), reps = Math.max(Math.max(1, lo - 2), Math.min(hi, Math.floor(30 * (rm / w - 1)) + 1));
+    return out('up', w, reps, 'up', `Llegaste a ${R}: sube ${nf(inc / (base.side ? 2 : 1))} ${u}${base.side ? ' por lado' : ''}`);
   }
   if (R < lo) {
-    const prevLow = hist.length >= 2 && (() => { const pl = hist[hist.length - 2].sets, pw = Math.max(...pl.map((s) => s.kg)); return pw >= W && Math.max(...pl.filter((s) => s.kg === pw).map((s) => s.reps)) < lo; })();
-    if (prevLow) { const w = roundTo(Wd - inc, step); return out(w, lo + 1, 'down', `Dos sesiones bajo ${lo} repeticiones: baja un poco el peso y haz series más limpias.`); }
-    return out(Wd, lo, 'eq', `La última vez hiciste ${R}: mantén el peso y apunta a ${lo} repeticiones.`);
+    const prevLow = prev && maxW(prev) >= W && repsAt(prev, maxW(prev)) < lo;
+    if (prevLow) { const w = roundTo(Wd - inc, step); return out('down', w, lo + 1, 'down', 'Muy pesado: baja un poco'); }
+    return out('reps', Wd, lo, 'eq', `Apunta a ${lo} reps`);
   }
-  return out(Wd, R + 1, 'eq', R + 1 >= hi ? `Mismo peso y apunta a ${R + 1} repeticiones: si las logras, la próxima vez toca subir el peso.` : `Mismo peso que la última vez y una repetición más (${R} → ${R + 1}). Cuando llegues a ${hi}, subes el peso.`);
+  return out('reps', Wd, R + 1, 'eq', 'Supera la vez anterior');
+}
+
+/* ---------- objetivo serie por serie ----------
+   Cada serie busca superar (en 1RM estimado) la misma serie de tu sesión anterior, siguiendo la decisión del día,
+   y se ajusta según cómo te fue en tu serie anterior de hoy. No obliga: es una guía. */
+function baseSet(T, last, i) {
+  const { k, u } = T, disp = (kg) => (u === 'lb' ? kg / LB : kg);
+  const ref = last.sets[i - 1] || null, r = ref || last.sets[last.sets.length - 1];
+  const wN = disp(r.kg), rr = r.reps, isTop = r.kg >= T.Wtop - 1e-9;
+  const lab = ref ? `tu serie ${i} anterior (${setTxt(ref, k === 'kg')})` : 'tu última serie anterior';
+  const o = { k, u, side: T.side, ref: r, wRef: wN, rRef: rr };
+  const beat = (rm, w) => { let n = Math.floor(30 * (rm / w - 1)) + 1; return Math.max(Math.max(1, (T.lo || 1) - 2), Math.min(T.hi || 30, n)); };
+  const rw = (v) => (T.step ? roundTo(v, T.step) : Math.round(v * 2) / 2);
+  if (k === 'cardio') return { ...o, sec: T.sec, km: T.km, dir: T.dir, short: T.short };
+  if (k === 'time') {
+    if (T.mode === 'load') return { ...o, w: T.w, sec: T.sec, dir: 'up', short: T.short };
+    if (T.mode === 'back') return { ...o, w: wN, sec: Math.max(10, Math.round(rr * 0.85 / 5) * 5), dir: 'down', short: T.short };
+    if (T.mode === 'hold') return { ...o, w: wN, sec: rr, dir: 'eq', short: T.short };
+    return { ...o, w: wN, sec: rr + (T.add || 5), dir: 'up', short: ref ? `Supera ${lab}` : T.short };
+  }
+  if (T.mode === 'hold') return { ...o, w: wN, reps: Math.max(1, rr + (T.adj || 0)), dir: 'eq', short: T.short };
+  if (T.mode === 'back') return { ...o, w: k === 'kg' ? rw(wN * T.ratio) : k === 'assist' ? wN + (T.inc || 0) : wN, reps: k === 'kg' ? rr : Math.max(1, rr - 2), dir: 'down', short: T.short };
+  if (T.mode === 'load') return { ...o, w: T.w, reps: T.reps, dir: 'up', short: T.short };
+  if (T.mode === 'down') return { ...o, w: rw(wN * T.ratio), reps: Math.max(rr, T.reps || rr), dir: 'down', short: T.short };
+  if (T.mode === 'up') {
+    if (k === 'kg') { if (!isTop) return { ...o, w: wN, reps: rr + 1, dir: 'eq', short: `Supera ${lab}` }; const w = wN + T.inc; return { ...o, w, reps: beat(rm1(r), w), dir: 'up', short: T.short }; }
+    if (k === 'bw') return isTop ? { ...o, w: wN + T.inc, reps: T.lo, dir: 'up', short: T.short } : { ...o, w: wN, reps: rr + 1, dir: 'eq', short: `Supera ${lab}` };
+    if (k === 'assist') return { ...o, w: Math.max(0, wN - T.inc), reps: T.lo, dir: 'up', short: T.short };
+  }
+  // 'reps': mismo peso, una repetición más que esa misma serie la vez anterior
+  return { ...o, w: wN, reps: Math.min(T.hi || 99, rr + 1), dir: 'eq', short: ref ? `Supera ${lab}` : T.short };
+}
+function setTarget(xid) {
+  const T = exTarget(xid); if (!T) return null;
+  const k = T.k, u = T.u, disp = (kg) => (u === 'lb' ? kg / LB : kg);
+  const td = S.logs.filter((l) => l.x === xid && l.d === today()).sort(byTs);
+  const n = td.length + 1, prevT = td[td.length - 1], sr = T.srange || [1, 1];
+  const fin = (t) => {
+    t = { ...t, n, srange: sr, extra: k !== 'cardio' && n > sr[1] };
+    if (t.extra) t.short = `Serie extra: sueles hacer ${sr[0] === sr[1] ? sr[0] : `${sr[0]}–${sr[1]}`}`;
+    // diferencia con la serie de referencia
+    if (k === 'time') t.delta = t.w > (t.wRef || 0) ? `+${nf(t.w - (t.wRef || 0))} ${u}` : t.sec !== t.rRef && t.rRef ? `${t.sec > t.rRef ? '+' : '−'}${Math.abs(t.sec - t.rRef)} s` : '';
+    else if (k === 'cardio') t.delta = T.delta || '';
+    else if (t.wRef !== undefined && Math.abs(t.w - t.wRef) > 1e-9) { const dv = (t.w - t.wRef) / (t.side ? 2 : 1); t.delta = k === 'assist' ? `${dv < 0 ? '−' : '+'}${nf(Math.abs(dv))} ${u} de ayuda` : `${dv > 0 ? '+' : '−'}${nf(Math.abs(dv))} ${u}${t.side ? ' por lado' : ''}`; }
+    else if (t.rRef && t.reps > t.rRef) t.delta = `+${t.reps - t.rRef} rep`;
+    else t.delta = '';
+    return t;
+  };
+  if (T.first) {
+    if (!prevT) return { ...T, n, srange: sr };
+    return fin({ k, u, side: T.side, w: disp(prevT.kg), wRef: disp(prevT.kg), reps: prevT.reps, rRef: prevT.reps, sec: prevT.reps, dir: 'eq', short: 'Igual que tu serie anterior' });
+  }
+  const hist = byDay(S.logs.filter((l) => l.x === xid && l.d < today())), last = hist[hist.length - 1];
+  let t = baseSet(T, last, n);
+  /* cómo te fue en tu serie anterior de hoy */
+  if (prevT && k !== 'cardio') {
+    const b = baseSet(T, last, n - 1), did = prevT.reps, pw = disp(prevT.kg), same = Math.abs(pw - (b.w || 0)) < 0.01;
+    if (k === 'time') {
+      if (did < b.sec * 0.8) t = { ...t, sec: Math.max(10, Math.round(did / 5) * 5), dir: 'eq', short: 'La anterior quedó corta: apunta a igualarla' };
+      else if (did >= b.sec + 15 && t.sec <= did) t = { ...t, sec: did + 5, dir: 'up', short: 'Vas bien: un poco más que la anterior' };
+    } else if (same && did <= b.reps - 3) {
+      if (k === 'kg') t = { ...t, w: roundTo(Math.min(t.w, pw) - (T.inc || 2.5), T.step || 2.5), reps: Math.max(1, did + 1), dir: 'down', short: 'La anterior quedó corta: baja un poco' };
+      else if (k === 'assist') t = { ...t, w: pw + (T.inc || 5), reps: Math.max(1, did), dir: 'down', short: 'La anterior quedó corta: más ayuda' };
+      else t = { ...t, reps: Math.max(1, did), dir: 'eq', short: 'Apunta a lo de tu serie anterior' };
+    } else if (same && did >= b.reps + 3 && k === 'kg') {
+      const w = pw + (T.inc || 2.5); t = { ...t, w, reps: Math.max(1, Math.floor(30 * (rm1({ kg: pw, reps: did }) / w - 1))), dir: 'up', short: 'La anterior te quedó fácil: sube' };
+    } else if (!same && k === 'kg' && pw > t.w && did >= (b.reps || 0) - 1) {
+      t = { ...t, w: pw, reps: Math.max(1, did), dir: 'eq', short: 'Sigue con el peso de tu serie anterior' };
+    } else if (!same && k === 'kg' && pw < (b.w || 0) - 1e-9 && pw < t.w) {
+      t = { ...t, w: pw, reps: Math.max(1, did), dir: 'eq', short: 'Mantén el peso que bajaste' };
+    }
+  }
+  return fin(t);
 }
 function tgtTxt(t) {
-  if (!t || t.first) return '';
+  if (!t || (t.first && t.w === undefined)) return '';
   if (t.k === 'cardio') return fmtT(t.sec);
-  if (t.k === 'time') return fmtT(t.sec) + (t.last?.kg > 0 ? ` + ${nf(t.u === 'lb' ? t.last.kg / LB : t.last.kg)} ${t.u}` : '');
+  if (t.k === 'time') return fmtT(t.sec) + (t.w > 0 ? ` + ${nf(t.w)} ${t.u}` : '');
   if (t.k === 'bw') return `${t.reps} reps${t.w > 0 ? ` + ${nf(t.w)} ${t.u}` : ''}`;
   if (t.k === 'assist') return `${t.reps} reps, ayuda ${nf(t.w)} ${t.u}`;
   return `${t.side ? `${nf(t.w / 2)} ${t.u} por lado` : `${nf(t.w)} ${t.u}`} × ${t.reps}`;
@@ -3354,8 +3483,8 @@ function vPick(r) {
     <h2 class="pt">${PICK.mode === 'swap' ? 'Cambiar' : 'Agregar'}</h2>
     ${ce ? `<p class="crumb">En lugar de <b>${esc(ce.name)}</b></p>` : ''}
     ${PICK.mode === 'add' && r.parts.length > 1 ? `<div class="chips pkparts">${r.parts.map(P).filter(Boolean).map((q) => `<button class="chip${q.id === p.id ? ' on' : ''}" data-act="pkpart" data-p="${q.id}">${esc(q.name)}</button>`).join('')}</div>` : ''}
-    ${sug.length ? `<div id="pksug"><p class="lbl">Sugeridos</p><div class="pklist">${sug.map((e) => row(e, sugRole(e.id, p.id))).join('')}</div></div>` : ''}
-    <p class="lbl">Todos</p>
+    ${sug.length ? `<div id="pksug" class="pkbox"><div class="pkbh">${ic('spark', 18)}<b>Sugeridos para ti</b></div><div class="pklist">${sug.map((e) => row(e, sugRole(e.id, p.id))).join('')}</div></div>` : ''}
+    <div class="pkallh">${ic('list', 18)}<b>Todos los ejercicios</b><span>${list.length}</span></div>
     <div class="search">${ic('search', 20)}<input id="pkq" type="search" placeholder="Buscar ejercicio" value="${esc(PICK.q)}" autocomplete="off" aria-label="Buscar ejercicio"></div>
     ${p.muscles.length > 1 ? `<div class="fbar">
       <button class="fbtn${PICK.m ? ' act' : ''}" data-act="pkfopen" aria-expanded="${!!PICK.open}">${ic('filter', 18)}<span class="grow">${PICK.m ? `${grpWord(p.id).One}: <b>${esc(PICK.m)}</b>` : `Filtrar por ${grpWord(p.id).one}`}</span>${ic(PICK.open ? 'up' : 'down', 18)}</button>
@@ -4257,13 +4386,10 @@ const A = {
   },
   delset: (el) => removeSet(el.dataset.id),
   usetgt: () => {
-    const xid = curX(), t = exTarget(xid); if (!t || t.first) return;
-    const k = kindOf(xid);
-    let w = $('#fw')?.value || '', reps;
-    if (k === 'cardio' || k === 'time') { reps = String(t.sec); if (k === 'time') w = t.last?.kg > 0 ? inNum(t.u === 'lb' ? t.last.kg / LB : t.last.kg) : ''; }
-    else { reps = String(t.reps); w = t.w > 0 || k === 'kg' || k === 'assist' ? inNum(t.side ? t.w / 2 : t.w) : ''; }
-    draft = { x: xid, w, reps };
-    render(); toast('Objetivo cargado: revisa y guarda la serie');
+    const xid = curX(), t = setTarget(xid); if (!t || t.w === undefined) return;
+    const fr = $('#fr')?.value || '';
+    draft = { x: xid, w: inNum(t.side ? t.w / 2 : t.w), reps: fr };
+    render(); toast(`Peso cargado: ${nf(t.side ? t.w / 2 : t.w)} ${t.u}${t.side ? ' por lado' : ''}`);
   },
   sidemode: (el) => {
     const xid = curX(), e = X(xid)?.e; if (!e) return;
