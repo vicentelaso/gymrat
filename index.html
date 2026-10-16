@@ -197,6 +197,12 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .cdot{fill:#000;stroke:#FF6A1F;stroke-width:2}
 .cdot.on{fill:#FF6A1F;stroke:#FF6A1F}
 .cguide{stroke:#FF6A1F;stroke-opacity:.35;stroke-width:1.5;stroke-dasharray:3 3}
+.cblk:not(.on) .cguide,.cblk:not(.on) .cinfo{display:none}
+.cblk+.cblk{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.cbh{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:var(--mu);font-weight:600;margin:2px 0 -2px}
+.cbh em{font-style:normal;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--s2);color:var(--tx)}
+.cbh em.up{background:rgba(123,224,138,.14);color:#7BE08A}
+.cbh em.down{background:rgba(255,122,122,.14);color:var(--red)}
 .cinfo{font-size:15px;text-align:center;min-height:22px;margin:2px 0 0}
 .cinfo{display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;margin-top:4px}
 .cinfo .cd{font-weight:600;font-size:15px}
@@ -2530,7 +2536,7 @@ const TOUR_STEPS = [
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo por serie', text: 'Cada serie busca superar esa misma serie de la vez anterior, y se ajusta a cómo te fue en la anterior de hoy. "Usar" pone el peso.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.logger .cta')], title: 'Anotar la serie', text: 'La meta de repeticiones aparece en gris. Anota lo que hiciste y toca "Guardar serie": vuelves al plan.' },
   { go: '/r/tour_pt/x/' + AX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.siderow')], title: 'Dos mancuernas o poleas', text: 'Anota el peso de un lado y la app lo multiplica por dos.' },
-  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Tu mejor serie de cada día, hasta 2 años atrás. Toca o desliza para ver el detalle.' },
+  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Tu mejor serie de cada día, de a 20 días por gráfico. Toca o desliza para ver el detalle.' },
   { go: '/r/tour_pt/x/abdominales_plancha', prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.stopw')], title: 'Por tiempo y cardio', text: 'Se anotan en minutos y segundos, con cronómetro incluido.' },
   { go: '/r/tour_pt', prep: tl, el: '.dock', title: 'Hoy y Terminar', text: '"Hoy" muestra tus series para borrar alguna con la ×. "Terminar" detiene el tiempo; si aún no anotas nada, aparece "Cancelar".' },
   { go: '/r/tour_pt', prep: () => { tourLive(); finish('tour_pt'); }, el: () => [document.querySelector('#sheet .stats'), document.querySelector('.sesrow')], title: 'Resumen', text: 'Series, kilos, duración y récords. Si el horario quedó mal, lo corriges con "Editar" y las flechas.' },
@@ -3730,81 +3736,103 @@ function chartModes(xid) {
 const modeLabel = (xid, m) => { const k = kindOf(xid); if (m === 'km') return 'Km'; if (m === 'spd') return 'Km/h'; if (m === 'cnt') return (CX[cxOf(xid)] || CX.jumps).label; if (m === 'cntr') return 'Ritmo'; if (k === 'cardio' && m === 'reps') return 'Tiempo'; return m === 'peso' ? ({ bw: 'Lastre', time: 'Peso extra', assist: 'Ayuda' }[k] || 'Peso') : m === 'reps' ? (k === 'time' ? 'Tiempo' : 'Reps') : '1RM'; };
 const modeOf = (xid) => { const md = chartModes(xid); return md.includes(chartM) ? chartM : md[0]; };
 function chartPoints(xid) {
-  const all = byDay(S.logs.filter((l) => l.x === xid));
-  const from = all.length ? (() => { const d = pd(all[all.length - 1].d); d.setMonth(d.getMonth() - 24); return iso(d); })() : '';
-  const days = all.filter((x) => x.d >= from).slice(-50);
   const M = modeOf(xid);
-  return days.map(({ d, sets }) => {
+  return byDay(S.logs.filter((l) => l.x === xid)).map(({ d, sets }) => {
     const b = topSet(sets);
     const v = M === 'reps' ? b.reps : M === 'rm' ? rm1(b) : M === 'km' ? (b.km || 0) : M === 'spd' ? kmh(b) : M === 'cnt' ? (b.cnt || 0) : M === 'cntr' ? cxRate(b) : b.kg;
     return { d, v, s: b, i: sets.indexOf(b) + 1, n: sets.length };
   }).filter((pt) => !((M === 'km' || M === 'spd') && !(pt.s.km > 0)) && !((M === 'cnt' || M === 'cntr') && !(pt.s.cnt > 0)));
 }
+/* de a 20 días por gráfico; el siguiente (abajo) repite los últimos 5 y suma 15 nuevos; máximo 4 gráficos (se va el más antiguo) */
+const CH_N = 20, CH_NEW = 15, CH_MAX = 4;
+function chartBlocks(pts) {
+  const N = pts.length, nb = N <= CH_N ? 1 : 1 + Math.ceil((N - CH_N) / CH_NEW), out = [];
+  for (let k = Math.max(0, nb - CH_MAX); k < nb; k++) out.push(pts.slice(CH_NEW * k, CH_NEW * k + CH_N));
+  return out;
+}
+function chDelta(xid, M, dv) {
+  const k = kindOf(xid), isTime = M === 'reps' && (k === 'time' || k === 'cardio');
+  const less = k === 'assist' && M === 'peso', abs = Math.abs(dv);
+  const unit = M === 'reps' ? (k === 'time' ? ' s' : k === 'cardio' ? ' min' : abs === 1 ? ' rep' : ' reps') : M === 'km' ? ' km' : M === 'spd' ? ' km/h' : M === 'cnt' ? ' ' + (CX[cxOf(xid)] || CX.jumps).unit : M === 'cntr' ? ' ' + ((CX[cxOf(xid)] || CX.jumps).rate || '') : ' kg';
+  const what = less ? `${nf(abs)} kg de ayuda` : isTime ? fmtT(abs) : `${nf(abs)}${unit}`;
+  return { what, good: less ? dv < 0 : dv > 0, bad: less ? dv > 0 : dv < 0, chip: Math.abs(dv) < 1e-9 ? 'Igual' : `${dv > 0 ? '+' : '−'}${isTime ? fmtT(abs) : nf(abs) + unit}` };
+}
+const chSelOf = () => {
+  const nb = CHP.blocks.length, s = chartSel;
+  return s && s.b < nb && s.i < CHP.blocks[s.b].pts.length ? s : { b: nb - 1, i: CHP.blocks[nb - 1].pts.length - 1 };
+};
 function chartHTML(xid) {
-  const pts = chartPoints(xid);
-  if (!pts.length) return `<p class="empty">Aquí verás tu progreso cuando registres series.</p>`;
-  const n = pts.length, W = 340, H = 180, l = 38, r = 14, tp = 14, b = 26;
-  const vs = pts.map((p) => p.v);
-  let mn = Math.min(...vs), mx = Math.max(...vs);
-  const M = modeOf(xid);
-  const isTime = M === 'reps' && (kindOf(xid) === 'time' || kindOf(xid) === 'cardio');
-  // escala con números redondos (2,5 · 5 · 10 …) o, si es tiempo, en segundos/minutos redondos
-  const span = Math.max(mx - mn, isTime ? 10 : M === 'reps' ? 2 : 2.5);
-  const step = isTime ? ([5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600].find((s) => span / s <= 4) || 3600) : ([1, 2, 2.5, 5, 10, 20, 25, 50, 100].find((s) => span / s <= 4) || 100);
-  mn = Math.floor((mn - step * 0.3) / step) * step; mx = Math.ceil((mx + step * 0.3) / step) * step;
-  if (mn < 0) mn = 0;
-  const X_ = (i) => (n === 1 ? l + (W - l - r) / 2 : l + (i * (W - l - r)) / (n - 1));
-  const Y_ = (v) => tp + (1 - (v - mn) / (mx - mn)) * (H - tp - b);
-  const sel = chartSel == null || chartSel >= n ? n - 1 : chartSel;
-  let g = '';
-  for (let v = mn; v <= mx + 1e-9; v += step) {
-    const y = Y_(v).toFixed(1);
-    g += `<line x1="${l}" x2="${W - r}" y1="${y}" y2="${y}" stroke="#262626" stroke-width="1"/><text x="${l - 8}" y="${y}" dy="4" text-anchor="end" font-size="11" fill="#8a8580">${isTime ? hms(v) : nf(v, 1)}</text>`;
-  }
-  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X_(i).toFixed(1)} ${Y_(p.v).toFixed(1)}`).join(' ');
-  const area = n > 1 ? `<path d="${line} L${X_(n - 1).toFixed(1)} ${H - b} L${X_(0).toFixed(1)} ${H - b} Z" fill="#FF6A1F" fill-opacity=".12"/>` : '';
-  const rd = n > 30 ? 2.5 : 3.5;
-  const dots = pts.map((p, i) => `<circle class="cdot${i === sel ? ' on' : ''}" data-i="${i}" cx="${X_(i).toFixed(1)}" cy="${Y_(p.v).toFixed(1)}" r="${i === sel ? 6.5 : rd}" data-r="${rd}"/>`).join('');
-  const guide = `<line class="cguide" x1="${X_(sel).toFixed(1)}" x2="${X_(sel).toFixed(1)}" y1="${tp}" y2="${H - b}"/>`;
-  const hits = `<rect class="chit" x="0" y="0" width="${W}" height="${H}" fill="transparent"/>`;
-  CHP = { xid, pts, n, X: pts.map((p, i) => X_(i)) };
-  const xl = `<text x="${X_(0).toFixed(1)}" y="${H - 6}" text-anchor="${n === 1 ? 'middle' : 'start'}" font-size="11" fill="#8a8580">${fShortY(pts[0].d)}</text>` +
-    (n > 1 ? `<text x="${X_(n - 1).toFixed(1)}" y="${H - 6}" text-anchor="end" font-size="11" fill="#8a8580">${fShortY(pts[n - 1].d)}</text>` : '');
-  const sp = pts[sel];
+  const all = chartPoints(xid);
+  if (!all.length) { CHP = null; return `<p class="empty">Aquí verás tu progreso cuando registres series.</p>`; }
+  const blocks = chartBlocks(all), many = blocks.length > 1;
+  const W = 340, H = many ? 156 : 180, l = 38, r = 14, tp = 14, b = 26;
+  const vis = blocks.flat(), M = modeOf(xid), k = kindOf(xid);
+  const isTime = M === 'reps' && (k === 'time' || k === 'cardio');
+  CHP = { xid, blocks: blocks.map((pts) => { const n = pts.length; return { pts, X: pts.map((p, i) => (n === 1 ? l + (W - l - r) / 2 : l + (i * (W - l - r)) / (n - 1))) }; }) };
+  const sel = chSelOf();
+  const blk = (B, bi) => {
+    const { pts, X } = B, n = pts.length, on = sel.b === bi, si = on ? sel.i : -1;
+    // escala propia de cada gráfico, con números redondos (2,5 · 5 · 10 …) o, si es tiempo, en segundos/minutos redondos
+    const vs = pts.map((p) => p.v);
+    let mn = Math.min(...vs), mx = Math.max(...vs);
+    const span = Math.max(mx - mn, isTime ? 10 : M === 'reps' ? 2 : 2.5);
+    const step = isTime ? ([5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600].find((s) => span / s <= 4) || 3600) : ([1, 2, 2.5, 5, 10, 20, 25, 50, 100, 250, 500, 1000].find((s) => span / s <= 4) || 1000);
+    mn = Math.floor((mn - step * 0.3) / step) * step; mx = Math.ceil((mx + step * 0.3) / step) * step;
+    if (mn < 0) mn = 0;
+    const Y_ = (v) => tp + (1 - (v - mn) / (mx - mn)) * (H - tp - b);
+    let grid = '';
+    for (let v = mn; v <= mx + 1e-9; v += step) {
+      const y = Y_(v).toFixed(1);
+      grid += `<line x1="${l}" x2="${W - r}" y1="${y}" y2="${y}" stroke="#262626" stroke-width="1"/><text x="${l - 8}" y="${y}" dy="4" text-anchor="end" font-size="11" fill="#8a8580">${isTime ? hms(v) : nf(v, 1)}</text>`;
+    }
+    const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X[i].toFixed(1)} ${Y_(p.v).toFixed(1)}`).join(' ');
+    const area = n > 1 ? `<path d="${line} L${X[n - 1].toFixed(1)} ${H - b} L${X[0].toFixed(1)} ${H - b} Z" fill="#FF6A1F" fill-opacity=".12"/>` : '';
+    const dots = pts.map((p, i) => `<circle class="cdot${i === si ? ' on' : ''}" data-i="${i}" cx="${X[i].toFixed(1)}" cy="${Y_(p.v).toFixed(1)}" r="${i === si ? 6.5 : 3.5}" data-r="3.5"/>`).join('');
+    const gx = X[on ? si : n - 1].toFixed(1);
+    const xl = `<text x="${X[0].toFixed(1)}" y="${H - 6}" text-anchor="${n === 1 ? 'middle' : 'start'}" font-size="11" fill="#8a8580">${fShortY(pts[0].d)}</text>` +
+      (n > 1 ? `<text x="${X[n - 1].toFixed(1)}" y="${H - 6}" text-anchor="end" font-size="11" fill="#8a8580">${fShortY(pts[n - 1].d)}</text>` : '');
+    const dl = n > 1 ? chDelta(xid, M, pts[n - 1].v - pts[0].v) : null;
+    return `<div class="cblk${on ? ' on' : ''}" data-b="${bi}">
+      ${many ? `<div class="cbh"><span>${fShortY(pts[0].d)}${n > 1 ? ` – ${fShortY(pts[n - 1].d)}` : ''}</span>${dl ? `<em class="${dl.good ? 'up' : dl.bad ? 'down' : ''}">${dl.chip}</em>` : ''}</div>` : ''}
+      <svg data-b="${bi}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${grid}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><line class="cguide" x1="${gx}" x2="${gx}" y1="${tp}" y2="${H - b}"/>${dots}${xl}<rect x="0" y="0" width="${W}" height="${H}" fill="transparent"/></svg>
+      <div class="cinfo">${on ? chartInfo(xid, pts[si]) : ''}</div></div>`;
+  };
   let trend = '';
-  if (n > 1) {
-    const k = kindOf(xid), dv = pts[n - 1].v - pts[0].v;
-    const unit = M === 'reps' ? (k === 'time' ? ' s' : k === 'cardio' ? ' min' : ' reps') : M === 'km' ? ' km' : M === 'spd' ? ' km/h' : M === 'cnt' ? ' ' + (CX[cxOf(xid)] || CX.jumps).unit : M === 'cntr' ? ' ' + ((CX[cxOf(xid)] || CX.jumps).rate || '') : ' kg';
-    const lessIsBetter = k === 'assist' && M === 'peso';
-    const good = lessIsBetter ? dv < 0 : dv > 0, bad = lessIsBetter ? dv > 0 : dv < 0;
-    const what = lessIsBetter ? `${nf(Math.abs(dv))} kg de ayuda` : isTime ? fmtT(Math.abs(dv)) : `${nf(Math.abs(dv))}${unit}`;
-    trend = `<p class="csum ${good ? 'up' : bad ? 'down' : ''}">${dv > 0 ? `Subiste ${what}` : dv < 0 ? `Bajaste ${what}` : 'Te mantienes igual'} desde el ${fShortY(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
+  if (vis.length > 1) {
+    const f = blocks[0][0], z = blocks[blocks.length - 1].slice(-1)[0], ns = all.length - all.indexOf(f);
+    const dl = chDelta(xid, M, z.v - f.v);
+    trend = `<p class="csum ${dl.good ? 'up' : dl.bad ? 'down' : ''}">${z.v > f.v ? `Subiste ${dl.what}` : z.v < f.v ? `Bajaste ${dl.what}` : 'Te mantienes igual'} desde el ${fShortY(f.d)} <span>en ${plural(ns, 'sesión', 'sesiones')}</span></p>`;
   }
-  return `${trend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="${n > 30 ? 2 : 2.5}" stroke-linejoin="round" stroke-linecap="round"/>${guide}${dots}${xl}${hits}</svg>
-    <div class="cinfo">${chartInfo(xid, sp)}</div>`;
+  return trend + CHP.blocks.map(blk).join('');
 }
 function chartInfo(xid, sp) {
   return `<span class="cd">${cap(fLong(sp.d))}${pd(sp.d).getFullYear() !== new Date().getFullYear() ? ' de ' + pd(sp.d).getFullYear() : ''}</span><span class="cv">${kindOf(xid) === 'cardio' ? 'Mejor marca' : 'Mejor serie'}: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${kindOf(xid) === 'cardio' ? (sp.n > 1 ? `${sp.i}.º registro de ${sp.n}` : 'Único registro del día') : sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}${kindOf(xid) === 'cardio' && sp.s.km > 0 ? ` · ${nf(kmh(sp.s))} km/h` : ''}${kindOf(xid) === 'cardio' && sp.s.cnt > 0 && CX[cxOf(xid)]?.rate ? ` · ${nf(cxRate(sp.s))} ${CX[cxOf(xid)].rate}` : ''}</span>`;
 }
-/* tocar o deslizar sobre el gráfico elige el punto más cercano */
-let CHP = null, chScrub = false;
+/* tocar o deslizar sobre un gráfico elige el punto más cercano; el detalle aparece bajo ese gráfico */
+let CHP = null, chScrub = -1;
 const fShortY = (d) => fShort(d) + (pd(d).getFullYear() !== new Date().getFullYear() ? ' ' + pd(d).getFullYear() : '');
-function chartScrub(e) {
-  const svg = $('#chart svg'); if (!svg || !CHP || CHP.xid !== curX()) return;
-  const rc = svg.getBoundingClientRect(), vx = ((e.clientX - rc.left) / rc.width) * 340;
+function chartScrub(e, b) {
+  if (!CHP || CHP.xid !== curX() || !CHP.blocks[b]) return;
+  const svg = $(`#chart svg[data-b="${b}"]`); if (!svg) return;
+  const B = CHP.blocks[b], rc = svg.getBoundingClientRect(), vx = ((e.clientX - rc.left) / rc.width) * 340;
   let i = 0, best = Infinity;
-  CHP.X.forEach((x, k) => { const dd = Math.abs(x - vx); if (dd < best) { best = dd; i = k; } });
-  const cur = chartSel == null || chartSel >= CHP.n ? CHP.n - 1 : chartSel;
-  if (i === cur) return;
-  chartSel = i;
+  B.X.forEach((x, k) => { const dd = Math.abs(x - vx); if (dd < best) { best = dd; i = k; } });
+  const cur = chSelOf();
+  if (cur.b === b && cur.i === i) return;
+  chartSel = { b, i };
+  if (cur.b !== b) {
+    const ob = $(`#chart .cblk[data-b="${cur.b}"]`);
+    if (ob) { ob.classList.remove('on'); ob.querySelectorAll('.cdot.on').forEach((c) => { c.classList.remove('on'); c.setAttribute('r', c.dataset.r); }); ob.querySelector('.cinfo').innerHTML = ''; }
+    svg.closest('.cblk')?.classList.add('on');
+  }
   svg.querySelectorAll('.cdot').forEach((c) => { const on = Number(c.dataset.i) === i; c.classList.toggle('on', on); c.setAttribute('r', on ? 6.5 : c.dataset.r); });
-  const gl = svg.querySelector('.cguide'); if (gl) { gl.setAttribute('x1', CHP.X[i].toFixed(1)); gl.setAttribute('x2', CHP.X[i].toFixed(1)); }
-  const ci = $('#chart .cinfo'); if (ci) ci.innerHTML = chartInfo(CHP.xid, CHP.pts[i]);
+  const gl = svg.querySelector('.cguide'); if (gl) { gl.setAttribute('x1', B.X[i].toFixed(1)); gl.setAttribute('x2', B.X[i].toFixed(1)); }
+  const ci = svg.closest('.cblk')?.querySelector('.cinfo'); if (ci) ci.innerHTML = chartInfo(CHP.xid, B.pts[i]);
   try { navigator.vibrate?.(5); } catch (err) { /* sin vibración */ }
 }
-document.addEventListener('pointerdown', (e) => { if (e.target.closest?.('#chart svg')) { chScrub = true; chartScrub(e); } });
-document.addEventListener('pointermove', (e) => { if (chScrub) chartScrub(e); });
-['pointerup', 'pointercancel'].forEach((ev) => document.addEventListener(ev, () => { chScrub = false; }));
+document.addEventListener('pointerdown', (e) => { const s = e.target.closest?.('#chart svg'); if (s) { chScrub = Number(s.dataset.b); chartScrub(e, chScrub); } });
+document.addEventListener('pointermove', (e) => { if (chScrub >= 0) chartScrub(e, chScrub); });
+['pointerup', 'pointercancel'].forEach((ev) => document.addEventListener(ev, () => { chScrub = -1; }));
 
 /* ---------- hojas inferiores ---------- */
 let PEND = null, sheetRender = null;
@@ -4593,7 +4621,6 @@ const A = {
   },
   tact: () => { const f = TA; TA = null; $('#toast').classList.remove('on'); f?.(); },
   cm: (el) => { chartM = el.dataset.m; chartSel = null; draft = { x: curX(), w: $('#fw')?.value || '', reps: $('#fr')?.value || '' }; render(); },
-  pt: (el) => { chartSel = Number(el.dataset.i); $('#chart').innerHTML = chartHTML(curX()); },
 
   today: (el) => openToday(el.dataset.r),
   finish: (el) => finish(el.dataset.r),
