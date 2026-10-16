@@ -127,6 +127,7 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .hseg button{flex:1;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .hseg button i{font-style:normal;font-size:12px;font-weight:700;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--s2);color:var(--tx);display:inline-grid;place-items:center}
 .hseg button.on i{background:#000;color:var(--tx)}
+.rseg{margin:0 0 12px;background:var(--s1)}
 .ehint{margin:0 4px 2px;display:flex;align-items:center;gap:5px;font-size:13px;color:var(--mu)}
 .ehint svg{color:var(--ac)}
 .editbar .txtbtn{background:var(--ac);color:#000;flex:none}
@@ -192,6 +193,10 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .del:active{background:rgba(255,122,122,.26)}
 .card{background:var(--s1);border-radius:26px;padding:16px 16px 14px;margin-top:12px}
 .chart svg{width:100%;height:auto;display:block;margin-top:6px}
+.chart svg{touch-action:pan-y;-webkit-user-select:none;user-select:none;cursor:pointer}
+.cdot{fill:#000;stroke:#FF6A1F;stroke-width:2}
+.cdot.on{fill:#FF6A1F;stroke:#FF6A1F}
+.cguide{stroke:#FF6A1F;stroke-opacity:.35;stroke-width:1.5;stroke-dasharray:3 3}
 .cinfo{font-size:15px;text-align:center;min-height:22px;margin:2px 0 0}
 .cinfo{display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;margin-top:4px}
 .cinfo .cd{font-weight:600;font-size:15px}
@@ -808,7 +813,16 @@ const fLong = (s) => new Intl.DateTimeFormat('es-CL', { weekday: 'long', day: 'n
 const fShort = (s) => new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short' }).format(pd(s)).replace('.', '');
 const daysAgo = (s) => Math.round((pd(today()) - pd(s)) / 864e5);
 const rel = (s) => { const n = daysAgo(s); return n === 0 ? 'Hoy' : n === 1 ? 'Ayer' : n < 7 ? `Hace ${n} días` : fShort(s); };
-const nf = (n, d = 1) => Number(n).toLocaleString('es-CL', { maximumFractionDigits: d });
+const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+const nf = (n, d = 1) => {
+  n = Number(n);
+  if (isFinite(n) && Math.abs(n) >= 999999.5) { // más de 6 cifras: 1,23 × 10⁶
+    let e = Math.floor(Math.log10(Math.abs(n))), m = Math.round((n / 10 ** e) * 100) / 100;
+    if (Math.abs(m) >= 10) { m /= 10; e++; }
+    return `${m.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} × 10${String(e).split('').map((c) => SUP[c]).join('')}`;
+  }
+  return n.toLocaleString('es-CL', { maximumFractionDigits: d });
+};
 const kg = (n) => nf(n) + ' kg';
 const parseNum = (v) => parseFloat(String(v).replace(',', '.'));
 const inNum = (n) => String(Math.round(n * 100) / 100).replace('.', ',');
@@ -2253,7 +2267,8 @@ function vPart(r, p) {
   const { c, last } = exStats();
   const tdIds = {};
   S.logs.forEach((l) => { if (l.d === today()) tdIds[l.x] = (tdIds[l.x] || 0) + 1; });
-  const order = p.ex.map((e, i) => ({ e, i })).sort((a, b) => (edit ? 0 : (a.e.hidden ? 1 : 0) - (b.e.hidden ? 1 : 0)) || (c[b.e.id] || 0) - (c[a.e.id] || 0) || a.i - b.i).map((o) => o.e);
+  const rec = !edit && !!S.settings.recOnly, nRec = p.ex.filter((e) => c[e.id]).length;
+  const order = p.ex.map((e, i) => ({ e, i })).sort((a, b) => (rec ? (last[b.e.id]?.ts || 0) - (last[a.e.id]?.ts || 0) : 0) || (edit || rec ? 0 : (a.e.hidden ? 1 : 0) - (b.e.hidden ? 1 : 0)) || (c[b.e.id] || 0) - (c[a.e.id] || 0) || a.i - b.i).map((o) => o.e);
   const md = f.m && p.muscles.find((m) => m.n === f.m);
   const nHid = p.ex.filter((e) => e.hidden).length, hv = edit && hidView;
   const pl = S.plans?.[r.id], inPlan = new Set(pl && pl.d === today() ? pl.items.map((it) => it.x) : []);
@@ -2264,41 +2279,41 @@ function vPart(r, p) {
       ? `<button class="iconbtn sm" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${ic('edit', 18)}</button>`
       : l ? `<span class="meta">${setTxt(l)}</span>` : `<span class="chev">${ic('chev')}</span>`;
     const inner = `<span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 58, e.mode)}</span><span class="grow"><span class="nm">${esc(e.name)}</span><span class="sub">${esc(e.m || '')}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}${e.hidden ? '<span class="ptag">Oculto</span>' : ''}${inPlan.has(e.id) ? '<span class="ptag plan">En tu plan</span>' : ''}</span></span>`;
-    return `<div class="item ex${e.hidden ? ' hid' : ''}" data-n="${esc(norm(e.name))}" data-m="${esc(e.m || '')}" data-h="${e.hidden ? 1 : 0}">${edit
+    return `<div class="item ex${e.hidden ? ' hid' : ''}" data-n="${esc(norm(e.name))}" data-m="${esc(e.m || '')}" data-h="${e.hidden ? 1 : 0}" data-c="${c[e.id] ? 1 : 0}">${edit
       ? `<button class="main" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${inner}</button><button class="iconbtn sm" data-act="exhide" data-id="${e.id}" aria-label="${e.hidden ? 'Mostrar' : 'Ocultar'} ${esc(e.name)}" aria-pressed="${!!e.hidden}">${ic(e.hidden ? 'eyeoff' : 'eye', 18)}</button><button class="iconbtn sm" data-act="editEx" data-id="${e.id}" aria-label="Editar ${esc(e.name)}">${ic('edit', 18)}</button>`
       : `<button class="main" data-act="nav" data-to="/r/${r.id}/v/${e.id}">${inner}${right}</button>`}</div>`;
   }).join('');
   return `${hdr('/r/' + r.id + '/e', 'Ejercicios', `<button class="txtbtn${edit ? ' on' : ''}" data-act="edit">${edit ? 'Listo' : 'Editar'}</button>`)}
     <h2 class="pt">${esc(p.name)}</h2>
     ${edit ? `<div class="editbar"><div class="seg hseg" role="group" aria-label="Qué ejercicios ver"><button data-act="hidv" data-v="0" class="${hv ? '' : 'on'}" aria-pressed="${!hv}">Todos</button><button data-act="hidv" data-v="1" class="${hv ? 'on' : ''}" aria-pressed="${hv}">${ic('eyeoff', 16)} Ocultos<i>${nHid}</i></button></div>
-      <p class="ehint">${ic('eye', 15)} oculta o muestra · ${ic('edit', 15)} edita</p></div>` : ''}
+      <p class="ehint">${ic('eye', 15)} oculta o muestra · ${ic('edit', 15)} edita</p></div>` : `<div class="seg hseg rseg" role="group" aria-label="Qué ejercicios ver"><button data-act="recf" data-v="0" class="${rec ? '' : 'on'}" aria-pressed="${!rec}">Todos</button><button data-act="recf" data-v="1" class="${rec ? 'on' : ''}" aria-pressed="${rec}">${ic('stats', 16)} Con registros<i>${nRec}</i></button></div>`}
     <div class="search">${ic('search', 20)}<input id="q" type="search" placeholder="Buscar ejercicio" value="${esc(f.q)}" autocomplete="off" aria-label="Buscar ejercicio"></div>
     ${p.muscles.length ? `<div class="fbar">
       <button class="fbtn${f.m ? ' act' : ''}" data-act="fopen" aria-expanded="${!!f.open}">${ic('filter', 18)}<span class="grow">${f.m ? `${grpWord(p.id).One}: <b>${esc(f.m)}</b>` : `Filtrar por ${grpWord(p.id).one}`}</span>${ic(f.open ? 'up' : 'down', 18)}</button>
       ${f.m ? `<button class="fclr" data-act="fm" data-m="" aria-label="Quitar filtro">${ic('x', 18)}</button>` : ''}
     </div>
     ${f.open ? `<div class="flist" role="listbox" aria-label="${grpWord(p.id).many}">${[['', grpWord(p.id).all]].concat(p.muscles.map((m) => [m.n, m.n])).map(([v, l]) => {
-      const n = p.ex.filter((e) => (hv ? e.hidden : edit || !e.hidden) && (!v || e.m === v)).length;
-      if (hv && v && !n && f.m !== v) return '';
+      const n = p.ex.filter((e) => (hv ? e.hidden : rec ? c[e.id] : edit || !e.hidden) && (!v || e.m === v)).length;
+      if ((hv || rec) && v && !n && f.m !== v) return '';
       return `<button class="fopt${(f.m || '') === v ? ' on' : ''}" role="option" aria-selected="${(f.m || '') === v}" data-act="fm" data-m="${esc(v)}"><i></i><span class="grow">${esc(l)}</span><span class="fn">${n}</span></button>`;
     }).join('')}</div>` : ''}` : ''}
     ${md && md.d ? `<p class="mdesc"><b>${esc(md.n)}.</b> ${esc(md.d)}</p>` : ''}
     <div class="list" id="exlist">${items}</div>
     <p class="empty" id="nores" hidden></p>
-    ${nHid && !edit ? `<button class="alt-toggle" data-act="showhid" data-p="${p.id}" aria-expanded="${!!showHid[p.id]}">${showHid[p.id] ? 'Esconder ocultos' : `Ver ${plural(nHid, 'ejercicio oculto', 'ejercicios ocultos')}`} ${ic(showHid[p.id] ? 'up' : 'down', 18)}</button>` : ''}
-    ${hv ? '' : `<button class="addbtn" data-act="newEx" data-p="${p.id}">${ic('plus', 18)} Agregar ejercicio</button>`}`;
+    ${nHid && !edit && !rec ? `<button class="alt-toggle" data-act="showhid" data-p="${p.id}" aria-expanded="${!!showHid[p.id]}">${showHid[p.id] ? 'Esconder ocultos' : `Ver ${plural(nHid, 'ejercicio oculto', 'ejercicios ocultos')}`} ${ic(showHid[p.id] ? 'up' : 'down', 18)}</button>` : ''}
+    ${hv || rec ? '' : `<button class="addbtn" data-act="newEx" data-p="${p.id}">${ic('plus', 18)} Agregar ejercicio</button>`}`;
 }
 function applyFilter() {
   const p = P(parse()[3]); if (!p) return;
   const f = filt[p.id]; const q = norm(f.q.trim());
   let shown = 0;
-  const hidOk = edit || showHid[p.id] || !!q, hv = edit && hidView;
+  const hidOk = edit || showHid[p.id] || !!q, hv = edit && hidView, rec = !edit && !!S.settings.recOnly;
   document.querySelectorAll('#exlist .item').forEach((el) => {
-    const ok = (!q || el.dataset.n.includes(q)) && (!f.m || el.dataset.m === f.m) && (hv ? el.dataset.h === '1' : hidOk || el.dataset.h !== '1');
+    const ok = (!q || el.dataset.n.includes(q)) && (!f.m || el.dataset.m === f.m) && (hv ? el.dataset.h === '1' : rec ? el.dataset.c === '1' : hidOk || el.dataset.h !== '1');
     el.hidden = !ok; if (ok) shown++;
   });
   const nr = $('#nores');
-  if (nr) { nr.hidden = shown > 0; nr.textContent = hv ? (q ? 'Ningún oculto con ese nombre.' : `No tienes ejercicios ocultos${f.m ? ` de ${f.m.toLowerCase()}` : ''}.`) : 'No hay ejercicios con ese nombre. Agrégalo abajo.'; }
+  if (nr) { nr.hidden = shown > 0; nr.textContent = hv ? (q ? 'Ningún oculto con ese nombre.' : `No tienes ejercicios ocultos${f.m ? ` de ${f.m.toLowerCase()}` : ''}.`) : rec ? (q ? 'Ninguno con registros con ese nombre.' : `Aún no tienes registros${f.m ? ` de ${f.m.toLowerCase()}` : ' en esta parte'}.`) : 'No hay ejercicios con ese nombre. Agrégalo abajo.'; }
 }
 
 /* la serie que sirve de referencia: la misma serie (1.ª, 2.ª…) de la vez anterior; si hoy llevas más series que esa vez, tu última de hoy */
@@ -2389,12 +2404,12 @@ function vEx(r, xid, view = false) {
         return `<div class="tgt ${st.dir}"><div class="grow"><small>${ic('target', 13)} Objetivo${kd === 'cardio' ? '' : ` · serie ${st.n}`}</small><div class="tgtv"><b>${tgtTxt(st)}</b>${tgtChip(st, true)}</div><p>${esc(st.short)}</p></div>${canUse ? `<button class="tgtuse" data-act="usetgt">Usar</button>` : ''}</div>`; })()}
       <div class="fields${kd === 'cardio' && !kmOpen ? ' one' : ''}">
         ${(() => {
-          const W = (label, opt, first) => `<label class="fld${opt ? ' opt' : ''}"><span>${label}</span><input id="fw" class="num" type="text" inputmode="decimal" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>`;
-          const Rr = (label, first) => `<label class="fld"><span>${label}</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="${st && st.reps ? st.reps : 0}" value="${esc(dr.reps)}"></label>`;
+          const W = (label, opt, first) => `<label class="fld${opt ? ' opt' : ''}"><span>${label}</span><input id="fw" class="num" type="text" inputmode="decimal" data-lim="4" data-dec="2" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>`;
+          const Rr = (label, first) => `<label class="fld"><span>${label}</span><input id="fr" class="num" type="text" inputmode="numeric" pattern="[0-9]*" data-lim="4" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="${st && st.reps ? st.reps : 0}" value="${esc(dr.reps)}"></label>`;
           if (kd === 'bw') return Rr('Repeticiones', true) + W(`Lastre (${u})`, true, false);
           const TT = (first) => { const t = parseInt(dr.reps, 10) || 0; const mm = dr.reps === '' ? '' : String(Math.floor(t / 60)), ss = dr.reps === '' ? '' : pad(t % 60);
-            return `<div class="fld tfld"><span>Tiempo</span><div class="tin"><input id="ftm" class="num" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="${st && st.sec ? Math.floor(st.sec / 60) : 0}" value="${mm}" aria-label="Minutos"><b>:</b><input id="fts" class="num" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="${st && st.sec ? pad(st.sec % 60) : '00'}" value="${ss}" aria-label="Segundos"></div><small>min : seg</small><input id="fr" type="hidden" value="${esc(dr.reps)}"></div>`; };
-          if (kd === 'cardio') { const cx = CX[cxOf(xid)]; return TT(!!kmOpen) + (kmOpen && cx ? `<label class="fld opt"><span>${cx.field}</span><input id="fw" class="num" type="text" inputmode="${cx.dec ? 'decimal' : 'numeric'}" enterkeyhint="done" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>` : ''); }
+            return `<div class="fld tfld"><span>Tiempo</span><div class="tin"><input id="ftm" class="num" type="text" inputmode="numeric" pattern="[0-9]*" data-lim="4" autocomplete="off" placeholder="${st && st.sec ? Math.floor(st.sec / 60) : 0}" value="${mm}" aria-label="Minutos"><b>:</b><input id="fts" class="num" type="text" inputmode="numeric" pattern="[0-9]*" data-lim="2" enterkeyhint="${first ? 'next' : 'done'}" autocomplete="off" placeholder="${st && st.sec ? pad(st.sec % 60) : '00'}" value="${ss}" aria-label="Segundos"></div><small>min : seg</small><input id="fr" type="hidden" value="${esc(dr.reps)}"></div>`; };
+          if (kd === 'cardio') { const cx = CX[cxOf(xid)]; return TT(!!kmOpen) + (kmOpen && cx ? `<label class="fld opt"><span>${cx.field}</span><input id="fw" class="num" type="text" inputmode="${cx.dec ? 'decimal' : 'numeric'}" data-lim="4" data-dec="${cx.dec ? 2 : 0}" enterkeyhint="done" autocomplete="off" placeholder="0" value="${esc(dr.w)}"></label>` : ''); }
           if (kd === 'time') return TT(true) + W(`Peso extra (${u})`, true, false);
           if (kd === 'assist') return W(`Ayuda (${u})`, false, true) + Rr('Repeticiones', false);
           return W(sideOn(e) ? `Por lado (${u})` : `Peso (${u})`, false, true) + Rr('Repeticiones', false);
@@ -2414,7 +2429,7 @@ function vEx(r, xid, view = false) {
         ${(() => { const md = chartModes(xid); const cm = md.includes(chartM) ? chartM : md[0];
           return md.length > 1 ? `<div class="seg" role="group" aria-label="Qué mostrar">${md.map((k) => `<button data-act="cm" data-m="${k}" class="${cm === k ? 'on' : ''}" aria-pressed="${cm === k}">${modeLabel(xid, k)}</button>`).join('')}</div>` : ''; })()}
       </div>
-      <p class="chelp">Cada punto es ${kd === 'cardio' ? 'la mejor marca' : 'la mejor serie'} del día.${kd === 'cardio' && CX[cxOf(xid)] ? ` Las pestañas de ${CX[cxOf(xid)].label.toLowerCase()} solo muestran los días en que la anotaste.` : ''} Toca uno para ver el detalle.${kd === 'assist' ? ' En Ayuda, que la línea baje es avanzar.' : ''}</p>
+      <p class="chelp">Cada punto es ${kd === 'cardio' ? 'la mejor marca' : 'la mejor serie'} del día.${kd === 'cardio' && CX[cxOf(xid)] ? ` Las pestañas de ${CX[cxOf(xid)].label.toLowerCase()} solo muestran los días en que la anotaste.` : ''} Toca o desliza para ver el detalle.${kd === 'assist' ? ' En Ayuda, que la línea baje es avanzar.' : ''}</p>
       <div id="chart" class="chart">${chartHTML(xid)}</div>
     </div>
     ${hist}`;
@@ -2515,13 +2530,13 @@ const TOUR_STEPS = [
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo por serie', text: 'Cada serie busca superar esa misma serie de la vez anterior, y se ajusta a cómo te fue en la anterior de hoy. "Usar" pone el peso.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.logger .cta')], title: 'Anotar la serie', text: 'La meta de repeticiones aparece en gris. Anota lo que hiciste y toca "Guardar serie": vuelves al plan.' },
   { go: '/r/tour_pt/x/' + AX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.siderow')], title: 'Dos mancuernas o poleas', text: 'Anota el peso de un lado y la app lo multiplica por dos.' },
-  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Cada punto es tu mejor serie del día. Toca uno para ver el detalle.' },
+  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Tu mejor serie de cada día, hasta 2 años atrás. Toca o desliza para ver el detalle.' },
   { go: '/r/tour_pt/x/abdominales_plancha', prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.stopw')], title: 'Por tiempo y cardio', text: 'Se anotan en minutos y segundos, con cronómetro incluido.' },
   { go: '/r/tour_pt', prep: tl, el: '.dock', title: 'Hoy y Terminar', text: '"Hoy" muestra tus series para borrar alguna con la ×. "Terminar" detiene el tiempo; si aún no anotas nada, aparece "Cancelar".' },
   { go: '/r/tour_pt', prep: () => { tourLive(); finish('tour_pt'); }, el: () => [document.querySelector('#sheet .stats'), document.querySelector('.sesrow')], title: 'Resumen', text: 'Series, kilos, duración y récords. Si el horario quedó mal, lo corriges con "Editar" y las flechas.' },
   { go: '/r/tour_pt', prep: async () => { tourLive(); await openShare(today(), 'tour_pt'); $('#sheet .shprev')?.classList.add('mini'); }, el: '#sheet .shprev', title: 'Compártelo', text: 'Crea esta imagen de tu entrenamiento para WhatsApp o Instagram.' },
   { go: '/r/tour_pt/e', el: '.list', title: 'Ver y editar ejercicios', text: 'Entras por parte del cuerpo. Si estás entrenando, "Volver al entrenamiento" te regresa.' },
-  { go: '/r/tour_pt/p/pecho', prep: () => { filt.pecho = { q: '', m: '', open: true }; render(); }, el: () => [document.querySelector('.search'), document.querySelector('.flist')], title: 'Buscar y filtrar', text: 'Busca por nombre o filtra por músculo. Hay más de 200 ejercicios, cada uno con su dibujo.' },
+  { go: '/r/tour_pt/p/pecho', prep: () => { filt.pecho = { q: '', m: '', open: true }; S.settings.recOnly = false; render(); }, el: () => [document.querySelector('.rseg'), document.querySelector('.flist')], title: 'Buscar y filtrar', text: 'Busca por nombre o filtra por músculo. "Con registros" deja solo los que has hecho, para ver su historial.' },
   { go: '/r/tour_pt/p/pecho', prep: () => { edit = true; hidView = false; if (filt.pecho) filt.pecho.open = false; render(); }, el: () => [document.querySelector('.editbar'), document.querySelector('#exlist .item')], title: 'Ocultar y editar', text: 'En "Editar", el ojo oculta un ejercicio (no se sugiere más) y el lápiz lo edita. "Ocultos" muestra solo esos, también por músculo.' },
   { prep: () => { editEx('pecho', TX); EX.open = true; refreshEX(); }, el: () => [document.querySelector('#sheet .erhead'), document.querySelector('#exgrid')], title: 'Editar un ejercicio', text: 'Nombre, músculo, implemento, cómo se mide y su dibujo.' },
   { prep: () => { editEx('espalda', null); EX.name = 'Remo sentado con cuerda'; $('#exn').value = EX.name; applySuggest(); refreshEX(); }, el: () => [document.querySelector('#sheet .erhead'), document.querySelector('#exhint')], title: 'Crear tu propio ejercicio', text: 'Escribe el nombre y la app sugiere el dibujo, el músculo y el implemento.' },
@@ -3592,12 +3607,14 @@ function applyPick() {
 }
 
 /* ---------- ver y editar ejercicios (sin anotar series) ---------- */
+let RECX = new Set();
 function vBrowse(r) {
   const parts = r.parts.map(P).filter(Boolean);
+  RECX = new Set(S.logs.map((l) => l.x));
   return `${hdr('/r/' + r.id, r.name)}
     <h2 class="pt">Ejercicios</h2>
-    <div class="list">${parts.map((p) => { const nh = p.ex.filter((e) => e.hidden).length;
-      return `<div class="item part"><button class="main" data-act="nav" data-to="/r/${r.id}/p/${p.id}">${body(regsFor([p.id]), TH.dk, 50)}<span class="grow"><span class="nm">${esc(p.name)}</span><span class="sub">${plural(p.ex.length - nh, 'ejercicio', 'ejercicios')}${nh ? ` · ${nh} ${nh === 1 ? 'oculto' : 'ocultos'}` : ''}</span></span><span class="chev">${ic('chev')}</span></button></div>`; }).join('')}</div>`;
+    <div class="list">${parts.map((p) => { const nh = p.ex.filter((e) => e.hidden).length, nr = p.ex.filter((e) => RECX.has(e.id)).length;
+      return `<div class="item part"><button class="main" data-act="nav" data-to="/r/${r.id}/p/${p.id}">${body(regsFor([p.id]), TH.dk, 50)}<span class="grow"><span class="nm">${esc(p.name)}</span><span class="sub">${plural(p.ex.length - nh, 'ejercicio', 'ejercicios')}${nr ? ` · ${nr} con registros` : ''}${nh ? ` · ${nh} ${nh === 1 ? 'oculto' : 'ocultos'}` : ''}</span></span><span class="chev">${ic('chev')}</span></button></div>`; }).join('')}</div>`;
 }
 
 /* ---------- terminar ---------- */
@@ -3713,7 +3730,9 @@ function chartModes(xid) {
 const modeLabel = (xid, m) => { const k = kindOf(xid); if (m === 'km') return 'Km'; if (m === 'spd') return 'Km/h'; if (m === 'cnt') return (CX[cxOf(xid)] || CX.jumps).label; if (m === 'cntr') return 'Ritmo'; if (k === 'cardio' && m === 'reps') return 'Tiempo'; return m === 'peso' ? ({ bw: 'Lastre', time: 'Peso extra', assist: 'Ayuda' }[k] || 'Peso') : m === 'reps' ? (k === 'time' ? 'Tiempo' : 'Reps') : '1RM'; };
 const modeOf = (xid) => { const md = chartModes(xid); return md.includes(chartM) ? chartM : md[0]; };
 function chartPoints(xid) {
-  const days = byDay(S.logs.filter((l) => l.x === xid)).slice(-24);
+  const all = byDay(S.logs.filter((l) => l.x === xid));
+  const from = all.length ? (() => { const d = pd(all[all.length - 1].d); d.setMonth(d.getMonth() - 24); return iso(d); })() : '';
+  const days = all.filter((x) => x.d >= from).slice(-50);
   const M = modeOf(xid);
   return days.map(({ d, sets }) => {
     const b = topSet(sets);
@@ -3744,12 +3763,13 @@ function chartHTML(xid) {
   }
   const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X_(i).toFixed(1)} ${Y_(p.v).toFixed(1)}`).join(' ');
   const area = n > 1 ? `<path d="${line} L${X_(n - 1).toFixed(1)} ${H - b} L${X_(0).toFixed(1)} ${H - b} Z" fill="#FF6A1F" fill-opacity=".12"/>` : '';
-  const dots = pts.map((p, i) => i === sel
-    ? `<circle cx="${X_(i).toFixed(1)}" cy="${Y_(p.v).toFixed(1)}" r="6.5" fill="#FF6A1F"/>`
-    : `<circle cx="${X_(i).toFixed(1)}" cy="${Y_(p.v).toFixed(1)}" r="3.5" fill="#000" stroke="#FF6A1F" stroke-width="2"/>`).join('');
-  const hits = pts.map((p, i) => `<circle cx="${X_(i).toFixed(1)}" cy="${Y_(p.v).toFixed(1)}" r="16" fill="transparent" data-act="pt" data-i="${i}" style="cursor:pointer"/>`).join('');
-  const xl = `<text x="${X_(0).toFixed(1)}" y="${H - 6}" text-anchor="${n === 1 ? 'middle' : 'start'}" font-size="11" fill="#8a8580">${fShort(pts[0].d)}</text>` +
-    (n > 1 ? `<text x="${X_(n - 1).toFixed(1)}" y="${H - 6}" text-anchor="end" font-size="11" fill="#8a8580">${fShort(pts[n - 1].d)}</text>` : '');
+  const rd = n > 30 ? 2.5 : 3.5;
+  const dots = pts.map((p, i) => `<circle class="cdot${i === sel ? ' on' : ''}" data-i="${i}" cx="${X_(i).toFixed(1)}" cy="${Y_(p.v).toFixed(1)}" r="${i === sel ? 6.5 : rd}" data-r="${rd}"/>`).join('');
+  const guide = `<line class="cguide" x1="${X_(sel).toFixed(1)}" x2="${X_(sel).toFixed(1)}" y1="${tp}" y2="${H - b}"/>`;
+  const hits = `<rect class="chit" x="0" y="0" width="${W}" height="${H}" fill="transparent"/>`;
+  CHP = { xid, pts, n, X: pts.map((p, i) => X_(i)) };
+  const xl = `<text x="${X_(0).toFixed(1)}" y="${H - 6}" text-anchor="${n === 1 ? 'middle' : 'start'}" font-size="11" fill="#8a8580">${fShortY(pts[0].d)}</text>` +
+    (n > 1 ? `<text x="${X_(n - 1).toFixed(1)}" y="${H - 6}" text-anchor="end" font-size="11" fill="#8a8580">${fShortY(pts[n - 1].d)}</text>` : '');
   const sp = pts[sel];
   let trend = '';
   if (n > 1) {
@@ -3758,11 +3778,33 @@ function chartHTML(xid) {
     const lessIsBetter = k === 'assist' && M === 'peso';
     const good = lessIsBetter ? dv < 0 : dv > 0, bad = lessIsBetter ? dv > 0 : dv < 0;
     const what = lessIsBetter ? `${nf(Math.abs(dv))} kg de ayuda` : isTime ? fmtT(Math.abs(dv)) : `${nf(Math.abs(dv))}${unit}`;
-    trend = `<p class="csum ${good ? 'up' : bad ? 'down' : ''}">${dv > 0 ? `Subiste ${what}` : dv < 0 ? `Bajaste ${what}` : 'Te mantienes igual'} desde el ${fShort(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
+    trend = `<p class="csum ${good ? 'up' : bad ? 'down' : ''}">${dv > 0 ? `Subiste ${what}` : dv < 0 ? `Bajaste ${what}` : 'Te mantienes igual'} desde el ${fShortY(pts[0].d)} <span>en ${plural(n, 'sesión', 'sesiones')}</span></p>`;
   }
-  return `${trend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xl}${hits}</svg>
-    <div class="cinfo"><span class="cd">${cap(fLong(sp.d))}</span><span class="cv">${kindOf(xid) === 'cardio' ? 'Mejor marca' : 'Mejor serie'}: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${kindOf(xid) === 'cardio' ? (sp.n > 1 ? `${sp.i}.º registro de ${sp.n}` : 'Único registro del día') : sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}${kindOf(xid) === 'cardio' && sp.s.km > 0 ? ` · ${nf(kmh(sp.s))} km/h` : ''}${kindOf(xid) === 'cardio' && sp.s.cnt > 0 && CX[cxOf(xid)]?.rate ? ` · ${nf(cxRate(sp.s))} ${CX[cxOf(xid)].rate}` : ''}</span></div>`;
+  return `${trend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de progreso">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="${n > 30 ? 2 : 2.5}" stroke-linejoin="round" stroke-linecap="round"/>${guide}${dots}${xl}${hits}</svg>
+    <div class="cinfo">${chartInfo(xid, sp)}</div>`;
 }
+function chartInfo(xid, sp) {
+  return `<span class="cd">${cap(fLong(sp.d))}${pd(sp.d).getFullYear() !== new Date().getFullYear() ? ' de ' + pd(sp.d).getFullYear() : ''}</span><span class="cv">${kindOf(xid) === 'cardio' ? 'Mejor marca' : 'Mejor serie'}: <b>${kindOf(xid) !== 'kg' ? setTxt(sp.s) : `${nf(sp.s.kg)} kg × ${sp.s.reps} reps`}</b></span><span class="cx">${kindOf(xid) === 'cardio' ? (sp.n > 1 ? `${sp.i}.º registro de ${sp.n}` : 'Único registro del día') : sp.n > 1 ? `${sp.i}.ª serie de ${sp.n}` : 'Única serie del día'}${sp.s.kg > 0 && kindOf(xid) === 'kg' ? ` · 1RM estimado ${nf(rm1(sp.s))} kg` : ''}${kindOf(xid) === 'cardio' && sp.s.km > 0 ? ` · ${nf(kmh(sp.s))} km/h` : ''}${kindOf(xid) === 'cardio' && sp.s.cnt > 0 && CX[cxOf(xid)]?.rate ? ` · ${nf(cxRate(sp.s))} ${CX[cxOf(xid)].rate}` : ''}</span>`;
+}
+/* tocar o deslizar sobre el gráfico elige el punto más cercano */
+let CHP = null, chScrub = false;
+const fShortY = (d) => fShort(d) + (pd(d).getFullYear() !== new Date().getFullYear() ? ' ' + pd(d).getFullYear() : '');
+function chartScrub(e) {
+  const svg = $('#chart svg'); if (!svg || !CHP || CHP.xid !== curX()) return;
+  const rc = svg.getBoundingClientRect(), vx = ((e.clientX - rc.left) / rc.width) * 340;
+  let i = 0, best = Infinity;
+  CHP.X.forEach((x, k) => { const dd = Math.abs(x - vx); if (dd < best) { best = dd; i = k; } });
+  const cur = chartSel == null || chartSel >= CHP.n ? CHP.n - 1 : chartSel;
+  if (i === cur) return;
+  chartSel = i;
+  svg.querySelectorAll('.cdot').forEach((c) => { const on = Number(c.dataset.i) === i; c.classList.toggle('on', on); c.setAttribute('r', on ? 6.5 : c.dataset.r); });
+  const gl = svg.querySelector('.cguide'); if (gl) { gl.setAttribute('x1', CHP.X[i].toFixed(1)); gl.setAttribute('x2', CHP.X[i].toFixed(1)); }
+  const ci = $('#chart .cinfo'); if (ci) ci.innerHTML = chartInfo(CHP.xid, CHP.pts[i]);
+  try { navigator.vibrate?.(5); } catch (err) { /* sin vibración */ }
+}
+document.addEventListener('pointerdown', (e) => { if (e.target.closest?.('#chart svg')) { chScrub = true; chartScrub(e); } });
+document.addEventListener('pointermove', (e) => { if (chScrub) chartScrub(e); });
+['pointerup', 'pointercancel'].forEach((ev) => document.addEventListener(ev, () => { chScrub = false; }));
 
 /* ---------- hojas inferiores ---------- */
 let PEND = null, sheetRender = null;
@@ -3831,7 +3873,7 @@ function bwDialog() {
   d.innerHTML = `<div class="dbg" data-act="dno"></div><div class="dbox" role="dialog" aria-modal="true" aria-labelledby="bwt">
     <h3 id="bwt">${ic('scale', 22)} Tu peso corporal</h3>
     <p>${l ? `Último registro: <b>${nf(l.kg)} kg</b> el ${fShort(l.d)}.` : 'Anótalo cada cierto tiempo (por ejemplo, una vez por semana en ayunas) y verás tu evolución en Estadísticas.'}</p>
-    <div class="bwin"><input id="bwv" class="num" inputmode="decimal" autocomplete="off" placeholder="${l ? inNum(l.kg) : '0'}" value="${td ? inNum(td.kg) : ''}" aria-label="Peso en kilos"><span>kg</span></div>
+    <div class="bwin"><input id="bwv" class="num" inputmode="decimal" data-lim="4" data-dec="2" autocomplete="off" placeholder="${l ? inNum(l.kg) : '0'}" value="${td ? inNum(td.kg) : ''}" aria-label="Peso en kilos"><span>kg</span></div>
     <label class="bwdate"><span>Fecha</span><input id="bwd" class="inp" type="date" value="${today()}" max="${today()}"></label>
     <p class="seserr" id="bwerr" hidden></p>
     <div class="dbtns"><button class="btn2" data-act="dno">Cancelar</button><button class="cta" data-act="bwok">Guardar</button></div></div>`;
@@ -4175,6 +4217,7 @@ const A = {
   close: () => closeSheet(),
   edit: () => { edit = !edit; hidView = false; render(); },
   hidv: (el) => { hidView = el.dataset.v === '1'; render(); },
+  recf: (el) => { S.settings.recOnly = el.dataset.v === '1'; save(); render(); },
   amode: (el) => { loginDraft = { u: $('#lu').value, pw: $('#lp').value }; authMode = el.dataset.m; authErr = ''; render(); },
   auth: () => doAuth(),
   logout: () => {
@@ -4596,6 +4639,7 @@ document.addEventListener('click', (e) => {
 });
 document.addEventListener('input', (e) => {
   const t = e.target, b = t.dataset?.bind;
+  if (t.dataset?.lim) limNum(t);
   if (b === 'ername' && ER) ER.name = t.value;
   if (b === 'exname' && EX) { EX.name = t.value; if (!EX.id) { clearTimeout(exT); exT = setTimeout(() => { applySuggest(); refreshEX(); }, 250); } }
   if (b === 'exdesc' && EX) EX.desc = t.value;
@@ -4633,7 +4677,17 @@ document.addEventListener('keydown', (e) => {
   else if (id === 'q') e.target.blur();
   else if (/^ses[SE][hm]$/.test(id)) { e.preventDefault(); const nx = { sesSh: 'sesSm', sesSm: 'sesEh', sesEh: 'sesEm' }[id]; if (nx) $('#' + nx).focus(); else e.target.blur(); }
 });
-document.addEventListener('focusin', (e) => { if (e.target.classList?.contains('num')) setTimeout(() => e.target.select(), 0); });
+document.addEventListener('focusin', (e) => { if (e.target.dataset?.lim) e.target.dataset.pv = e.target.value; if (e.target.classList?.contains('num')) setTimeout(() => e.target.select(), 0); });
+/* números con tope de cifras (4 enteras, 2 decimales): si se pasa, se deja como estaba */
+function limNum(t) {
+  const L = Number(t.dataset.lim), D = Number(t.dataset.dec || 0);
+  const v = t.value.replace(D ? /[^0-9.,]/g : /[^0-9]/g, '');
+  const ok = D ? new RegExp(`^\\d{0,${L}}([.,]\\d{0,${D}})?$`) : new RegExp(`^\\d{0,${L}}$`);
+  if (ok.test(v)) { if (v !== t.value) t.value = v; t.dataset.pv = v; return; }
+  const pv = t.dataset.pv ?? '', pos = Math.max(0, (t.selectionStart ?? t.value.length) - (t.value.length - pv.length));
+  t.value = ok.test(pv) ? pv : '';
+  try { t.setSelectionRange(pos, pos); } catch (err) { /* sin cursor */ }
+}
 document.addEventListener('change', (e) => {
   if (e.target.id !== 'imp') return;
   const file = e.target.files[0]; if (!file) return;
