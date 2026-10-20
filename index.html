@@ -649,6 +649,8 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .sbar{margin-top:10px}
 .sbl{display:flex;justify-content:space-between;gap:10px;font-size:15px;margin-bottom:5px}
 .sbl b{font-weight:700;white-space:nowrap}
+.sbl .dl{font-style:normal;font-size:12px;font-weight:700;color:var(--mu);margin-left:4px}
+.sbl .dl.up{color:#7BE08A}.sbl .dl.down{color:#FF9A8A}
 .sbt{height:10px;border-radius:6px;background:#000;overflow:hidden}
 .sbt i{display:block;height:100%;border-radius:6px;background:var(--ac)}
 .sbar.yl .sbt i{background:var(--yl)}
@@ -725,6 +727,71 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .stat b{display:block;font-family:var(--cond);font-size:38px;font-weight:800;line-height:1.05}
 .stat span{color:var(--mu);font-size:14px}
 .prrow{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+/* estadísticas v2 */
+.sgrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sgrid.three .scard{padding:12px}
+.sgrid.three .scard b{font-size:28px}
+.frow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.frow:first-child{border-top:0}
+.frow .grow{min-width:0;font-size:15px;font-weight:600}
+.frow .pct{min-width:58px;text-align:right;font-size:20px}
+.spk{flex:none;display:block}
+.bch{display:grid;gap:5px;height:132px;align-items:end;margin-top:6px}
+.bch.many{gap:2px}
+.bc{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0;padding:0}
+.bc i{width:100%;max-width:26px;border-radius:6px 6px 3px 3px;background:#4a3a2e;display:block}
+.bch.many .bc i{border-radius:3px 3px 1px 1px}
+.bc.top i{background:#8a5a3a}
+.bc.now i,.bc.sel i{background:var(--ac)}
+.bc em{font-style:normal;font-size:10px;color:var(--mu);white-space:nowrap}
+.bc span{font-size:10px;color:var(--mu);white-space:nowrap;height:12px;line-height:12px}
+.bcap{margin:6px 0 0;text-align:center;color:#8a857f;font-size:12px;min-height:16px}
+.prhero{display:flex;align-items:stretch;gap:8px}
+.prhero > div{flex:1;background:#000;border-radius:18px;padding:12px 14px;min-width:0}
+.prhero > div:first-child{background:linear-gradient(135deg,#2a1307,#000 75%);box-shadow:inset 0 0 0 1.5px #4a2610;flex:0 0 38%}
+.prhero b{display:block;font-family:var(--cond);font-weight:800;font-size:34px;line-height:1.05;color:var(--ac)}
+.prhero span{color:var(--mu);font-size:13px}
+.prhero .dl{display:block;font-style:normal;font-size:12px;font-weight:700;color:var(--mu);margin-top:2px}
+.prhero .dl.up{color:#7BE08A}.prhero .dl.down{color:#FF9A8A}
+.prtop small{display:block;color:var(--mu);font-size:12px}
+.prtop b{font-family:inherit;font-size:15px;font-weight:700;color:var(--tx);line-height:1.25;margin:2px 0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.prtop em{font-style:normal;color:#7BE08A;font-weight:800;font-family:var(--cond);font-size:20px}
+.ssb .lbl svg{vertical-align:-2px;color:var(--ac)}
+.nrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.nrow .grow{font-size:15px;font-weight:600}
+.nrow > b{color:var(--ac);white-space:nowrap;font-size:15px}
+.nbar{grid-column:1/-1;display:block;height:6px;border-radius:3px;background:#2a2a2a;overflow:hidden;margin-top:4px}
+.nbar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#8a3d12,var(--ac))}
+.vit{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vcard{background:#000;border-radius:18px;padding:12px 14px;min-width:0}
+.vcard small{display:block;color:var(--ac);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.vcard b{display:block;font-family:var(--cond);font-weight:800;font-size:22px;line-height:1.15;margin-top:2px}
+.vcard span{display:block;font-size:13px;color:var(--tx);line-height:1.25;margin-top:2px}
+.vcard em{display:block;font-style:normal;font-size:12px;color:var(--mu);margin-top:4px}
+.ygrid{display:grid;grid-template-columns:38px repeat(12,minmax(0,1fr));gap:3px;align-items:center}
+.ygrid .yh{font-size:10px;color:var(--mu);text-align:center}
+.ygrid .yl{font-size:11px;color:var(--mu);font-weight:600}
+.yc{aspect-ratio:1;border-radius:6px;display:grid;place-items:center;font-size:10px;font-weight:700;color:#000}
+.yc.l0{background:#1f1f1f}.yc.l1{background:#5a2a12;color:#f5d6c4}.yc.l2{background:#9a4416;color:#fff}.yc.l3{background:#d85a1c}.yc.l4{background:var(--ac)}
+.yc.lx{background:transparent;box-shadow:inset 0 0 0 1px #1c1c1c}
+.bwtiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:6px 0 8px}
+.bwtiles > div{background:#000;border-radius:14px;padding:9px 10px;min-width:0}
+.bwtiles small{display:block;color:var(--mu);font-size:12px}
+.bwtiles b{display:block;font-family:var(--cond);font-weight:800;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bwtiles b span{font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;color:var(--mu)}
+.bwtiles b.down{color:#7BE08A}.bwtiles b.up{color:#FFB38A}
+.bwleg{display:flex;justify-content:center;gap:16px;font-size:12px;color:var(--mu);margin-top:4px}
+.bwleg span{display:inline-flex;align-items:center;gap:6px}
+.bwleg .dot{width:7px;height:7px;border-radius:50%;background:#6b5546;display:inline-block}
+.bwleg .ln{width:16px;height:3px;border-radius:2px;background:var(--ac);display:inline-block}
+.caltabs{margin:0 0 14px}
+.wknav{display:flex;align-items:center;gap:10px;text-align:center}
+.wknav b{display:block;font-family:var(--cond);font-weight:800;font-size:24px;line-height:1.1}
+.wknav small{display:block;color:var(--mu);font-size:13px}
+.wknav .iconbtn:disabled{opacity:.3}
+#sheet .wkhead{text-align:center;margin:12px 0 10px}
+.wdots button.wd{background:none;padding:0}
+
 .prrow b{color:var(--ac);white-space:nowrap}
 
 /* acceso */
@@ -959,7 +1026,7 @@ function regionCounts(from, to) {
   return { c, cardio };
 }
 let heatW = 0;
-/* tu semana: qué días entrenaste y qué músculos trabajaste (esta semana o la pasada) */
+/* tu semana (en el calendario): qué días entrenaste y qué músculos trabajaste; con flechas vas a semanas anteriores */
 function weekSection() {
   const m = monday(today()); m.setDate(m.getDate() - 7 * heatW);
   const a = iso(m), e = new Date(m); e.setDate(e.getDate() + 6); const b = iso(e);
@@ -970,19 +1037,18 @@ function weekSection() {
   const rows = Object.keys(REG_NAMES).map((k) => [k, c[k] || 0]).sort((x, y) => y[1] - x[1]);
   const max = Math.max(1, ...rows.map((r) => r[1]));
   const zero = rows.filter((r) => !r[1]).map((r) => REG_NAMES[r[0]]);
+  const old = S.logs.length && a <= firstLogD();
   const dots = ['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((x, i) => {
     const t = new Date(m); t.setDate(t.getDate() + i); const d = iso(t), on = ds.has(d);
-    return `<span class="wd${on ? ' on' : ''}${d === today() ? ' td' : ''}${d > today() ? ' fut' : ''}"><i>${on ? ic('check', 16) : t.getDate()}</i>${x}</span>`;
+    return `<button class="wd${on ? ' on' : ''}${d === today() ? ' td' : ''}${d > today() ? ' fut' : ''}" ${on ? `data-act="cday" data-d="${d}"` : 'disabled'} aria-label="${fLong(d)}${on ? ', entrenaste' : ''}"><i>${on ? ic('check', 16) : t.getDate()}</i>${x}</button>`;
   }).join('');
-  return `<div class="seg wide" role="group" aria-label="Semana"><button data-act="heatw" data-w="0" class="${heatW === 0 ? 'on' : ''}" aria-pressed="${heatW === 0}">Esta semana</button><button data-act="heatw" data-w="1" class="${heatW === 1 ? 'on' : ''}" aria-pressed="${heatW === 1}">Semana pasada</button></div>
-    <div class="wkhead"><small>${wkLong(a)}</small><b>${plural(ds.size, 'día entrenado', 'días entrenados')}</b><span>${plural(nSets, 'serie', 'series')}${cardio ? ` · ${plural(cardio, 'registro', 'registros')} de cardio` : ''}</span></div>
+  return `<div class="wknav"><button class="iconbtn" data-act="cwk" data-d="1" aria-label="Semana anterior" ${old ? 'disabled' : ''}>${ic('back')}</button><div class="grow"><b>${heatW === 0 ? 'Esta semana' : heatW === 1 ? 'Semana pasada' : wkLabel(a)}</b><small>${wkLong(a)}</small></div><button class="iconbtn" data-act="cwk" data-d="-1" aria-label="Semana siguiente" ${heatW === 0 ? 'disabled' : ''}>${ic('chev')}</button></div>
+    <div class="wkhead"><b>${plural(ds.size, 'día entrenado', 'días entrenados')}</b><span>${plural(nSets, 'serie', 'series')}${cardio ? ` · ${plural(cardio, 'registro', 'registros')} de cardio` : ''}</span></div>
     <div class="wdots">${dots}</div>
-    <p class="lbl">Músculos que trabajaste</p>
-    <div class="heatfig">${body(new Set(), TH.dk, 200, true, fillFn)}</div>
+    <div class="heatfig">${body(new Set(), TH.dk, 190, true, fillFn)}</div>
     <div class="heatleg">${HEAT.map((col, i) => `<span><i style="background:${col}"></i>${['0', '1–3', '4–6', '7–9', '10+'][i]}</span>`).join('')}<em>series</em></div>
     ${rows.filter((r) => r[1]).map(([k, n]) => `<div class="sbar heat"><div class="sbl"><span>${REG_NAMES[k]}</span><b>${n}</b></div><div class="sbt"><i style="width:${Math.max(4, (n / max) * 100)}%;background:${HEAT[heatLvl(n)]}"></i></div></div>`).join('')}
-    ${zero.length ? `<p class="heatzero"><b>Sin trabajar${heatW ? '' : ' aún'}:</b> ${zero.join(', ')}.</p>` : `<p class="heatzero ok">¡Trabajaste todos los músculos ${heatW ? 'esa' : 'esta'} semana!</p>`}
-    <p class="mu small" style="margin:6px 0 0">Cada serie cuenta para el músculo principal del ejercicio.${cardio ? ' El corazón marca el cardio.' : ''}</p>`;
+    ${ds.size ? (zero.length ? `<p class="heatzero"><b>Sin trabajar${heatW ? '' : ' aún'}:</b> ${zero.join(', ')}.</p>` : `<p class="heatzero ok">¡Trabajaste todos los músculos ${heatW ? 'esa' : 'esta'} semana!</p>`) : ''}`;
 }
 
 /* ---------- tarjeta para compartir el entrenamiento ---------- */
@@ -2203,7 +2269,7 @@ function week() {
     const s = iso(d); const on = days.has(s); if (on) n++;
     h += `<span class="wd${on ? ' on' : ''}${s === today() ? ' today' : ''}"><span>${L[i]}</span><i>${d.getDate()}</i></span>`;
   }
-  return `<button class="week" data-act="cal" aria-label="Esta semana entrenaste ${plural(n, 'día', 'días')}. Abrir calendario">${h}</button>`;
+  return `<button class="week" data-act="calw" aria-label="Esta semana entrenaste ${plural(n, 'día', 'días')}. Ver tu semana">${h}</button>`;
 }
 const favStar = (r) => `<button class="favstar${r.fav ? ' on' : ''}" data-act="favstar" data-r="${r.id}" aria-label="${r.fav ? 'Sacar de favoritos' : 'Agregar a favoritos'}: ${esc(r.name)}" aria-pressed="${!!r.fav}">${ic(r.fav ? 'starf' : 'star', 24)}</button>`;
 function tile(r, sug) {
@@ -2329,8 +2395,11 @@ function refSet(xid) {
   const td = logs.filter((l) => l.d === today());
   const prev = byDay(logs.filter((l) => l.d !== today()));
   const ps = prev.length ? prev[prev.length - 1].sets : [];
-  if (ps[td.length]) return { s: ps[td.length], same: true, n: td.length + 1 };
-  return { s: td.length ? td[td.length - 1] : ps[ps.length - 1], same: false };
+  /* hoy: tu última serie (lo normal es seguir con el mismo peso); si recién partes, tu peso de trabajo de la vez anterior
+     (tu serie más pesada, no la primera, que pudo ser de prueba) */
+  if (td.length) return { s: td[td.length - 1], same: false };
+  const inv = kindOf(xid) === 'assist';
+  return { s: ps.reduce((m, s) => (!m || (inv ? s.kg < m.kg : s.kg > m.kg) ? s : m), null), same: false };
 }
 function defaultDraft(xid) {
   const { s } = refSet(xid);
@@ -2516,7 +2585,7 @@ const TOUR_STEPS = [
   { center: true, hero: true, title: '¡Bienvenido a GymRat!', text: 'Te muestro en un par de minutos cómo usar la app, con datos de ejemplo. Nada de esto se guarda ni cambia tus datos.' },
   { go: '/', el: () => [document.querySelector('.hellorow'), document.querySelector('.title')], title: 'Tu pantalla de inicio', text: 'Aquí eliges qué entrenar hoy. Arriba a la derecha anotas tu peso corporal cuando quieras.' },
   { go: '/', el: '.tools', title: 'Barra superior', text: 'Estadísticas, calendario y ajustes.' },
-  { go: '/', el: '.week', title: 'Tu semana', text: 'En naranjo, los días que entrenaste. Tócala para abrir el calendario.' },
+  { go: '/', el: '.week', title: 'Tu semana', text: 'En naranjo, los días que entrenaste. Tócala para ver tu semana: días y músculos.' },
   { go: '/', el: () => document.querySelector('.tile .tag')?.closest('.tile') || document.querySelector('.tile'), title: 'Tus rutinas', text: 'El monito marca en rojo los músculos de cada rutina. "Te toca" te dice cuál sigue según el orden que definas en Ajustes.' },
   { go: '/', el: '.tile .favstar', title: 'Favoritas', text: 'La estrella agrega o saca una rutina de favoritas. Las demás quedan abajo, como alternativas.' },
   { go: '/', prep: () => { altOpen = true; render(); }, el: '.alts', title: 'Rutinas alternativas', text: 'Aquí están las que no son favoritas, y desde aquí creas rutinas nuevas.' },
@@ -2533,7 +2602,7 @@ const TOUR_STEPS = [
   { go: '/r/tour_pt', prep: tl, el: () => { const its = document.querySelectorAll('.planit'); return [its[its.length - 1], document.querySelector('.planadd')]; }, title: 'Cambios sobre la marcha', text: '"Agregar ejercicio" suma uno y "Editar" cambia el plan, también a mitad del entrenamiento.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.exhead', title: 'El ejercicio', text: 'Su dibujo y cómo hacerlo, con un consejo clave.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.notes', title: 'Última vez y mejor serie', text: 'Lo que hiciste la última vez y tu mejor serie histórica (según el 1RM estimado).' },
-  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo por serie', text: 'Cada serie busca superar esa misma serie de la vez anterior, y se ajusta a cómo te fue en la anterior de hoy. "Usar" pone el peso.' },
+  { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.logger .tgt', title: 'Objetivo por serie', text: 'Sale de tu fuerza actual, no solo de la vez anterior: parte con tu peso de trabajo y se ajusta a cómo te va hoy. "Usar" pone el peso.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.logger .cta')], title: 'Anotar la serie', text: 'La meta de repeticiones aparece en gris. Anota lo que hiciste y toca "Guardar serie": vuelves al plan.' },
   { go: '/r/tour_pt/x/' + AX, prep: tl, el: () => [document.querySelector('.logger .fields'), document.querySelector('.siderow')], title: 'Dos mancuernas o poleas', text: 'Anota el peso de un lado y la app lo multiplica por dos.' },
   { go: '/r/tour_pt/x/' + TX, prep: tl, el: '.card', title: 'Tu progreso', text: 'Tu mejor serie de cada día, de a 20 días por gráfico. Toca o desliza para ver el detalle.' },
@@ -2548,13 +2617,15 @@ const TOUR_STEPS = [
   { prep: () => { editEx('espalda', null); EX.name = 'Remo sentado con cuerda'; $('#exn').value = EX.name; applySuggest(); refreshEX(); }, el: () => [document.querySelector('#sheet .erhead'), document.querySelector('#exhint')], title: 'Crear tu propio ejercicio', text: 'Escribe el nombre y la app sugiere el dibujo, el músculo y el implemento.' },
   { go: '/r/tour_pt/v/' + TX, el: () => [document.querySelector('.hdr'), document.querySelector('.notes')], title: 'Su progreso', text: 'Al tocar un ejercicio ves su progreso e historial. El lápiz de arriba lo edita.' },
   { go: '/', prep: () => openCal(), el: '#sheet .cal', title: 'Calendario', text: 'Toca un día para ver qué hiciste.' },
+  { go: '/', prep: () => { openCal('w'); if (new Set(S.logs.filter((l) => l.d >= iso(monday(today()))).map((l) => l.d)).size < 2) { heatW = 1; renderCal(); } }, el: () => [document.querySelector('#sheet .wknav'), document.querySelector('#sheet .heatfig')], title: 'Tu semana', text: 'En "Semana": qué días entrenaste y qué músculos trabajaste. Las flechas te llevan a semanas anteriores.' },
   { go: '/', prep: () => renderDay(iso(new Date(Date.now() - 4 * 864e5))), el: () => [document.querySelector('.dtitle'), document.querySelector('.dstats')], title: 'Resumen de un día', text: 'Tiempo, series y kilos de ese día. Aquí también editas el horario, lo compartes o lo borras.' },
-  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('#view .seg.wide'), document.querySelectorAll('.ssec[data-sec="resumen"] .scard')[3] || document.querySelector('.ssec[data-sec="resumen"]')], title: 'Estadísticas', text: 'Parten en 90 días (también 30 o Todo). Las cifras pequeñas comparan con el período anterior.' },
-  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('.ssec[data-sec="semana"] .wkhead'), document.querySelector('.ssec[data-sec="semana"] .wdots')], title: 'Tu semana', text: 'Cuántos días entrenaste y, más abajo, qué músculos trabajaste.' },
-  { go: '/stats', prep: () => tourStats(90), el: '.ssec[data-sec="peso"]', title: 'Peso corporal', text: 'Cada vez que anotas tu peso se suma a este gráfico.' },
-  { go: '/stats', prep: () => tourStats(90, { fuerza: 1 }), el: () => [document.querySelector('.ssec[data-sec="fuerza"] .ssh'), document.querySelectorAll('.ssec[data-sec="fuerza"] .stop')[2] || document.querySelector('.ssec[data-sec="fuerza"]')], title: 'Progreso de fuerza', text: 'Cuánto subió o bajó tu 1RM en tus ejercicios principales. Toca el título de una sección para abrirla o cerrarla.' },
-  { go: '/stats', prep: () => tourStats(90, { constancia: 1 }), el: () => [document.querySelector('.ssec[data-sec="constancia"] .ssh'), document.querySelectorAll('.ssec[data-sec="constancia"] .wkrow')[3] || document.querySelector('.ssec[data-sec="constancia"]')], title: 'Constancia', text: 'Tu racha de semanas y cuántos días fuiste cada semana.' },
-  { go: '/stats', prep: () => tourStats(0, { fuerza: 1 }), el: () => [document.querySelector('#view .seg.wide'), document.querySelectorAll('.ssec[data-sec="resumen"] .scard')[3] || document.querySelector('.ssec[data-sec="resumen"]')], title: 'Todo tu historial', text: 'Tus marcas de siempre: días entrenados, mejor mes, racha y mejores series.' },
+  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('#view .seg.wide'), document.querySelectorAll('.ssec[data-sec="resumen"] .scard')[3] || document.querySelector('.ssec[data-sec="resumen"]')], title: 'Estadísticas', text: 'Elige el período: 30 o 90 días, 1 año o Todo. Lo pequeño compara con el período anterior.' },
+  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('.ssec[data-sec="fuerza"] .ssh'), document.querySelectorAll('.ssec[data-sec="fuerza"] .frow')[2] || document.querySelector('.ssec[data-sec="fuerza"]')], title: 'Progreso de fuerza', text: 'Cuánto subió tu fuerza en cada ejercicio, con su curva. Toca un título para abrir o cerrar la sección.' },
+  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('.ssec[data-sec="records"] .prhero'), document.querySelector('.ssec[data-sec="records"] .nrow') || document.querySelector('.ssec[data-sec="records"] .bcap')], title: 'Récords', text: 'Cuántos hiciste, tu mayor salto y los que estás a punto de romper, con la serie que te falta.' },
+  { go: '/stats', prep: () => tourStats(90, { constancia: 1 }), el: () => [document.querySelector('.ssec[data-sec="constancia"] .ssh'), document.querySelector('.ssec[data-sec="constancia"] .bch') || document.querySelector('.ssec[data-sec="constancia"]')], title: 'Constancia', text: 'Tu racha y cuántos días entrenas cada semana (o cada mes, en 1 año).' },
+  { go: '/stats', prep: () => tourStats(90, { musculos: 1 }), el: () => [document.querySelector('.ssec[data-sec="musculos"] .ssh'), document.querySelector('.ssec[data-sec="musculos"] .heatleg')], title: 'Músculos', text: 'Las series por semana de cada músculo: en rojo intenso lo que más trabajas.' },
+  { go: '/stats', prep: () => tourStats(90, { peso: 1 }), el: () => [document.querySelector('.ssec[data-sec="peso"] .bwhead'), document.querySelector('.ssec[data-sec="peso"] .bwleg') || document.querySelector('.ssec[data-sec="peso"]')], title: 'Peso corporal', text: 'Tus registros y la tendencia (la línea naranja), sin el sube y baja de cada día.' },
+  { go: '/stats', prep: () => tourStats(0), el: () => document.querySelector('.ssec[data-sec="records"] .vit') || document.querySelector('.ssec[data-sec="resumen"]'), title: 'Todo tu historial', text: 'En Todo: tu vitrina con lo más fuerte de cada parte del cuerpo y un mapa de tus años entrenando.' },
   { go: '/', prep: () => openSettings(), el: '.rord', title: 'Orden de rutinas', text: '"Te toca" sigue este orden. Si te saltas una, te la sugiere una vez más.' },
   { go: '/', prep: () => openSettings(), el: '#bwset', title: 'Tus preferencias', text: 'Peso corporal, kilos o libras, respaldo y cerrar sesión.' },
   { go: '/', prep: () => openSettings(), el: '#tourbtn', title: 'Vuelve cuando quieras', text: 'Este recorrido queda al final de Ajustes.' },
@@ -2654,81 +2725,142 @@ function offerTour() {
 }
 function maybeOfferTour() { if (S && S.settings.tourSeen === false) setTimeout(offerTour, 700); }
 
-/* ---------- estadísticas generales ----------
-   90 y 30 días: lo que hiciste en el período, comparado con el período anterior.
-   Todo: solo lo que no crece sin límite (promedios, rachas, mejores marcas, los 5 o 8 primeros),
-   para que la pantalla siga siendo clara y liviana después de años de uso. */
-let statsP = 90;
+/* ---------- estadísticas ----------
+   Períodos: 30 días, 90 días, 1 año y Todo. Cada sección resume con pocos números y un gráfico simple.
+   A largo plazo todo se agrupa (semanas → meses → trimestres → años) y las listas se cortan en los primeros,
+   así la pantalla sigue clara después de años de uso. */
+let statsP = 90, fuerzaAll = false;
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const MES3 = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'];
 /* "12 – 18 oct" (o "29 sept – 5 oct") */
 const wkLabel = (a) => { const e = pd(a); e.setDate(e.getDate() + 6); const sa = fShort(a).split(' '), sb = fShort(iso(e)).split(' '); return sa[1] === sb[1] ? `${sa[0]} – ${sb[0]} ${sb[1]}` : `${sa[0]} ${sa[1]} – ${sb[0]} ${sb[1]}`; };
 /* "Lunes 12 al domingo 18 de octubre" */
 const wkLong = (a) => { const A = pd(a), B = pd(a); B.setDate(B.getDate() + 6); return `Lunes ${A.getDate()}${A.getMonth() !== B.getMonth() ? ' de ' + MESES[A.getMonth()] : ''} al domingo ${B.getDate()} de ${MESES[B.getMonth()]}`; };
-function statsData(days, offset = 0) {
+const firstLogD = () => S.logs.reduce((m, l) => (l.d < m ? l.d : m), today());
+function periodOf(days, offset = 0) {
   const until = days ? iso(new Date(Date.now() - days * offset * 864e5)) : today();
   const since = days ? iso(new Date(Date.now() - (days * (offset + 1) - 1) * 864e5)) : '0000';
+  return { since, until };
+}
+/* barras del período: semanas (hasta ~3 meses), meses (hasta 2 años), trimestres (hasta 6 años) o años */
+function binsFor(since, until) {
+  const a = since === '0000' || since < firstLogD() ? firstLogD() : since;
+  const A = pd(a), Z = pd(until), out = [];
+  const span = (Z - A) / 864e5 + 1, months = (Z.getFullYear() - A.getFullYear()) * 12 + Z.getMonth() - A.getMonth() + 1;
+  const thisMon = iso(monday(today()));
+  if (span <= 100) {
+    for (const t = monday(a); iso(t) <= until; t.setDate(t.getDate() + 7)) { const s = iso(t), e = new Date(t); e.setDate(e.getDate() + 6); out.push({ a: s, b: iso(e), lab: `${t.getDate()}/${t.getMonth() + 1}`, long: s === thisMon ? 'Esta semana' : wkLabel(s), now: s === thisMon }); }
+    return { unit: 'semana', bins: out };
+  }
+  const per = months <= 24 ? 1 : months <= 72 ? 3 : 12;
+  let y = A.getFullYear(), m = per === 1 ? A.getMonth() : per === 3 ? Math.floor(A.getMonth() / 3) * 3 : 0;
+  while (y < Z.getFullYear() || (y === Z.getFullYear() && m <= Z.getMonth())) {
+    const s = `${y}-${pad(m + 1)}-01`, ed = new Date(y, m + per, 0), e = iso(ed);
+    const lab = per === 1 ? MES3[m] : per === 3 ? `T${m / 3 + 1}·${String(y).slice(2)}` : String(y);
+    const long = per === 1 ? `${cap(MESES[m])} ${y}` : per === 3 ? `${m / 3 + 1}.º trimestre ${y}` : `Año ${y}`;
+    out.push({ a: s, b: e, lab, long, now: today() >= s && today() <= e, y, m });
+    m += per; if (m >= 12) { m -= 12; y++; }
+  }
+  return { unit: per === 1 ? 'mes' : per === 3 ? 'trimestre' : 'año', bins: out };
+}
+/* récords: el día en que tu mejor serie de un ejercicio superó todo lo anterior (uno por ejercicio y día) */
+function prEvents() {
+  const byX = {};
+  S.logs.forEach((l) => { if (kindOf(l.x) !== 'cardio') (byX[l.x] || (byX[l.x] = [])).push(l); });
+  const ev = [];
+  Object.entries(byX).forEach(([x, ls]) => {
+    let best = 0, bs = null;
+    byDay(ls).forEach((d, i) => {
+      const t = topSet(d.sets), sc = score(t);
+      if (i > 0 && sc > best * 1.0005) ev.push({ x, d: d.d, s: t, sc, prev: best, ps: bs, gain: best ? sc / best - 1 : 0 });
+      if (sc > best) { best = sc; bs = t; }
+    });
+  });
+  return ev.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : b.gain - a.gain));
+}
+const prGain = (e) => (kindOf(e.x) === 'kg' ? `+${nf(e.sc - e.prev, 1)} kg` : `+${nf(e.gain * 100, 0)} %`);
+/* los que estás a punto de romper: tu capacidad de hoy (la del motor de recomendación) contra tu récord */
+function nearPRs() {
+  const cut = iso(new Date(Date.now() - 45 * 864e5)), byX = {}, out = [];
+  S.logs.forEach((l) => { const k = kindOf(l.x); if (k === 'kg' || k === 'bw' || k === 'assist') (byX[l.x] || (byX[l.x] = [])).push(l); });
+  Object.entries(byX).forEach(([x, ls]) => {
+    if (!X(x) || !ls.some((l) => l.d >= cut)) return;
+    const T = exTarget(x); if (!T || T.first || !T.model) return;
+    const k = T.k, B = T.model.B, best = Math.max(...ls.map((s) => capOf(k, s, B))), ratio = T.model.C / best;
+    if (ratio < 0.955) return;
+    /* la serie que lo rompe, con un peso que te deje dentro de tu rango de repeticiones */
+    let w = T.w, need = 0;
+    for (let s = 0; s < 4; s++) {
+      need = Math.floor(30 * (best / effKg(k, T.u === 'lb' ? w * LB : w, B) - 1)) + 1;
+      const w2 = roundTo(k === 'assist' ? w - (T.inc || 5) : w + (T.inc || 2.5), T.step || T.inc || 2.5);
+      if (need <= (T.hi || 12) || w2 < 0) break;
+      w = w2;
+    }
+    if (need < 1 || need > 25) return;
+    out.push({ x, name: X(x).e.name, ratio, t: { k, u: T.u, side: T.side, w, reps: need } });
+  });
+  return out.sort((a, b) => b.ratio - a.ratio).slice(0, 3);
+}
+/* tu vitrina: la marca más fuerte de cada parte del cuerpo (no la más usada) */
+function vitrina() {
+  const B = bodyKg(), out = [];
+  S.parts.filter((p) => p.id !== 'cardio').forEach((p) => {
+    const ids = new Set(p.ex.map((e) => e.id));
+    const ls = S.logs.filter((l) => ids.has(l.x) && kindOf(l.x) === 'kg' && l.kg > 0);
+    if (ls.length) { const b = ls.reduce((m, l) => (!m || rm1(l) > rm1(m) ? l : m), null), e = X(b.x).e; out.push({ p: p.name, name: e.name, s: b, rm: rm1(b), xbw: fnOf(e, p.id) === 'C' ? rm1(b) / B : 0 }); return; }
+    const lb = S.logs.filter((l) => ids.has(l.x) && (kindOf(l.x) === 'bw' || kindOf(l.x) === 'assist'));
+    if (lb.length) { const b = lb.reduce((m, l) => (!m || score(l) > score(m) ? l : m), null); out.push({ p: p.name, name: X(b.x).e.name, s: b, rm: 0, xbw: 0 }); }
+  });
+  return out;
+}
+function statsData(days, offset = 0) {
+  const { since, until } = periodOf(days, offset);
   const logs = S.logs.filter((l) => l.d >= since && l.d <= until);
   if (!logs.length) return null;
   const XM = new Map(); S.parts.forEach((p) => p.ex.forEach((e) => XM.set(e.id, { p, e })));
   // sesiones y tiempo en el gym
   const sessM = {};
   logs.forEach((l) => { const k = l.d + '|' + l.r; (sessM[k] || (sessM[k] = [])).push(l); });
-  const sessions = Object.entries(sessM).map(([k, arr]) => {
-    arr.sort(byTs); const [d, r] = k.split('|'); const t = sessionTime(d, r, arr);
-    return { d, r, arr, min: Math.max(0, (t.end - t.start) / 60000), start: t.start };
-  });
+  const sessions = Object.entries(sessM).map(([k, arr]) => { arr.sort(byTs); const [d, r] = k.split('|'); const t = sessionTime(d, r, arr); return { d, r, arr, min: Math.max(0, (t.end - t.start) / 60000), start: t.start }; });
   const dayMin = {}, dayR = {};
   sessions.forEach((s) => { dayMin[s.d] = (dayMin[s.d] || 0) + s.min; (dayR[s.d] || (dayR[s.d] = [])).push(s.r); });
-  const dates = Object.keys(dayMin).sort();
-  const timed = dates.filter((d) => dayMin[d] >= 5);
-  const totalMin = timed.reduce((a, d) => a + dayMin[d], 0);
-  const avgMin = timed.length ? totalMin / timed.length : 0;
+  const dates = Object.keys(dayMin).sort(), timed = dates.filter((d) => dayMin[d] >= 5);
+  const totalMin = timed.reduce((a, d) => a + dayMin[d], 0), avgMin = timed.length ? totalMin / timed.length : 0;
   const longest = timed.reduce((b, d) => (!b || dayMin[d] > dayMin[b] ? d : b), null);
   /* las semanas se cuentan desde tu primer entrenamiento (o desde el inicio del período si empezaste antes) */
-  const firstEver = S.logs.reduce((m, l) => (l.d < m ? l.d : m), today());
-  const firstD = firstEver > since ? firstEver : since;
-  const weeks = Math.max(1, ((pd(until) - pd(firstD)) / 864e5 + 1) / 7);
-  const perWeek = dates.length / weeks;
-  const wd = [0, 0, 0, 0, 0, 0, 0];
-  dates.forEach((d) => { wd[(pd(d).getDay() + 6) % 7]++; });
-  // rutinas
+  const firstEver = firstLogD(), firstD = firstEver > since ? firstEver : since;
+  const weeks = Math.max(1, ((pd(until) - pd(firstD)) / 864e5 + 1) / 7), perWeek = dates.length / weeks;
+  const wd = [0, 0, 0, 0, 0, 0, 0]; dates.forEach((d) => { wd[(pd(d).getDay() + 6) % 7]++; });
+  // rutinas y ejercicios
   const rc = {};
   sessions.forEach((s) => { const o = rc[s.r] || (rc[s.r] = { r: s.r, n: 0, last: '', min: 0, name: R(s.r)?.name || s.arr[0].rn || 'Rutina' }); o.n++; o.min += s.min; if (s.d > o.last) o.last = s.d; });
-  const routines = Object.values(rc).sort((a, b) => b.n - a.n).slice(0, 8);
-  // series por parte del cuerpo: todas las partes de tus rutinas, aunque tengan 0
+  const routines = Object.values(rc).sort((a, b) => b.n - a.n).slice(0, 4);
+  const byX = {}; logs.forEach((l) => (byX[l.x] || (byX[l.x] = [])).push(l));
+  const ec = Object.entries(byX).map(([x, ls]) => ({ x, ls, sets: ls.length, days: new Set(ls.map((l) => l.d)).size, name: XM.get(x)?.e.name || ls[0].name || 'Ejercicio', k: kindOf(x) })).sort((a, b) => b.days - a.days || b.sets - a.sets);
+  const firstOf = {}; S.logs.forEach((l) => { if (!firstOf[l.x] || l.d < firstOf[l.x]) firstOf[l.x] = l.d; });
+  const newEx = ec.filter((o) => o.k !== 'cardio' && firstOf[o.x] >= since).length;
+  // series por parte del cuerpo (todas las partes de tus rutinas, aunque tengan 0)
   const pc = {};
   S.routines.forEach((r) => r.parts.forEach((pid) => { if (pid !== 'cardio' && P(pid)) pc[pid] = pc[pid] || 0; }));
   logs.forEach((l) => { const f = XM.get(l.x); if (!f || kindOf(l.x) === 'cardio') return; pc[f.p.id] = (pc[f.p.id] || 0) + 1; });
-  const parts = Object.entries(pc).map(([id, n]) => [P(id)?.name || id, n]).sort((a, b) => b[1] - a[1]);
-  // ejercicios
-  const byX = {};
-  logs.forEach((l) => (byX[l.x] || (byX[l.x] = [])).push(l));
-  const ec = Object.entries(byX).map(([x, ls]) => ({ x, ls, sets: ls.length, days: new Set(ls.map((l) => l.d)).size, name: XM.get(x)?.e.name || ls[0].name || 'Ejercicio', k: kindOf(x) }))
-    .sort((a, b) => b.days - a.days || b.sets - a.sets);
-  const exs = ec.slice(0, 5);
-  const firstOf = {};
-  S.logs.forEach((l) => { if (!firstOf[l.x] || l.d < firstOf[l.x]) firstOf[l.x] = l.d; });
-  const newEx = ec.filter((o) => o.k !== 'cardio' && firstOf[o.x] >= since).length;
-  // progreso de fuerza: tus ejercicios con peso más frecuentes, primer vs. último día del período
-  const prog = ec.filter((o) => o.k === 'kg' && o.days >= 2).slice(0, 6).map((o) => {
-    const dd = byDay(o.ls.filter((l) => l.kg > 0)); if (dd.length < 2) return null;
-    const a = rm1(topSet(dd[0].sets)), b = rm1(topSet(dd[dd.length - 1].sets));
-    return a > 0 ? { x: o.x, name: o.name, a, b, pct: (b - a) / a, n: dd.length } : null;
-  }).filter(Boolean);
-  // mejores marcas de tus ejercicios más frecuentes (se usa en "Todo")
-  const marks = ec.filter((o) => o.k !== 'cardio').slice(0, 8).map((o) => {
-    const best = topSet(o.ls), dd = byDay(o.ls);
-    return { x: o.x, name: o.name, best, k: o.k, n: dd.length, rm: o.k === 'kg' ? rm1(best) : 0, first: o.k === 'kg' ? rm1(topSet(dd[0].sets)) : 0 };
-  });
-  const recs = logs.filter((l) => l.pr).sort((a, b) => b.ts - a.ts);
+  const parts = Object.entries(pc).map(([id, n]) => ({ id, name: P(id)?.name || id, n })).sort((a, b) => b.n - a.n);
+  // progreso de fuerza: todos los ejercicios de fuerza con 2 o más días (el mejor de cada sesión, al inicio vs. al final)
+  const B = bodyKg();
+  const prog = ec.filter((o) => (o.k === 'kg' || o.k === 'bw' || o.k === 'assist') && o.days >= 2).map((o) => {
+    const vals = byDay(o.ls).map((d) => Math.max(...d.sets.map((s) => capOf(o.k, s, B)))), n = vals.length;
+    const a = n >= 4 ? Math.max(vals[0], vals[1]) : vals[0], b = n >= 4 ? Math.max(vals[n - 1], vals[n - 2]) : vals[n - 1];
+    const g = Math.ceil(n / 16), sp = []; for (let i = 0; i < n; i += g) sp.push(Math.max(...vals.slice(i, i + g)));
+    return a > 0 ? { x: o.x, name: o.name, k: o.k, a, b, pct: (b - a) / a, n, sp } : null;
+  }).filter(Boolean).sort((p, q) => q.pct - p.pct);
+  // récords del período
+  const prs = prEvents().filter((e) => e.d >= since && e.d <= until);
   // rachas en semanas (lunes a domingo) sobre todo el historial
   const allW = [...new Set(S.logs.map((l) => iso(monday(l.d))))].sort();
   let best = 0, run = 0, prev = null;
   allW.forEach((w) => { run = prev && Math.round((pd(w) - pd(prev)) / 864e5) === 7 ? run + 1 : 1; best = Math.max(best, run); prev = w; });
   let cur = 0; { let w = iso(monday(today())); const set = new Set(allW); if (!set.has(w)) { const t = pd(w); t.setDate(t.getDate() - 7); w = iso(t); } while (set.has(w)) { cur++; const t = pd(w); t.setDate(t.getDate() - 7); w = iso(t); } }
+  /* hora habitual: la ventana de 2 horas donde más veces empiezas, y la mediana dentro de ella */
   const starts = sessions.map((s) => { const d = new Date(s.start); return d.getHours() * 60 + d.getMinutes(); });
-  /* hora habitual: la ventana de 2 horas donde más veces empiezas, y la mediana dentro de ella
-     (así un día excepcional en la tarde no corre tu hora típica de la mañana) */
   let avgStart = null, startN = 0;
   if (starts.length) {
     const s = starts.slice().sort((a, b) => a - b); let bi = 0, bj = 0;
@@ -2737,35 +2869,34 @@ function statsData(days, offset = 0) {
     avgStart = win.length % 2 ? win[mid] : (win[mid - 1] + win[mid]) / 2; startN = win.length;
   }
   // cardio
-  const cardio = logs.filter((l) => kindOf(l.x) === 'cardio');
-  const cTop = ec.find((o) => o.k === 'cardio');
+  const cardio = logs.filter((l) => kindOf(l.x) === 'cardio'), cTop = ec.find((o) => o.k === 'cardio');
   const cBest = ec.filter((o) => o.k === 'cardio').slice(0, 3).map((o) => ({ name: o.name, n: o.days, maxT: Math.max(...o.ls.map((l) => l.reps)), maxKm: Math.max(0, ...o.ls.map((l) => l.km || 0)) }));
   // mejor mes (en días entrenados)
   const mc = {}; dates.forEach((d) => { const m = d.slice(0, 7); mc[m] = (mc[m] || 0) + 1; });
   const bestMonth = Object.entries(mc).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? 1 : -1))[0];
-  // semana a semana (solo 90 y 30 días: como máximo 14 semanas)
-  const wks = [];
-  if (days) {
-    const w0 = monday(firstD), wN = monday(until), a0 = iso(w0), wk = {};
-    S.logs.forEach((l) => {
-      if (l.d < a0 || l.d > until) return;
-      const k = iso(monday(l.d)), o = wk[k] || (wk[k] = { d: new Set(), vol: 0, sets: 0 });
-      o.d.add(l.d); if (kindOf(l.x) !== 'cardio') { o.sets++; o.vol += volKg(l); }
-    });
-    for (const t = new Date(w0); t <= wN; t.setDate(t.getDate() + 7)) { const a = iso(t), o = wk[a]; wks.push({ a, days: o ? o.d.size : 0, vol: o ? o.vol : 0, sets: o ? o.sets : 0 }); }
-  }
+  // barras del período (días, series, toneladas y récords en cada una)
+  const bk = binsFor(since, until);
+  const dset = new Set(dates);
+  bk.bins.forEach((b) => { b.days = 0; b.sets = 0; b.vol = 0; b.prs = 0; });
+  const binOf = (d) => bk.bins.find((b) => d >= b.a && d <= b.b);
+  dset.forEach((d) => { const b = binOf(d); if (b) b.days++; });
+  logs.forEach((l) => { if (kindOf(l.x) === 'cardio') return; const b = binOf(l.d); if (b) { b.sets++; b.vol += volKg(l); } });
+  prs.forEach((e) => { const b = binOf(e.d); if (b) b.prs++; });
+  // músculos: series por semana en cada zona (para el mapa)
+  const { c: reg } = regionCounts(firstD, until);
+  const regW = {}; Object.keys(REG_NAMES).forEach((k) => { regW[k] = (reg[k] || 0) / weeks; });
   return {
-    days: dates.length, perWeek, weeks, avgMin, totalMin, longest, longestMin: longest ? dayMin[longest] : 0, longestR: longest ? dayR[longest] : [],
-    wd, routines, parts, exs, newEx, nEx: ec.filter((o) => o.k !== 'cardio').length, prog, marks, recs, prs: recs.length,
+    since, until, days: dates.length, dates, perWeek, weeks, avgMin, totalMin, longest, longestMin: longest ? dayMin[longest] : 0, longestR: longest ? dayR[longest] : [],
+    wd, routines, parts, exs: ec.slice(0, 5), newEx, nEx: ec.filter((o) => o.k !== 'cardio').length, prog, prs,
     sets: logs.filter((l) => kindOf(l.x) !== 'cardio').length, vol: logs.reduce((a, l) => a + volKg(l), 0),
-    cur, best, avgStart, startN, nStarts: starts.length, firstEver, bestMonth, wks,
+    cur, best, avgStart, startN, nStarts: starts.length, firstEver, bestMonth, bk, regW,
     cMin: cardio.reduce((a, l) => a + l.reps, 0), cKm: cardio.reduce((a, l) => a + (l.km || 0), 0), cN: cardio.length, cTop, cBest
   };
 }
 let sOpen = null;
-const S_DEF = { resumen: 1, semana: 1, peso: 1 };
-function sIsOpen(k) { if (TOUR) return !!((TOUR.open && TOUR.open[k]) || S_DEF[k]); if (!sOpen) { try { sOpen = JSON.parse(localStorage.getItem('gymrat:sopen')) || {}; } catch (e) { sOpen = {}; } } return sOpen[k] !== undefined ? !!sOpen[k] : !!S_DEF[k]; }
-function sToggle(k) { sIsOpen(k); sOpen[k] = !sIsOpen(k); try { localStorage.setItem('gymrat:sopen', JSON.stringify(sOpen)); } catch (e) {} }
+const S_DEF = { resumen: 1, fuerza: 1, records: 1 };
+function sIsOpen(k) { if (TOUR) return !!((TOUR.open && TOUR.open[k]) || S_DEF[k]); if (!sOpen) { try { sOpen = JSON.parse(localStorage.getItem('gymrat:sopen2')) || {}; } catch (e) { sOpen = {}; } } return sOpen[k] !== undefined ? !!sOpen[k] : !!S_DEF[k]; }
+function sToggle(k) { sIsOpen(k); sOpen[k] = !sIsOpen(k); try { localStorage.setItem('gymrat:sopen2', JSON.stringify(sOpen)); } catch (e) {} }
 const sec = (k, icon, title, peek, body) => `<section class="ssec${sIsOpen(k) ? ' open' : ''}" data-sec="${k}">
   <button class="ssh" data-act="stog" data-k="${k}" aria-expanded="${sIsOpen(k)}"><span class="ssi">${ic(icon, 20)}</span><span class="grow"><b>${title}</b>${peek ? `<small>${peek}</small>` : ''}</span>${ic(sIsOpen(k) ? 'up' : 'down', 20)}</button>
   ${sIsOpen(k) ? `<div class="ssb">${body}</div>` : ''}</section>`;
@@ -2773,126 +2904,152 @@ const sec = (k, icon, title, peek, body) => `<section class="ssec${sIsOpen(k) ? 
 function trainingFor(d) {
   const a = pd(d), t = pd(today());
   let m = (t.getFullYear() - a.getFullYear()) * 12 + t.getMonth() - a.getMonth(); if (t.getDate() < a.getDate()) m--;
-  const since = `desde ${MESES[a.getMonth()]} ${a.getFullYear()}`;
-  if (m < 1) { const n = Math.round((t - a) / 864e5) + 1; return { b: plural(n, 'día', 'días'), s: `entrenando · ${since}` }; }
-  if (m < 12) return { b: plural(m, 'mes', 'meses'), s: `entrenando · ${since}` };
+  const since = `desde ${MES3[a.getMonth()]} ${a.getFullYear()}`;
+  if (m < 1) { const n = Math.round((t - a) / 864e5) + 1; return { b: plural(n, 'día', 'días'), s: since }; }
+  if (m < 12) return { b: plural(m, 'mes', 'meses'), s: since };
   const y = Math.floor(m / 12), r = m % 12;
-  return { b: plural(y, 'año', 'años'), s: `${r ? `y ${plural(r, 'mes', 'meses')} ` : ''}entrenando · ${since}` };
+  return { b: plural(y, 'año', 'años'), s: `${r ? `y ${plural(r, 'mes', 'meses')} · ` : ''}${since}` };
+}
+/* gráficos simples */
+function barsHTML(bins, val, fmt, opts = {}) {
+  const vs = bins.map(val), mx = Math.max(opts.min || 1, ...vs), n = bins.length, many = n > 13, every = Math.ceil(n / 7);
+  const best = vs.indexOf(Math.max(...vs));
+  return `<div class="bch${many ? ' many' : ''}" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${bins.map((b, i) => `<button class="bc${b.now ? ' now' : ''}${i === best && vs[i] ? ' top' : ''}" data-act="bsel" data-t="${esc(`${b.long}: ${fmt(vs[i], true)}`)}" aria-label="${esc(`${b.long}: ${fmt(vs[i], true)}`)}"><em>${!many && vs[i] ? fmt(vs[i]) : ''}</em><i style="height:${vs[i] ? Math.max(5, (vs[i] / mx) * 100) : 2}%"></i><span>${(n - 1 - i) % every === 0 ? b.lab : ''}</span></button>`).join('')}</div>
+    <p class="bcap">${esc(`${bins[best]?.long || ''}${vs[best] ? `: ${fmt(vs[best], true)} · la más alta` : ''}`)}</p>`;
+}
+function spark(vals, w = 72, h = 24) {
+  if (vals.length < 2) return '';
+  const mn = Math.min(...vals), mx = Math.max(...vals), sp = mx - mn || 1, up = vals[vals.length - 1] >= vals[0] * 0.99;
+  const P_ = vals.map((v, i) => [(i / (vals.length - 1)) * (w - 6) + 3, h - 3 - ((v - mn) / sp) * (h - 6)]), L = P_[P_.length - 1], col = up ? '#7BE08A' : '#FF9A8A';
+  return `<svg class="spk" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><polyline points="${P_.map((p) => p.map((c) => c.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${L[0].toFixed(1)}" cy="${L[1].toFixed(1)}" r="2.6" fill="${col}"/></svg>`;
+}
+/* años × meses: cuántos días entrenaste cada mes (para "Todo") */
+function yearGrid(dates) {
+  const mc = {}; dates.forEach((d) => { const k = d.slice(0, 7); mc[k] = (mc[k] || 0) + 1; });
+  const y0 = Number(firstLogD().slice(0, 4)), y1 = Number(today().slice(0, 4)), tm = today().slice(0, 7), lvl = (n) => (n <= 0 ? 0 : n <= 4 ? 1 : n <= 8 ? 2 : n <= 12 ? 3 : 4);
+  let h = `<div class="ygrid"><span></span>${['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'].map((x) => `<span class="yh">${x}</span>`).join('')}`;
+  for (let y = y1; y >= y0; y--) {
+    h += `<span class="yl">${y}</span>`;
+    for (let m = 0; m < 12; m++) { const k = `${y}-${pad(m + 1)}`, n = mc[k] || 0, fut = k > tm || k < firstLogD().slice(0, 7); h += `<span class="yc l${fut ? 'x' : lvl(n)}" title="${cap(MESES[m])} ${y}: ${plural(n, 'día', 'días')}">${!fut && n ? n : ''}</span>`; }
+  }
+  return h + '</div><p class="bcap">Días entrenados cada mes.</p>';
 }
 function vStats() {
-  const P_ = [[90, '90 días'], [30, '30 días'], [0, 'Todo']];
-  const all = !statsP;
+  const P_ = [[30, '30 días'], [90, '90 días'], [365, '1 año'], [0, 'Todo']];
+  const all = !statsP, lbw = lastBW();
   const st = statsData(statsP), pv = statsP ? statsData(statsP, 1) : null;
   const seg = `<div class="seg wide" role="group" aria-label="Período">${P_.map(([v, l]) => `<button data-act="statsp" data-p="${v}" class="${statsP === v ? 'on' : ''}" aria-pressed="${statsP === v}">${l}</button>`).join('')}</div>`;
   const hm = (m) => m == null ? '—' : `${pad(Math.floor(m / 60))}:${pad(Math.round(m % 60) % 60)}`;
   const bar = (label, v, max, right, cls = '') => `<div class="sbar ${cls}"><div class="sbl"><span>${label}</span><b>${right}</b></div><div class="sbt"><i style="width:${max && v ? Math.max(4, (v / max) * 100) : 0}%"></i></div></div>`;
   const delta = (a, b, fmt = (v) => nf(v, 1)) => { if (!pv || b == null) return ''; const d = a - b; if (Math.abs(d) < 1e-9 || !/[1-9]/.test(fmt(Math.abs(d)))) return '<em class="dl">= igual</em>'; return `<em class="dl ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : '−'}${fmt(Math.abs(d))}</em>`; };
-  const L = ['L', 'M', 'X', 'J', 'V', 'S', 'D'], LL = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+  const L = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
   const none = '<p class="mu" style="margin:0">Sin entrenamientos en este período.</p>';
-  const lbw = lastBW(), thisMon = iso(monday(today()));
+  const pl = P_.find((p) => p[0] === statsP)[1].toLowerCase();
   let html = `${hdr('/', '')}<h2 class="pt">Estadísticas</h2>${seg}
-    <p class="stip">${all ? 'Tus marcas de siempre. Los totales que solo crecen (tiempo, kilos y series) están en 90 y 30 días.' : `Lo que hiciste en los últimos ${statsP} días.`} Toca cada sección para abrirla o cerrarla.</p>`;
+    <p class="stip">${all ? (st ? `Todo tu historial, ${trainingFor(st.firstEver).s}.` : 'Todo tu historial.') : `Últimos ${pl === '1 año' ? '365 días' : pl}. Lo pequeño compara con el período anterior.`}</p>`;
+  if (!st) return html + `<section class="ssec open"><div class="ssb">${none}</div></section>` + sec('peso', 'scale', 'Peso corporal', lbw ? `${nf(lbw.kg)} kg · ${fShort(lbw.d)}` : 'Sin registrar', bwSection(statsP));
   // resumen
   if (!all) {
-    html += sec('resumen', 'stats', 'Resumen', st ? `${plural(st.days, 'día entrenado', 'días entrenados')} · ${nf(st.perWeek, 1)} por semana` : 'Sin datos', st ? `
+    html += sec('resumen', 'stats', 'Resumen', `${plural(st.days, 'día entrenado', 'días entrenados')} · ${nf(st.perWeek, 1)} por semana`, `
     <div class="sgrid">
       <div class="scard hot"><b>${st.days}</b><span>${st.days === 1 ? 'día entrenado' : 'días entrenados'}</span>${delta(st.days, pv?.days, (v) => nf(v, 0))}</div>
       <div class="scard"><b>${nf(st.perWeek, 1)}</b><span>veces por semana</span>${delta(st.perWeek, pv?.perWeek)}</div>
-      <div class="scard"><b>${fmtDur(st.avgMin)}</b><span>promedio en el gym</span>${delta(st.avgMin, pv?.avgMin, (v) => fmtDur(v))}</div>
-      <div class="scard"><b>${st.prs}</b><span>${st.prs === 1 ? 'récord' : 'récords'}</span>${delta(st.prs, pv?.prs, (v) => nf(v, 0))}</div>
-      <div class="scard"><b>${st.sets}</b><span>series</span>${delta(st.sets, pv?.sets, (v) => nf(v, 0))}</div>
+      <div class="scard"><b>${nf(st.sets, 0)}</b><span>series</span>${delta(st.sets, pv?.sets, (v) => nf(v, 0))}</div>
       <div class="scard"><b>${nf(st.vol / 1000, 1)} t</b><span>levantadas</span>${delta(st.vol / 1000, pv ? pv.vol / 1000 : null, (v) => nf(v, 1) + ' t')}</div>
-    </div>${pv ? `<p class="mu small" style="margin:10px 0 0">Las cifras pequeñas comparan con los ${statsP} días anteriores.</p>` : ''}` : none);
+    </div>`);
   } else {
-    const tf = st ? trainingFor(st.firstEver) : null, bm = st?.bestMonth;
-    html += sec('resumen', 'stats', 'Resumen', st ? `${plural(st.days, 'día entrenado', 'días entrenados')} en total` : 'Sin datos', st ? `
+    const tf = trainingFor(st.firstEver), bm = st.bestMonth;
+    html += sec('resumen', 'stats', 'Resumen', `${plural(st.days, 'día entrenado', 'días entrenados')} · ${tf.b}`, `
     <div class="sgrid">
-      <div class="scard hot"><b>${st.days}</b><span>${st.days === 1 ? 'día entrenado' : 'días entrenados'}</span></div>
-      <div class="scard"><b class="md">${tf.b}</b><span>${tf.s}</span></div>
-      <div class="scard"><b>${nf(st.perWeek, 1)}</b><span>veces por semana en promedio</span></div>
-      <div class="scard"><b>${fmtDur(st.avgMin)}</b><span>promedio en el gym</span></div>
-      <div class="scard"><b class="md">${plural(bm[1], 'día', 'días')}</b><span>tu mejor mes: ${MESES[Number(bm[0].slice(5)) - 1]} ${bm[0].slice(0, 4)}</span></div>
-      <div class="scard"><b>${st.nEx}</b><span>ejercicios distintos</span></div>
-    </div>` : none);
+      <div class="scard hot"><b>${nf(st.days, 0)}</b><span>${st.days === 1 ? 'día entrenado' : 'días entrenados'}</span></div>
+      <div class="scard"><b class="md">${tf.b}</b><span>entrenando · ${tf.s}</span></div>
+      <div class="scard"><b>${nf(st.perWeek, 1)}</b><span>veces por semana</span></div>
+      <div class="scard"><b class="md">${plural(bm[1], 'día', 'días')}</b><span>mejor mes: ${MES3[Number(bm[0].slice(5)) - 1]} ${bm[0].slice(0, 4)}</span></div>
+    </div>`);
   }
-  // tu semana: qué días entrenaste y qué músculos
-  const tw = new Set(S.logs.filter((l) => l.d >= thisMon).map((l) => l.d)).size;
-  html += sec('semana', 'body', 'Tu semana', `${plural(tw, 'día entrenado', 'días entrenados')} · ${wkLabel(thisMon)}`, weekSection());
-  // peso corporal
-  html += sec('peso', 'scale', 'Peso corporal', lbw ? `${nf(lbw.kg)} kg · ${fShort(lbw.d)}` : 'Sin registrar', bwSection(statsP));
-  if (!st) return html;
   // fuerza
-  if (!all) {
-    const ups = st.prog.filter((p) => p.pct > 0.004).length;
-    html += sec('fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `${ups} de ${st.prog.length} ejercicios subiendo · ${plural(st.prs, 'récord', 'récords')}` : plural(st.prs, 'récord', 'récords'), `
-      ${st.prog.length ? `<p class="mu small" style="margin:0 0 4px">Tus ejercicios con peso más frecuentes. 1RM estimado de tu mejor serie: primer vs. último día del período.</p>${st.prog.map((p) => { const c = p.pct > 0.004 ? 'up' : p.pct < -0.004 ? 'dn' : 'eq';
-        return `<div class="stop"><span class="grow">${esc(p.name)}<small class="sub2">${nf(p.a, 0)} → ${nf(p.b, 0)} kg · ${plural(p.n, 'sesión', 'sesiones')}</small></span><b class="pct ${c}">${c === 'eq' ? '0' : (c === 'up' ? '+' : '−') + nf(Math.abs(p.pct) * 100, 0)} %</b></div>`; }).join('')}` : '<p class="mu" style="margin:0">Necesitas al menos dos sesiones de un mismo ejercicio con peso para ver tu progreso.</p>'}
-      <p class="lbl">Récords del período <span class="mu">(${st.prs})</span></p>
-      ${st.recs.slice(0, 5).map((l) => `<div class="prrow"><span>${esc(X(l.x)?.e.name || l.name)}<small class="sub2">${cap(fShort(l.d))}</small></span><b>${setTxt(l)}</b></div>`).join('') || '<p class="mu small" style="margin:0">Aún no hay récords en este período.</p>'}`);
-  } else {
-    const bwk = lbw?.kg;
-    html += sec('fuerza', 'up', 'Mejores marcas', st.marks[0] ? `${esc(st.marks[0].name)}: ${setTxt(st.marks[0].best)}` : '', `
-      <p class="mu small" style="margin:0 0 4px">La mejor serie de siempre en tus ejercicios más frecuentes.</p>
-      ${st.marks.map((m) => `<div class="prrow"><span>${esc(m.name)}<small class="sub2">${cap(fShort(m.best.d))}${m.k === 'kg' && m.n > 1 && m.first > 0 && m.rm > m.first * 1.004 ? ` · <em class="up">+${nf((m.rm / m.first - 1) * 100, 0)} %</em> desde tu primera vez` : ''}</small>${m.k === 'kg' ? `<small class="sub2">1RM estimado ${nf(m.rm, 0)} kg${bwk && X(m.x) && fnOf(X(m.x).e, X(m.x).p.id) === 'C' ? ` · ${nf(m.rm / bwk, 2)} veces tu peso` : ''}</small>` : ''}</span><b>${setTxt(m.best)}</b></div>`).join('')}`);
+  {
+    const up = st.prog.filter((p) => p.pct > 0.01).length, dn = st.prog.filter((p) => p.pct < -0.01).length, eq = st.prog.length - up - dn;
+    const rows = fuerzaAll ? st.prog : st.prog.slice(0, 6);
+    html += sec('fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `${up} subiendo · ${eq} igual · ${dn} bajando` : 'Faltan sesiones para comparar', st.prog.length ? `
+      ${rows.map((p) => { const c = p.pct > 0.01 ? 'up' : p.pct < -0.01 ? 'dn' : 'eq';
+        return `<div class="frow"><span class="grow">${esc(p.name)}<small class="sub2">${p.k === 'kg' ? `1RM ${nf(p.a, 0)} → ${nf(p.b, 0)} kg` : plural(p.n, 'sesión', 'sesiones')}</small></span>${spark(p.sp)}<b class="pct ${c}">${c === 'eq' ? '=' : (c === 'up' ? '+' : '−') + nf(Math.abs(p.pct) * 100, 0) + ' %'}</b></div>`; }).join('')}
+      ${st.prog.length > 6 ? `<button class="linkbtn" data-act="fall">${fuerzaAll ? 'Ver menos' : `Ver los ${st.prog.length}`} ${ic(fuerzaAll ? 'up' : 'down', 16)}</button>` : ''}`
+      : '<p class="mu" style="margin:0">Con dos sesiones de un mismo ejercicio verás aquí cuánto subió tu fuerza.</p>');
+  }
+  // récords
+  {
+    const near = nearPRs(), last = st.prs.slice(0, 5), top = st.prs.reduce((b, e) => (!b || e.gain > b.gain ? e : b), null);
+    const nm = (x) => esc(X(x)?.e.name || 'Ejercicio');
+    let body = `<div class="prhero"><div><b>${nf(st.prs.length, 0)}</b><span>${st.prs.length === 1 ? 'récord' : 'récords'}${all ? ' en total' : ''}</span>${!all ? delta(st.prs.length, pv?.prs.length, (v) => nf(v, 0)) : ''}</div>${top ? `<div class="prtop"><small>Mayor salto</small><b>${nm(top.x)}</b><em>${prGain(top)}</em></div>` : ''}</div>`;
+    if (st.prs.length) body += barsHTML(st.bk.bins, (b) => b.prs, (v, l) => (l ? plural(v, 'récord', 'récords') : String(v)));
+    if (near.length) body += `<p class="lbl">${ic('target', 15)} A punto de romper</p>${near.map((o) => `<div class="nrow"><span class="grow">${esc(o.name)}<small class="sub2">${o.ratio >= 1 ? 'Tu nivel de hoy ya lo alcanza' : `Estás al ${nf(Math.floor(o.ratio * 100), 0)} % de tu récord`}</small></span><b>${tgtTxt(o.t)}</b><i class="nbar"><i style="width:${Math.min(100, o.ratio * 100)}%"></i></i></div>`).join('')}`;
+    if (last.length) body += `<p class="lbl">${all ? 'Últimos récords' : 'Récords recientes'}</p>${last.map((e) => `<div class="prrow"><span>${nm(e.x)}<small class="sub2">${cap(rel(e.d))} · ${prGain(e)}</small></span><b>${setTxt(e.s)}</b></div>`).join('')}`;
+    if (all) { const v = vitrina(); if (v.length) body += `<p class="lbl">${ic('starf', 15)} Tu vitrina: lo más fuerte de cada parte</p><div class="vit">${v.map((o) => `<div class="vcard"><small>${esc(o.p)}</small><b>${setTxt(o.s)}</b><span>${esc(o.name)}</span>${o.rm ? `<em>1RM ${nf(o.rm, 0)} kg${o.xbw >= 0.5 ? ` · ${nf(o.xbw, 2)}× tu peso` : ''}</em>` : ''}</div>`).join('')}</div>`; }
+    if (!st.prs.length && !near.length && !all) body += '<p class="mu small" style="margin:8px 0 0">Aún no hay récords en este período.</p>';
+    html += sec('records', 'starf', 'Récords', st.prs[0] ? `${plural(st.prs.length, 'récord', 'récords')} · último: ${nm(st.prs[0].x)}` : near.length ? `${plural(near.length, 'récord', 'récords')} a punto de caer` : 'Sin récords en este período', body);
   }
   // constancia
-  const fmtRacha = `<div class="sgrid">
-      <div class="scard hot"><b>${st.cur}</b><span>${st.cur === 1 ? 'semana' : 'semanas'} de racha</span></div>
-      <div class="scard"><b>${st.best}</b><span>${st.best === 1 ? 'semana' : 'semanas'}: tu mejor racha</span></div>
-    </div>
-    <p class="mu small" style="margin:10px 0 0">La racha cuenta las semanas seguidas (de lunes a domingo) en que entrenaste al menos una vez.</p>`;
-  if (!all) {
-    const wmax = Math.max(...st.wd), fav = st.wd.indexOf(wmax);
-    html += sec('constancia', 'cal', 'Constancia', `${nf(st.perWeek, 1)} días por semana · racha de ${plural(st.cur, 'semana', 'semanas')}`, `
-      ${fmtRacha}
-      <p class="lbl">Semana a semana</p>
-      ${st.wks.slice().reverse().map((w) => `<div class="wkrow${w.days ? '' : ' zero'}${w.a === thisMon ? ' now' : ''}"><span class="wkl">${w.a === thisMon ? 'Esta semana' : wkLabel(w.a)}</span><span class="wkb"><i style="width:${(w.days / 7) * 100}%"></i></span><b>${plural(w.days, 'día', 'días')}</b></div>`).join('')}
-      <div class="srow" style="margin-top:8px"><span>Día favorito</span><b>${cap(LL[fav])}</b><small>El día de la semana en que más entrenaste en el período.</small></div>
-      <div class="wbars">${st.wd.map((n, i) => `<div class="wb${n === wmax && n ? ' top' : ''}"><em>${n || ''}</em><i style="height:${wmax ? Math.max(4, (n / wmax) * 100) : 4}%"></i><span>${L[i]}</span></div>`).join('')}</div>`);
-  } else {
-    html += sec('constancia', 'cal', 'Constancia', `Racha de ${plural(st.cur, 'semana', 'semanas')} · mejor: ${st.best}`, fmtRacha);
+  {
+    const tiles = `<div class="sgrid three"><div class="scard hot"><b>${st.cur}</b><span>${st.cur === 1 ? 'semana' : 'semanas'} de racha</span></div><div class="scard"><b>${st.best}</b><span>mejor racha</span></div><div class="scard"><b>${nf(st.perWeek, 1)}</b><span>días por semana</span></div></div>`;
+    const thisMon = iso(monday(today()));
+    let vis;
+    if (all) vis = yearGrid(st.dates);
+    else if (statsP === 30) vis = `<div class="wklist">${st.bk.bins.slice().reverse().map((w) => `<div class="wkrow${w.days ? '' : ' zero'}${w.a === thisMon ? ' now' : ''}"><span class="wkl">${w.long}</span><span class="wkb"><i style="width:${(w.days / 7) * 100}%"></i></span><b>${plural(w.days, 'día', 'días')}</b></div>`).join('')}</div>`;
+    else vis = barsHTML(st.bk.bins, (b) => b.days, (v, l) => (l ? plural(v, 'día', 'días') : String(v)), { min: st.bk.unit === 'semana' ? 7 : 1 });
+    const wmax = Math.max(...st.wd);
+    html += sec('constancia', 'cal', 'Constancia', `${plural(st.cur, 'semana', 'semanas')} de racha · ${nf(st.perWeek, 1)} por semana`, `${tiles}<p class="lbl">${all ? 'Mes a mes' : st.bk.unit === 'semana' ? 'Días por semana' : 'Días por mes'}</p>${vis}
+      <p class="lbl">Tus días</p><div class="wbars">${st.wd.map((n, i) => `<div class="wb${n === wmax && n ? ' top' : ''}"><em>${n || ''}</em><i style="height:${wmax ? Math.max(4, (n / wmax) * 100) : 4}%"></i><span>${L[i]}</span></div>`).join('')}</div>`);
   }
-  if (!all) {
-    // volumen semana a semana
-    const ws = st.wks, vmax = Math.max(1, ...ws.map((w) => w.vol)), many = ws.length > 8;
-    const bw = ws.reduce((b, w) => (!b || w.vol > b.vol ? w : b), null), now = ws[ws.length - 1];
-    html += sec('volumen', 'stats', 'Volumen por semana', `Esta semana: ${nf((now?.vol || 0) / 1000, 1)} t · ${now?.sets || 0} series`, `
-      <div class="vbars${many ? ' many' : ''}" style="grid-template-columns:repeat(${ws.length},minmax(0,1fr))">${ws.map((w, i) => `<div class="vb${w.a === thisMon ? ' now' : ''}"><em>${w.vol ? nf(w.vol / 1000, many ? 0 : 1) : ''}</em><i style="height:${Math.max(3, (w.vol / vmax) * 100)}%"></i><span>${!many || (ws.length - 1 - i) % 2 === 0 ? (w.a === thisMon ? 'Esta' : `${pd(w.a).getDate()}/${pd(w.a).getMonth() + 1}`) : ''}</span></div>`).join('')}</div>
-      <p class="mu small" style="margin:8px 0 0;text-align:center">Toneladas levantadas cada semana (la fecha es el lunes).</p>
-      ${bw && bw.vol ? `<div class="srow" style="margin-top:8px"><span>Mejor semana</span><b>${nf(bw.vol / 1000, 1)} t</b><small>${wkLabel(bw.a)} · ${bw.sets} series</small></div>` : ''}
-      <div class="srow"><span>Series por entrenamiento</span><b>${nf(st.sets / Math.max(1, st.days), 0)}</b><small>Promedio de series cada día que entrenaste.</small></div>`);
-    // partes del cuerpo
-    const low = st.parts.length > 2 ? st.parts.slice(-2).map((x) => x[0].toLowerCase()) : [];
-    html += sec('partes', 'filter', 'Series por parte del cuerpo', st.parts[0] ? `Más: ${esc(st.parts[0][0])} · menos: ${esc(st.parts[st.parts.length - 1][0])}` : '', `
-      <p class="mu small" style="margin:0 0 2px">Total del período y promedio por semana. Incluye todas las partes de tus rutinas.</p>
-      ${st.parts.map(([n, v]) => bar(esc(n), v, st.parts[0][1], `${v} <small class="mu">· ${nf(v / st.weeks, 1)}/sem</small>`)).join('') || none}
-      ${low.length ? `<p class="heatzero">Lo que menos entrenaste: <b>${esc(low.reverse().join(' y '))}</b>.</p>` : ''}`);
-    // tiempo en el gym
-    html += sec('tiempo', 'clock', 'Tiempo en el gym', `Promedio ${fmtDur(st.avgMin)} · total ${nf(st.totalMin / 60, 1)} h`, `
-      <div class="srow"><span>Promedio por día</span><b>${fmtDur(st.avgMin)}</b><small>Desde que empiezas hasta que terminas.</small></div>
-      <div class="srow"><span>Tiempo total</span><b>${nf(st.totalMin / 60, 1)} h</b><small>Sumando todos tus entrenamientos del período.</small></div>
-      ${st.longest ? `<div class="srow"><span>Día más largo</span><b>${fmtDur(st.longestMin)}</b><small>${cap(fLong(st.longest))} · ${esc(st.longestR.map((r) => R(r)?.name || 'Rutina').join(' + '))}</small></div>` : ''}
-      <div class="srow"><span>Hora habitual</span><b>${hm(st.avgStart)}</b><small>${st.startN === st.nStarts ? 'Siempre empiezas cerca de esa hora.' : `${st.startN} de tus ${st.nStarts} entrenamientos empezaron cerca de esa hora.`}</small></div>`);
+  // músculos
+  {
+    const lvlW = (n) => (n <= 0.05 ? 0 : n < 3 ? 1 : n < 6 ? 2 : n < 10 ? 3 : 4);
+    const fillFn = (k) => (k === 'heart' ? null : HEAT[lvlW(st.regW[k] || 0)]);
+    const pmax = st.parts[0]?.n || 1, low = st.parts.filter((p) => p.n / st.weeks < 2).map((p) => p.name.toLowerCase());
+    const pvMap = {}; (pv?.parts || []).forEach((p) => { pvMap[p.id] = p.n; });
+    html += sec('musculos', 'body', 'Músculos', st.parts[0] ? `Más: ${esc(st.parts[0].name)}${low.length ? ` · poco: ${esc(low[low.length - 1])}` : ''}` : '', `
+      <div class="heatfig">${body(new Set(), TH.dk, 170, true, fillFn)}</div>
+      <div class="heatleg">${HEAT.map((col, i) => `<span><i style="background:${col}"></i>${['0', '1–2', '3–5', '6–9', '10+'][i]}</span>`).join('')}<em>series por semana</em></div>
+      ${st.parts.map((p) => { const a = p.n / st.weeks, b = pv && pvMap[p.id] !== undefined ? pvMap[p.id] / pv.weeks : null, d = b === null ? 0 : a - b;
+        return bar(esc(p.name), p.n, pmax, `${nf(a, 1)}<small class="mu">/sem</small>${Math.abs(d) >= 0.3 ? ` <em class="dl ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : '−'}${nf(Math.abs(d), 1)}</em>` : ''}`); }).join('')}
+      ${low.length ? `<p class="heatzero">Poco trabajado: <b>${esc(low.slice(-3).join(', '))}</b> (menos de 2 series por semana).</p>` : ''}`);
   }
-  // rutinas
-  html += sec('rutinas', 'starf', 'Rutinas', st.routines[0] ? `Más hecha: ${esc(st.routines[0].name)}` : '', st.routines.map((o) => bar(esc(o.name), o.n, st.routines[0].n, `${o.n} ${o.n === 1 ? 'vez' : 'veces'}`, 'yl') + `<p class="ssub">Última: ${rel(o.last).toLowerCase()} · promedio ${fmtDur(o.min / o.n)}</p>`).join(''));
-  // ejercicios
-  html += sec('ejercicios', 'play', 'Ejercicios que más haces', st.exs[0] ? esc(st.exs[0].name) : '', `${st.exs.map((o, i) => `<div class="stop"><span class="rk">${i + 1}</span><span class="grow">${esc(o.name)}</span><small>${plural(o.days, 'día', 'días')} · ${o.sets} ${o.k === 'cardio' ? (o.sets === 1 ? 'registro' : 'registros') : 'series'}</small></div>`).join('')}
-    ${!all && st.newEx ? `<p class="ssub" style="margin-top:10px">${ic('spark', 14)} Probaste ${plural(st.newEx, 'ejercicio nuevo', 'ejercicios nuevos')} en este período.</p>` : ''}
-    ${all ? `<p class="ssub" style="margin-top:10px">Has hecho ${plural(st.nEx, 'ejercicio distinto', 'ejercicios distintos')}.</p>` : ''}`);
+  // peso corporal
+  html += sec('peso', 'scale', 'Peso corporal', lbw ? `${nf(lbw.kg)} kg · ${fShort(lbw.d)}` : 'Sin registrar', bwSection(statsP));
+  // volumen
+  {
+    const b = st.bk.bins, bb = b.reduce((m, x) => (!m || x.vol > m.vol ? x : m), null), uw = st.bk.unit;
+    html += sec('volumen', 'stats', 'Volumen', `${nf(st.vol / 1000 / st.weeks, 1)} t por semana`, `
+      ${barsHTML(b, (x) => x.vol / 1000, (v, l) => (l ? `${nf(v, 1)} t` : nf(v, v >= 10 ? 0 : 1)))}
+      <div class="srow"><span>Por semana</span><b>${nf(st.vol / 1000 / st.weeks, 1)} t</b></div>
+      <div class="srow"><span>Series por entrenamiento</span><b>${nf(st.sets / Math.max(1, st.days), 0)}</b></div>
+      ${bb && bb.vol ? `<div class="srow"><span>Mejor ${uw}</span><b>${nf(bb.vol / 1000, 1)} t</b><small>${esc(bb.long)}</small></div>` : ''}`);
+  }
+  // tiempo en el gym
+  html += sec('tiempo', 'clock', 'Tiempo en el gym', `Promedio ${fmtDur(st.avgMin)} · hora habitual ${hm(st.avgStart)}`, `
+    <div class="sgrid">
+      <div class="scard"><b>${fmtDur(st.avgMin)}</b><span>promedio por día</span>${delta(st.avgMin, pv?.avgMin, (v) => fmtDur(v))}</div>
+      <div class="scard"><b>${hm(st.avgStart)}</b><span>hora habitual</span></div>
+      ${all ? '' : `<div class="scard"><b>${nf(st.totalMin / 60, st.totalMin >= 6000 ? 0 : 1)} h</b><span>en total</span></div>`}
+      ${st.longest ? `<div class="scard"><b>${fmtDur(st.longestMin)}</b><span>día más largo · ${fShort(st.longest)}</span></div>` : ''}
+    </div>`);
+  // lo que más haces
+  html += sec('top', 'starf', 'Lo que más haces', st.routines[0] ? `${esc(st.routines[0].name)} · ${esc(st.exs[0]?.name || '')}` : '', `
+    ${st.routines.map((o) => bar(esc(o.name), o.n, st.routines[0].n, `${nf(o.n, 0)} ${o.n === 1 ? 'vez' : 'veces'}`, 'yl')).join('')}
+    <p class="lbl">Ejercicios</p>
+    ${st.exs.map((o, i) => `<div class="stop"><span class="rk">${i + 1}</span><span class="grow">${esc(o.name)}</span><small>${plural(o.days, 'día', 'días')}</small></div>`).join('')}
+    ${!all && st.newEx ? `<p class="ssub" style="margin-top:10px">${ic('spark', 14)} ${plural(st.newEx, 'ejercicio nuevo', 'ejercicios nuevos')} en este período.</p>` : ''}
+    ${all ? `<p class="ssub" style="margin-top:10px">${plural(st.nEx, 'ejercicio distinto', 'ejercicios distintos')} en total.</p>` : ''}`);
   // cardio
   if (st.cN) {
-    if (!all) html += sec('cardio', 'heart', 'Cardio', `${fmtDur(st.cMin / 60)}${st.cKm ? ` · ${nf(st.cKm, 1)} km` : ''}`, `
+    html += sec('cardio', 'heart', 'Cardio', all ? (st.cBest[0] ? `Más largo: ${fmtT(st.cBest[0].maxT)}` : '') : `${fmtDur(st.cMin / 60)}${st.cKm ? ` · ${nf(st.cKm, 1)} km` : ''}`, all ? `
+      ${st.cBest.map((c) => `<div class="prrow"><span>${esc(c.name)}<small class="sub2">${c.maxKm ? `Mayor distancia: ${nf(c.maxKm, 2)} km` : plural(c.n, 'día', 'días')}</small></span><b>${fmtT(c.maxT)}</b></div>`).join('')}` : `
       <div class="sgrid">
         <div class="scard"><b>${fmtDur(st.cMin / 60)}</b><span>de cardio</span></div>
         <div class="scard"><b>${st.cN}</b><span>${st.cN === 1 ? 'registro' : 'registros'}</span></div>
         ${st.cKm ? `<div class="scard"><b>${nf(st.cKm, 1)} km</b><span>recorridos</span></div>` : ''}
         ${st.cTop ? `<div class="scard"><b class="sm">${esc(st.cTop.name)}</b><span>el que más haces</span></div>` : ''}
       </div>`);
-    else html += sec('cardio', 'heart', 'Cardio', st.cBest[0] ? `Más largo en ${esc(st.cBest[0].name.toLowerCase())}: ${fmtT(st.cBest[0].maxT)}` : '', `
-      <p class="mu small" style="margin:0 0 4px">Tus mejores marcas en el cardio que más haces.</p>
-      ${st.cBest.map((c) => `<div class="prrow"><span>${esc(c.name)}<small class="sub2">${c.maxKm ? `Mayor distancia: ${nf(c.maxKm, 2)} km` : plural(c.n, 'día', 'días')}</small></span><b>${fmtT(c.maxT)}</b></div>`).join('')}
-      <p class="mu small" style="margin:6px 0 0">A la derecha, tu sesión más larga.</p>`);
   }
   return html;
 }
@@ -3196,11 +3353,46 @@ function repRange(hist, fn, k) {
   hi = Math.max(lo + 2, Math.min(hi, 30));
   return [lo, hi];
 }
-/* ---------- objetivo del día por ejercicio ----------
-   Progresión doble dentro de tu rango de repeticiones (calculado con tus sesiones recientes):
-   bajo el tope, una repetición más; en el tope, sube el peso con tu salto habitual; estancado 4 sesiones o
-   volviendo de una pausa, baja; si entrenaste esa parte ayer, mantén. En peso corporal y por tiempo, al pasar
-   el rango ideal se propone sumar lastre en vez de seguir alargando. */
+/* ---------- motor de recomendación ----------
+   Cómo decide cada objetivo (peso, reps, tiempo, lastre o ayuda):
+   1. Capacidad de cada sesión: tu 1RM estimado (Epley) con tu mejor serie. En peso corporal se usa tu peso más el
+      lastre (o menos la ayuda), así todo queda en la misma escala.
+   2. Nivel y tendencia: suavizado exponencial doble (Holt) de tus últimas 10 sesiones, sin bajar de lo que
+      demostraste en tus últimas 3.
+   3. Ajustes del día: días sin hacerlo (desentrenamiento gradual), si entrenaste esa parte ayer y cómo te va hoy.
+   4. Cansancio entre series aprendido de ti: las reps que sueles perder de una serie a la siguiente con el mismo peso.
+   5. Peso de trabajo: el de tu serie más pesada de la vez anterior (no la primera, que pudo ser de prueba).
+      Sube cuando te sobran reps para tu rango y baja si no llegarías al piso.
+   El objetivo de reps es lo que el modelo cree que logras, más una para progresar. */
+const MOD_REPS = 20; // sobre 20 reps, Epley exagera: se topa ahí para estimar
+const effKg = (k, kg, B) => (k === 'bw' ? B + kg : k === 'assist' ? Math.max(1, B - kg) : kg);
+const capOf = (k, s, B) => effKg(k, s.kg, B) * (1 + Math.min(s.reps, MOD_REPS) / 30);
+const repsFor = (C, m) => (m > 0 ? 30 * (C / m - 1) : 0);
+function sesSum(d, k, B) {
+  const eff = d.sets.map((s) => effKg(k, s.kg, B)), top = Math.max(...eff), topKg = d.sets[eff.indexOf(top)].kg;
+  return {
+    d: d.d, sets: d.sets, eff, top, topKg,
+    topReps: Math.max(...d.sets.filter((s) => Math.abs(s.kg - topKg) < 1e-9).map((s) => s.reps)),
+    work: d.sets.filter((s, i) => eff[i] >= top * 0.92 - 1e-9),
+    cap: Math.max(...d.sets.map((s) => capOf(k, s, B))),
+    ramp: d.sets.length > 1 && eff[0] < top * 0.92
+  };
+}
+function exModel(hist, k, B) {
+  const ses = hist.slice(-10).map((d) => sesSum(d, k, B));
+  // cansancio: reps que pierdes entre series seguidas con el mismo peso (lo reciente pesa más)
+  const dr = [], dw = [];
+  ses.slice(-6).reverse().forEach((s, j) => { for (let i = 1; i < s.sets.length; i++) if (Math.abs(s.sets[i].kg - s.sets[i - 1].kg) < 1e-9) { dr.push(s.sets[i - 1].reps - s.sets[i].reps); dw.push(RECW[j] ?? 0.2); } });
+  const F = Math.max(0, Math.min(k === 'bw' ? 5 : 3, dr.length >= 2 ? dr.reduce((a, v, i) => a + v * dw[i], 0) / dw.reduce((a, v) => a + v, 0) : k === 'bw' ? 2 : 1));
+  // nivel y tendencia, sin bajar de lo demostrado hace poco
+  let L = ses[0].cap, T = 0;
+  for (let j = 1; j < ses.length; j++) { const L2 = 0.5 * ses[j].cap + 0.5 * (L + T); T = 0.3 * (L2 - L) + 0.7 * T; L = L2; }
+  const C = Math.max(L + Math.max(-0.02 * L, Math.min(0.015 * L, T)), ses[ses.length - 1].cap, 0.985 * Math.max(...ses.slice(-3).map((s) => s.cap)));
+  // si casi siempre partes más liviano y subes (pirámide), se respeta tu forma de entrenar
+  const r4 = ses.slice(-4), rs = r4.filter((s) => s.ramp);
+  const ramp = k === 'kg' && r4.length >= 3 && rs.length >= 3 ? { ratio: Math.max(0.4, Math.min(0.92, median(rs.map((s) => s.eff[0] / s.top)))), reps: Math.round(median(rs.map((s) => s.sets[0].reps))) } : null;
+  return { ses, last: ses[ses.length - 1], C, F, ramp, trend: L ? T / L : 0 };
+}
 function exTarget0(xid) {
   const f = X(xid); if (!f) return null;
   const { e, p } = f, k = kindOf(xid), u = S.settings.unit, fn = fnOf(e, p.id);
@@ -3212,120 +3404,114 @@ function exTarget0(xid) {
     assist: 'Primera vez: una ayuda con la que llegues a 8–12 reps.',
     cardio: 'Primera vez: anota el tiempo y, si puedes, la distancia.' }[k] };
   const last = hist[hist.length - 1], ago = daysAgo(last.d), rest = restDays(p.id), pn = p.name.toLowerCase();
-  const disp = (kg) => (u === 'lb' ? kg / LB : kg);
-  const maxW = (d) => Math.max(...d.sets.map((s) => s.kg)), minW = (d) => Math.min(...d.sets.map((s) => s.kg));
-  const repsAt = (d, w) => Math.max(0, ...d.sets.filter((s) => s.kg === w).map((s) => s.reps));
+  const disp = (kg) => (u === 'lb' ? kg / LB : kg), kgOf = (w) => (u === 'lb' ? w * LB : w);
   const base = { k, u, side: sideOn(e), srange: setRange(hist, k, fn), last: topSet(last.sets), ago };
   base.sets = base.srange[0];
-  const hold = (extra, short) => ({ ...base, mode: 'hold', dir: 'eq', ...extra, short });
   const tired = rest <= 1 ? `Entrenaste ${pn} ayer: mantén` : '';
+  const maxW = (d) => Math.max(...d.sets.map((s) => s.kg));
+  const repsAtW = (d, w) => Math.max(0, ...d.sets.filter((s) => s.kg === w).map((s) => s.reps));
   if (k === 'cardio') {
     const T = Math.max(...last.sets.map((s) => s.reps)), km = Math.max(0, ...last.sets.map((s) => s.km || 0));
     const add = ago <= 14 && T < 1800 ? 60 : 0;
     return { ...base, mode: add ? 'up' : 'hold', sec: T + add, km, dir: add ? 'up' : 'eq', delta: add ? '+1 min' : '', short: add ? `Un minuto más que la vez anterior${km ? `; pasa los ${nf(km, 2)} km` : ''}` : 'Iguala tu última vez' };
   }
   if (k === 'time') {
-    const Wx = maxW(last), T = repsAt(last, Wx), load = u === 'lb' ? 5 : 2.5, first = u === 'lb' ? 10 : 5;
-    const noLoad = hist.slice(-3).length === 3 && hist.slice(-3).every((d) => maxW(d) === 0 && repsAt(d, 0) >= 90);
-    if (ago > 28) return { ...base, mode: 'back', w: disp(Wx), sec: Math.round(T * 0.85 / 5) * 5, dir: 'down', delta: '−15 %', short: `Vuelves tras ${ago} días: más suave` };
-    if (ago > 14 || tired) return hold({ w: disp(Wx), sec: T }, tired || `${ago} días sin hacerlo: iguala`);
-    if (Wx === 0 && T >= 90 && !noLoad) return { ...base, mode: 'load', w: first, sec: 45, dir: 'up', delta: `+${first} ${u}`, short: 'Pasas de 90 s: súmale peso y baja el tiempo' };
-    if (Wx > 0 && T >= 60) return { ...base, mode: 'load', w: disp(Wx) + load, sec: 40, dir: 'up', delta: `+${nf(load)} ${u}`, short: 'Llegaste a 60 s: sube el peso' };
-    const add = T < 60 ? 5 : 10;
-    return { ...base, mode: 'up', w: disp(Wx), sec: T + add, add, dir: 'up', delta: `+${add} s`, short: `${add} segundos más que la vez anterior` };
+    /* por tiempo: lo que sueles aguantar con ese peso (tus últimas sesiones) y cuánto pierdes entre series */
+    const ses = hist.slice(-6).map((d) => { const wx = maxW(d); return { wx, T: repsAtW(d, wx), sets: d.sets }; });
+    const Ls = ses[ses.length - 1], Wx = Ls.wx, same = ses.filter((s) => s.wx === Wx).slice(-3);
+    const Tp = Math.max(Ls.T, Math.round(Math.max(...same.map((s) => s.T)) * 0.95));
+    const fr = [], fw = [];
+    ses.slice().reverse().forEach((s, j) => { for (let i = 1; i < s.sets.length; i++) if (s.sets[i].kg === s.sets[i - 1].kg && s.sets[i - 1].reps > 0) { fr.push((s.sets[i - 1].reps - s.sets[i].reps) / s.sets[i - 1].reps); fw.push(RECW[j] ?? 0.2); } });
+    const ft = Math.max(0, Math.min(0.3, fr.length >= 2 ? wmedian(fr, fw) : 0.1));
+    const load = u === 'lb' ? 5 : 2.5, first = u === 'lb' ? 10 : 5, r5 = (v) => Math.max(10, Math.round(v / 5) * 5);
+    const noLoad = hist.slice(-3).length === 3 && hist.slice(-3).every((d) => maxW(d) === 0 && repsAtW(d, 0) >= 90);
+    const o = { ...base, model: { Tp, ft } };
+    if (ago > 28) return { ...o, mode: 'back', w: disp(Wx), sec: r5(Tp * 0.85), dir: 'down', delta: '−15 %', short: `Vuelves tras ${ago} días: más suave` };
+    if (ago > 14 || tired) return { ...o, mode: 'hold', dir: 'eq', w: disp(Wx), sec: Tp, delta: '', short: tired || `${ago} días sin hacerlo: iguala` };
+    if (Wx === 0 && Tp >= 90 && !noLoad) return { ...o, mode: 'load', w: first, sec: 45, dir: 'up', delta: `+${first} ${u}`, short: 'Pasas de 90 s: súmale peso y baja el tiempo' };
+    if (Wx > 0 && Tp >= 60) return { ...o, mode: 'load', w: disp(Wx) + load, sec: 40, dir: 'up', delta: `+${nf(load)} ${u}`, short: 'Llegaste a 60 s: sube el peso' };
+    const add = Tp < 60 ? 5 : 10, sec = Tp + add;
+    return { ...o, mode: 'up', w: disp(Wx), sec, add, dir: 'up', delta: `+${sec - Ls.T} s`, short: sec - Ls.T > add ? 'Puedes más que la vez anterior' : `${add} segundos más que la vez anterior` };
   }
+  // peso, peso corporal (con lastre) y asistidas
   let [lo, hi] = repRange(hist, fn, k);
-  if (k === 'bw') {
-    const Wl = maxW(last), R = repsAt(last, Wl), cap = fn === 'C' ? 15 : 25, inc = u === 'lb' ? 5 : 2.5;
-    hi = Math.min(hi, cap);
-    const noLoad = hist.slice(-3).length === 3 && hist.slice(-3).every((d) => maxW(d) === 0 && repsAt(d, 0) >= cap);
-    const o = { lo, hi, Wtop: Wl, inc };
-    if (ago > 28) return { ...base, ...o, mode: 'back', w: disp(Wl), reps: Math.max(1, R - 2), dir: 'down', short: `Vuelves tras ${ago} días: con calma` };
-    if (ago > 14 || tired) return hold({ ...o, w: disp(Wl), reps: R, adj: tired ? 0 : -1 }, tired || `${ago} días sin hacerlo: iguala`);
-    if (Wl === 0 && R >= cap && !noLoad) return { ...base, ...o, mode: 'load', w: inc, reps: fn === 'C' ? 8 : 12, dir: 'up', delta: `+${nf(inc)} ${u}`, short: `Pasas de ${cap}: súmale lastre` };
-    if (Wl > 0 && R >= hi) return { ...base, ...o, mode: 'up', w: disp(Wl) + inc, reps: lo, dir: 'up', delta: `+${nf(inc)} ${u}`, short: 'Llegaste al tope: sube el lastre' };
-    return { ...base, ...o, mode: 'reps', w: disp(Wl), reps: R + 1, dir: 'up', delta: '+1 rep', short: noLoad ? 'Una más (o súmale lastre)' : 'Una repetición más' };
-  }
-  if (k === 'assist') {
-    const Wa = minW(last), R = repsAt(last, Wa), inc = u === 'lb' ? 10 : 5, o = { lo, hi, inc, Wtop: Wa };
-    if (ago > 28) return { ...base, ...o, mode: 'back', w: disp(Wa) + inc, reps: R, dir: 'down', short: `Vuelves tras ${ago} días: más ayuda` };
-    if (ago > 14 || tired) return hold({ ...o, w: disp(Wa), reps: R }, tired || `${ago} días sin hacerlo: iguala`);
-    if (R >= hi && Wa > 0) { const w2 = Math.max(0, disp(Wa) - inc); return { ...base, ...o, mode: 'up', w: w2, reps: lo, dir: 'up', delta: `−${nf(disp(Wa) - w2)} ${u} de ayuda`, short: 'Llegaste al tope: menos ayuda' }; }
-    return { ...base, ...o, mode: 'reps', w: disp(Wa), reps: Math.min(hi, R + 1), dir: 'eq', delta: '+1 rep', short: 'Una repetición más' };
-  }
-  // ejercicios con peso
-  const W = maxW(last), R = repsAt(last, W);
-  const Wd = disp(W), inc0 = incOf(e, p.id, Wd, u) * (base.side ? 2 : 1), step = u === 'lb' ? 5 : e.tool === 'd' ? (base.side ? 2 : 1) : incOf(e, p.id, Wd, u);
-  /* tu salto habitual en este ejercicio (calza con los pesos de tu gym) */
-  const jc = {}; for (let i = 1; i < hist.length; i++) { const dj = Math.round((disp(maxW(hist[i])) - disp(maxW(hist[i - 1]))) * 100) / 100; if (dj > 0 && dj <= inc0 * 4) jc[dj] = (jc[dj] || 0) + 1; }
-  const jm = Object.entries(jc).sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];
-  const inc = jm && jm[1] >= 2 ? Number(jm[0]) : inc0;
-  /* si cuando subes de peso las repeticiones se te caen bajo el rango, se sube con más calma */
-  let ups = 0, fails = 0; for (let i = 1; i < hist.length; i++) { const w1 = maxW(hist[i - 1]), w2 = maxW(hist[i]); if (w2 > w1) { ups++; if (repsAt(hist[i], w2) < lo) fails++; } }
+  const B = bodyKg(), M = exModel(hist, k, B), Ls = M.last, Wd = disp(Ls.topKg), Rl = Ls.topReps;
+  if (k === 'kg' && Ls.topKg <= 0) return { ...base, lo, hi, mode: 'reps', w: 0, reps: Rl + 1, dir: 'eq', delta: '+1 rep', short: 'Una repetición más' };
+  let inc, step;
+  if (k === 'kg') {
+    const inc0 = incOf(e, p.id, Wd, u) * (base.side ? 2 : 1);
+    step = u === 'lb' ? 5 : e.tool === 'd' ? (base.side ? 2 : 1) : incOf(e, p.id, Wd, u);
+    /* tu salto habitual en este ejercicio (calza con los pesos de tu gym) */
+    const jc = {}; for (let i = 1; i < hist.length; i++) { const dj = Math.round((disp(maxW(hist[i])) - disp(maxW(hist[i - 1]))) * 100) / 100; if (dj > 0 && dj <= inc0 * 4) jc[dj] = (jc[dj] || 0) + 1; }
+    const jm = Object.entries(jc).sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];
+    inc = jm && jm[1] >= 2 ? Number(jm[0]) : inc0;
+  } else { inc = k === 'assist' ? (u === 'lb' ? 10 : 5) : (u === 'lb' ? 5 : 2.5); step = inc; }
+  const cap = k === 'bw' ? (fn === 'C' ? 15 : 25) : 99;
+  if (k === 'bw') { hi = Math.min(hi, cap); lo = Math.min(lo, hi - 2); }
+  /* si cuando subes de peso las reps se te caen bajo el rango, se sube con más calma */
+  let ups = 0, fails = 0;
+  if (k === 'kg') for (let i = 1; i < hist.length; i++) { const w1 = maxW(hist[i - 1]), w2 = maxW(hist[i]); if (w2 > w1) { ups++; if (repsAtW(hist[i], w2) < lo) fails++; } }
   const careful = ups >= 2 && fails / ups >= 0.5;
-  const prev = hist.length >= 2 ? hist[hist.length - 2] : null, prevR = prev && maxW(prev) === W ? repsAt(prev, W) : 0;
-  const rms = hist.map((d) => rm1(topSet(d.sets)));
-  const stall = hist.length >= 6 && Math.max(...rms.slice(-4)) <= Math.max(...rms.slice(0, -4)) * 1.005;
-  const o = { lo, hi, inc, step, Wtop: W };
-  const out = (mode, w, reps, dir, short, extra = {}) => ({ ...base, ...o, mode, w, reps, dir, ratio: Wd ? w / Wd : 1, short, ...extra,
-    delta: Math.abs(w - Wd) > 1e-9 ? `${w > Wd ? '+' : '−'}${nf(Math.abs(w - Wd) / (base.side ? 2 : 1))} ${u}${base.side ? ' por lado' : ''}` : 'mismo peso' });
-  if (ago > 28) { const w = roundTo(Wd * (ago > 60 ? 0.8 : 0.9), step); return out('back', w, R, w < Wd ? 'down' : 'eq', `Vuelves tras ${ago} días: más liviano`); }
-  if (ago > 14) return out('hold', Wd, Math.max(lo, R - 1), 'eq', `${ago} días sin hacerlo: repite el peso`, { adj: -1 });
-  if (stall) { const w = roundTo(Wd * 0.9, step); return out('down', w, hi, w < Wd ? 'down' : 'eq', 'Estancado: −10 % para destrabar', { stall: true }); }
-  if (tired) return out('hold', Wd, R, 'eq', tired);
-  if (prevR && prevR - R >= 3) return out('reps', Wd, Math.min(prevR, R + 2), 'eq', `Recupera las ${prevR} reps de antes`);
-  if (R >= hi) {
-    if (careful && !(prevR >= hi)) return out('hold', Wd, R, 'eq', 'Consolida este peso una vez más');
-    const w = Wd + inc, rm = rm1({ kg: Wd, reps: R }), reps = Math.max(Math.max(1, lo - 2), Math.min(hi, Math.floor(30 * (rm / w - 1)) + 1));
-    return out('up', w, reps, 'up', `Llegaste a ${R}: sube ${nf(inc / (base.side ? 2 : 1))} ${u}${base.side ? ' por lado' : ''}`);
+  const prevS = M.ses.length >= 2 ? M.ses[M.ses.length - 2] : null, prevR = prevS && Math.abs(prevS.topKg - Ls.topKg) < 1e-9 ? prevS.topReps : 0;
+  const caps = hist.map((d) => Math.max(...d.sets.map((s) => capOf(k, s, B))));
+  const stall = k === 'kg' && hist.length >= 6 && Math.max(...caps.slice(-4)) <= Math.max(...caps.slice(0, -4)) * 1.005;
+  const noLoad = k === 'bw' && hist.slice(-3).length === 3 && hist.slice(-3).every((d) => maxW(d) === 0 && repsAtW(d, 0) >= cap);
+  /* capacidad de hoy: desentrenamiento por días sin hacerlo y descanso de la parte */
+  const detr = ago <= 10 ? 1 : ago <= 28 ? 1 - (ago - 10) * 0.003 : Math.max(0.8, 0.946 - (ago - 28) * 0.002);
+  const C = M.C * detr * (tired ? 0.97 : 1), push = ago <= 14 && !tired ? 1 : 0;
+  const pred = (w) => repsFor(C, effKg(k, kgOf(w), B));
+  const heavier = (w) => (k === 'assist' ? w - inc : w + inc), lighter = (w) => (k === 'assist' ? w + inc : w - inc);
+  const rw = (w) => Math.max(0, roundTo(w, step)), can = (w) => w >= -1e-9;
+  const side = base.side, wTxt = (w) => `${nf(side ? w / 2 : w)} ${u}${side ? ' por lado' : ''}`;
+  const R0 = pred(Wd), rr = (r) => Math.max(1, Math.round(r));
+  let mode = 'reps', w = Wd, reps, dir = 'eq', short;
+  if (ago > 28) {
+    mode = 'back'; let s = 0; while (s < 4 && pred(w) < lo && can(lighter(w))) { w = rw(lighter(w)); s++; }
+    reps = Math.min(hi, rr(pred(w))); dir = s ? 'down' : 'eq'; short = `Vuelves tras ${ago} días: ${s ? (k === 'assist' ? 'más ayuda' : 'más liviano') : 'con calma'}`;
+  } else if (stall) {
+    mode = 'down'; w = rw(Wd * 0.9); reps = hi; dir = w < Wd ? 'down' : 'eq'; short = 'Estancado: −10 % para destrabar';
+  } else if (ago > 14 || tired) {
+    mode = 'hold'; reps = Math.max(1, Math.min(hi, Rl, rr(pred(Wd)))); short = tired || `${ago} días sin hacerlo: repite el peso`;
+  } else if (R0 >= hi) {
+    if (noLoad && Wd === 0) { reps = rr(R0) + 1; short = 'Una más (o súmale lastre)'; }
+    else if (careful && prevR < hi) { mode = 'hold'; reps = hi; short = 'Consolida este peso una vez más'; }
+    else {
+      let s = 0; while (s < 3 && pred(w) >= hi && can(heavier(w)) && pred(rw(heavier(w))) >= lo - (s ? 0 : 1)) { w = rw(heavier(w)); s++; }
+      if (s) {
+        mode = 'up'; dir = 'up'; reps = Math.max(lo, Math.min(hi, rr(pred(w))));
+        const dTxt = `${nf(Math.abs(w - Wd) / (side ? 2 : 1))} ${u}${side ? ' por lado' : ''}`;
+        short = k === 'bw' && Wd === 0 ? `Pasas de ${cap}: súmale lastre` : k === 'assist' ? 'Te sobra: menos ayuda' : Rl >= hi ? `Llegaste a ${Rl}: sube ${dTxt}` : `Tienes para más: sube ${dTxt}`;
+      } else { reps = Math.min(hi, rr(R0)); short = 'Consolida este peso'; }
+    }
+  } else if (R0 < lo - 1) {
+    mode = 'down'; let s = 0; while (s < 3 && pred(w) < lo && can(lighter(w))) { w = rw(lighter(w)); s++; }
+    reps = Math.min(hi, rr(pred(w))); dir = s ? 'down' : 'eq';
+    short = s ? (k === 'assist' ? 'Muy pesado para tu rango: más ayuda' : 'Muy pesado para tu rango: baja un poco') : `Apunta a ${reps}`;
+  } else {
+    reps = Math.min(hi, rr(R0) + push);
+    short = Ls.ramp && !M.ramp && k === 'kg' ? `La vez pasada subiste a ${wTxt(Wd)}: parte con ese peso`
+      : reps > Rl ? (reps - Rl === 1 ? 'Una repetición más que la vez anterior' : `Te da para ${reps - Rl} reps más que la vez anterior`)
+      : reps === Rl ? 'Iguala tu mejor serie anterior' : `Apunta a ${reps}`;
   }
-  if (R < lo) {
-    const prevLow = prev && maxW(prev) >= W && repsAt(prev, maxW(prev)) < lo;
-    if (prevLow) { const w = roundTo(Wd - inc, step); return out('down', w, lo + 1, 'down', 'Muy pesado: baja un poco'); }
-    return out('reps', Wd, lo, 'eq', `Apunta a ${lo} reps`);
-  }
-  return out('reps', Wd, R + 1, 'eq', 'Supera la vez anterior');
+  const dW = Math.abs(w - Wd) > 1e-9;
+  const delta = dW ? (k === 'assist' ? `${w < Wd ? '−' : '+'}${nf(Math.abs(w - Wd))} ${u} de ayuda` : `${w > Wd ? '+' : '−'}${nf(Math.abs(w - Wd) / (side ? 2 : 1))} ${u}${side ? ' por lado' : ''}`) : reps > Rl ? `+${reps - Rl} rep` : 'mismo peso';
+  return { ...base, lo, hi, inc, step, Wtop: Ls.topKg, mode, w, reps, dir, short, delta, stall: stall && mode === 'down',
+    model: { C, C0: M.C, F: M.F, ramp: M.ramp, push, B, work: Ls.work, noLoad } };
 }
 
 /* ---------- objetivo serie por serie ----------
-   Cada serie busca superar (en 1RM estimado) la misma serie de tu sesión anterior, siguiendo la decisión del día,
-   y se ajusta según cómo te fue en tu serie anterior de hoy. No obliga: es una guía. */
-function baseSet(T, last, i) {
-  const { k, u } = T, disp = (kg) => (u === 'lb' ? kg / LB : kg);
-  const ref = last.sets[i - 1] || null, r = ref || last.sets[last.sets.length - 1];
-  const wN = disp(r.kg), rr = r.reps, isTop = r.kg >= T.Wtop - 1e-9;
-  const lab = ref ? `tu serie ${i} anterior (${setTxt(ref, k === 'kg')})` : 'tu última serie anterior';
-  const o = { k, u, side: T.side, ref: r, wRef: wN, rRef: rr };
-  const beat = (rm, w) => { let n = Math.floor(30 * (rm / w - 1)) + 1; return Math.max(Math.max(1, (T.lo || 1) - 2), Math.min(T.hi || 30, n)); };
-  const rw = (v) => (T.step ? roundTo(v, T.step) : Math.round(v * 2) / 2);
-  if (k === 'cardio') return { ...o, sec: T.sec, km: T.km, dir: T.dir, short: T.short };
-  if (k === 'time') {
-    if (T.mode === 'load') return { ...o, w: T.w, sec: T.sec, dir: 'up', short: T.short };
-    if (T.mode === 'back') return { ...o, w: wN, sec: Math.max(10, Math.round(rr * 0.85 / 5) * 5), dir: 'down', short: T.short };
-    if (T.mode === 'hold') return { ...o, w: wN, sec: rr, dir: 'eq', short: T.short };
-    return { ...o, w: wN, sec: rr + (T.add || 5), dir: 'up', short: ref ? `Supera ${lab}` : T.short };
-  }
-  if (T.mode === 'hold') return { ...o, w: wN, reps: Math.max(1, rr + (T.adj || 0)), dir: 'eq', short: T.short };
-  if (T.mode === 'back') return { ...o, w: k === 'kg' ? rw(wN * T.ratio) : k === 'assist' ? wN + (T.inc || 0) : wN, reps: k === 'kg' ? rr : Math.max(1, rr - 2), dir: 'down', short: T.short };
-  if (T.mode === 'load') return { ...o, w: T.w, reps: T.reps, dir: 'up', short: T.short };
-  if (T.mode === 'down') return { ...o, w: rw(wN * T.ratio), reps: Math.max(rr, T.reps || rr), dir: 'down', short: T.short };
-  if (T.mode === 'up') {
-    if (k === 'kg') { if (!isTop) return { ...o, w: wN, reps: rr + 1, dir: 'eq', short: `Supera ${lab}` }; const w = wN + T.inc; return { ...o, w, reps: beat(rm1(r), w), dir: 'up', short: T.short }; }
-    if (k === 'bw') return isTop ? { ...o, w: wN + T.inc, reps: T.lo, dir: 'up', short: T.short } : { ...o, w: wN, reps: rr + 1, dir: 'eq', short: `Supera ${lab}` };
-    if (k === 'assist') return { ...o, w: Math.max(0, wN - T.inc), reps: T.lo, dir: 'up', short: T.short };
-  }
-  // 'reps': mismo peso, una repetición más que esa misma serie la vez anterior
-  return { ...o, w: wN, reps: Math.min(T.hi || 99, rr + 1), dir: 'eq', short: ref ? `Supera ${lab}` : T.short };
-}
+   Serie 1: tu peso de trabajo (o, si siempre partes más liviano, tu serie de aproximación).
+   Siguientes: la capacidad de hoy se corrige con lo que llevas (si vas más fuerte, sube; si costó, baja),
+   se descuenta el cansancio que sueles tener y se apunta a superar la serie equivalente de la vez anterior. */
 function setTarget(xid) {
   const T = exTarget(xid); if (!T) return null;
-  const k = T.k, u = T.u, disp = (kg) => (u === 'lb' ? kg / LB : kg);
+  const k = T.k, u = T.u, disp = (kg) => (u === 'lb' ? kg / LB : kg), kgOf = (w) => (u === 'lb' ? w * LB : w);
   const td = S.logs.filter((l) => l.x === xid && l.d === today()).sort(byTs);
-  const n = td.length + 1, prevT = td[td.length - 1], sr = T.srange || [1, 1];
+  const n = td.length + 1, prev = td[td.length - 1], sr = T.srange || [1, 1];
   const fin = (t) => {
     t = { ...t, n, srange: sr, extra: k !== 'cardio' && n > sr[1] };
     if (t.extra) t.short = `Serie extra: sueles hacer ${sr[0] === sr[1] ? sr[0] : `${sr[0]}–${sr[1]}`}`;
-    // diferencia con la serie de referencia
+    // diferencia con la serie de referencia de la vez anterior
     if (k === 'time') t.delta = t.w > (t.wRef || 0) ? `+${nf(t.w - (t.wRef || 0))} ${u}` : t.sec !== t.rRef && t.rRef ? `${t.sec > t.rRef ? '+' : '−'}${Math.abs(t.sec - t.rRef)} s` : '';
     else if (k === 'cardio') t.delta = T.delta || '';
     else if (t.wRef !== undefined && Math.abs(t.w - t.wRef) > 1e-9) { const dv = (t.w - t.wRef) / (t.side ? 2 : 1); t.delta = k === 'assist' ? `${dv < 0 ? '−' : '+'}${nf(Math.abs(dv))} ${u} de ayuda` : `${dv > 0 ? '+' : '−'}${nf(Math.abs(dv))} ${u}${t.side ? ' por lado' : ''}`; }
@@ -3334,30 +3520,71 @@ function setTarget(xid) {
     return t;
   };
   if (T.first) {
-    if (!prevT) return { ...T, n, srange: sr };
-    return fin({ k, u, side: T.side, w: disp(prevT.kg), wRef: disp(prevT.kg), reps: prevT.reps, rRef: prevT.reps, sec: prevT.reps, dir: 'eq', short: 'Igual que tu serie anterior' });
+    if (!prev) return { ...T, n, srange: sr };
+    return fin({ k, u, side: T.side, w: disp(prev.kg), wRef: disp(prev.kg), reps: prev.reps, rRef: prev.reps, sec: prev.reps, dir: 'eq', short: 'Igual que tu serie anterior' });
   }
   const hist = byDay(S.logs.filter((l) => l.x === xid && l.d < today())), last = hist[hist.length - 1];
-  let t = baseSet(T, last, n);
-  /* cómo te fue en tu serie anterior de hoy */
-  if (prevT && k !== 'cardio') {
-    const b = baseSet(T, last, n - 1), did = prevT.reps, pw = disp(prevT.kg), same = Math.abs(pw - (b.w || 0)) < 0.01;
-    if (k === 'time') {
-      if (did < b.sec * 0.8) t = { ...t, sec: Math.max(10, Math.round(did / 5) * 5), dir: 'eq', short: 'La anterior quedó corta: apunta a igualarla' };
-      else if (did >= b.sec + 15 && t.sec <= did) t = { ...t, sec: did + 5, dir: 'up', short: 'Vas bien: un poco más que la anterior' };
-    } else if (same && did <= b.reps - 3) {
-      if (k === 'kg') t = { ...t, w: roundTo(Math.min(t.w, pw) - (T.inc || 2.5), T.step || 2.5), reps: Math.max(1, did + 1), dir: 'down', short: 'La anterior quedó corta: baja un poco' };
-      else if (k === 'assist') t = { ...t, w: pw + (T.inc || 5), reps: Math.max(1, did), dir: 'down', short: 'La anterior quedó corta: más ayuda' };
-      else t = { ...t, reps: Math.max(1, did), dir: 'eq', short: 'Apunta a lo de tu serie anterior' };
-    } else if (same && did >= b.reps + 3 && k === 'kg') {
-      const w = pw + (T.inc || 2.5); t = { ...t, w, reps: Math.max(1, Math.floor(30 * (rm1({ kg: pw, reps: did }) / w - 1))), dir: 'up', short: 'La anterior te quedó fácil: sube' };
-    } else if (!same && k === 'kg' && pw > t.w && did >= (b.reps || 0) - 1) {
-      t = { ...t, w: pw, reps: Math.max(1, did), dir: 'eq', short: 'Sigue con el peso de tu serie anterior' };
-    } else if (!same && k === 'kg' && pw < (b.w || 0) - 1e-9 && pw < t.w) {
-      t = { ...t, w: pw, reps: Math.max(1, did), dir: 'eq', short: 'Mantén el peso que bajaste' };
+  if (k === 'cardio') return fin({ k, u, side: T.side, sec: T.sec, km: T.km, dir: T.dir, short: T.short });
+  if (k === 'time') {
+    const mo = T.model, w = T.w, ref = last.sets[n - 1] || last.sets[last.sets.length - 1];
+    const exp = (i) => Math.max(10, Math.round((T.sec * (1 - mo.ft * (i - 1))) / 5) * 5);
+    let sec = T.sec, short = T.short, dir = T.dir;
+    if (prev) {
+      const sameW = td.filter((s) => Math.abs(disp(s.kg) - w) < 1e-9).length, did = prev.reps;
+      if (Math.abs(disp(prev.kg) - w) > 1e-9) { sec = T.sec; }
+      else {
+        const e1 = exp(sameW), r5 = (v) => Math.max(10, Math.round(v / 5) * 5); dir = 'eq';
+        if (did < e1 * 0.85) { sec = r5(did * (1 - mo.ft)); short = 'La anterior quedó corta: apunta a esto'; }
+        else if (did >= e1 + 10) { sec = r5(did * (1 - mo.ft)) + 5; dir = 'up'; short = 'Vas bien: un poco más'; }
+        else { sec = r5(Math.max(exp(sameW + 1), did * (1 - mo.ft))); short = 'Mismo peso: aguanta esto'; }
+      }
     }
+    return fin({ k, u, side: T.side, w, sec, dir, short, wRef: disp(ref.kg), rRef: ref.reps });
   }
-  return fin(t);
+  const mo = T.model; if (!mo) return fin({ ...T });
+  const B = mo.B, F = mo.F, W = T.w, ws = mo.work && mo.work.length ? mo.work : last.sets;
+  const ef = (w) => effKg(k, kgOf(w), B), refOf = (i) => ws[i - 1] || ws[ws.length - 1];
+  const heavier = (w) => (k === 'assist' ? w - T.inc : w + T.inc), lighter = (w) => (k === 'assist' ? w + T.inc : w - T.inc);
+  const rw = (w) => Math.max(0, roundTo(w, T.step || 2.5)), can = (w) => w >= -1e-9;
+  const wTxt = (w) => `${nf(T.side ? w / 2 : w)} ${u}${T.side ? ' por lado' : ''}`;
+  if (!prev) {
+    if (mo.ramp) { const w = rw(W * mo.ramp.ratio); if (w < W - 1e-9) { const r1 = last.sets[0]; return fin({ k, u, side: T.side, w, reps: mo.ramp.reps, dir: 'eq', short: `Como sueles: parte liviano y luego ${wTxt(W)}`, wRef: disp(r1.kg), rRef: r1.reps }); } }
+    const r1 = refOf(1);
+    return fin({ k, u, side: T.side, w: W, reps: T.reps, dir: T.dir, short: T.short, wRef: disp(r1.kg), rRef: r1.reps });
+  }
+  /* lo que llevas hoy dice cómo estás: cada serie, corregida por el cansancio, estima tu capacidad de hoy */
+  const effs = td.map((s) => effKg(k, s.kg, B));
+  const iwOf = (i, e) => effs.slice(0, i).filter((x) => x >= e * 0.9).length;
+  let C = mo.C, strong = false, weak = false;
+  td.forEach((s, i) => {
+    const e = effs[i], iw = iwOf(i, e), dif = s.reps - (repsFor(C, e) - F * iw), imp = e * (1 + (Math.min(s.reps, MOD_REPS) + F * iw) / 30);
+    if (e < ef(W) * 0.92 && dif < 1.5) return; // serie de aproximación: no se exige al máximo
+    if (dif >= 1.5) { C += 0.8 * (imp - C); strong = true; weak = false; }
+    else if (dif <= -1.5) { C += 0.6 * (imp - C); weak = true; strong = false; }
+    else { C += 0.3 * (imp - C); weak = false; }
+  });
+  const push = mo.push && !weak ? 1 : 0;
+  const pw = disp(prev.kg), pe = effs[effs.length - 1], maxE = Math.max(...effs);
+  let w, why = '';
+  if (pe < maxE - 1e-9) { w = pw; why = 'drop'; }
+  else if (ef(W) > pe * 1.03 && !mo.noLoad) { w = W; why = 'work'; }
+  else w = pw;
+  const pred = (x) => repsFor(C, ef(x)) - F * iwOf(td.length, ef(x));
+  let r = pred(w);
+  if (Math.round(r) + push > T.hi && !(mo.noLoad && w === 0)) { const w2 = rw(heavier(w)); if (can(w2) && pred(w2) >= T.lo) { w = w2; r = pred(w2); why = 'easy'; } }
+  else if (r < T.lo - 1) { let s = 0; while (s < 3 && r < T.lo - 1 && can(lighter(w))) { w = rw(lighter(w)); r = pred(w); s++; } if (s) why = 'hard'; }
+  const reps = Math.min(T.hi + 2, Math.max(1, Math.round(r) + (why === 'easy' || why === 'hard' ? 0 : push)));
+  const ref = refOf(iwOf(td.length, ef(w)) + 1), sameRef = ref && Math.abs(disp(ref.kg) - w) < 1e-9;
+  let short, dir = 'eq';
+  if (why === 'easy') { short = k === 'assist' ? 'La anterior te quedó fácil: menos ayuda' : 'La anterior te quedó fácil: sube'; dir = 'up'; }
+  else if (why === 'hard') { short = k === 'assist' ? 'La anterior costó: más ayuda' : 'La anterior costó: baja un poco'; dir = 'down'; }
+  else if (why === 'drop') short = 'Mantén el peso que bajaste';
+  else if (why === 'work') { short = `Ahora tu peso de trabajo: ${wTxt(W)}`; dir = 'up'; }
+  else if (sameRef && reps > ref.reps) short = `${strong ? 'Vas fuerte: s' : 'S'}upera ${last.sets.indexOf(ref) + 1 === n ? `tu serie ${n} anterior` : 'esa serie de la vez anterior'} (${setTxt(ref, k === 'kg')})`;
+  else if (weak) short = `Hoy cuesta más: apunta a ${reps}`;
+  else if (sameRef && reps === ref.reps) short = last.sets.indexOf(ref) + 1 === n ? `Iguala tu serie ${n} anterior` : 'Iguala esa serie de la vez anterior';
+  else short = `Mismo peso: apunta a ${reps}`;
+  return fin({ k, u, side: T.side, w, reps, dir, short, wRef: ref ? disp(ref.kg) : undefined, rRef: ref?.reps });
 }
 function tgtTxt(t) {
   if (!t || (t.first && t.w === undefined)) return '';
@@ -3487,7 +3714,7 @@ function sugWhy(r) {
   if (nu.length) L.push(['spark', `Nuevo: ${B(nu[0].e.name)}${nu[0].role.rel ? `, trabaja lo mismo que tu ${esc(nu[0].role.rel.name)} con otro implemento` : `, de los más usados para ${esc(lc(nu[0].e.m || ''))}`}`]);
   // progresión de cargas
   const up = items.filter((i) => i.t && i.t.dir === 'up' && kindOf(i.x) !== 'cardio'), st = items.filter((i) => i.t && i.t.stall);
-  if (up.length) L.push(['up', `Hoy toca subir en ${up.slice(0, 2).map((i) => B(i.e.name)).join(' y ')}${up.length > 2 ? ` y ${up.length - 2} más` : ''}: la última vez llegaste al tope de repeticiones`]);
+  if (up.length) L.push(['up', `Hoy toca subir en ${up.slice(0, 2).map((i) => B(i.e.name)).join(' y ')}${up.length > 2 ? ` y ${up.length - 2} más` : ''}: tienes fuerza para más`]);
   if (st.length) L.push(['down', `${B(st[0].e.name)} lleva 4 sesiones sin mejorar: baja un 10 % para destrabarlo`]);
   // la semana
   const mon = iso(monday(today())), byP = {};
@@ -3689,35 +3916,64 @@ function lineSvg(pts, fmt = (v) => nf(v, 1), xfmt = fShort) {
   const xl = `<text x="${X_(0).toFixed(1)}" y="${H - 6}" text-anchor="${n === 1 ? 'middle' : 'start'}" font-size="11" fill="#8a8580">${xfmt(pts[0].d)}</text>` + (n > 1 ? `<text x="${X_(n - 1).toFixed(1)}" y="${H - 6}" text-anchor="end" font-size="11" fill="#8a8580">${xfmt(pts[n - 1].d)}</text>` : '');
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico" style="width:100%;height:auto;display:block">${g}${area}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.5" stroke-linejoin="round"/>${dots}${xl}</svg>`;
 }
-/* sección de peso corporal (se muestra en Estadísticas) */
+/* sección de peso corporal (en Estadísticas): tus registros y tu tendencia.
+   La tendencia es un promedio móvil exponencial por día (cada día acerca un 10 % la tendencia al peso anotado),
+   así se ve hacia dónde vas sin el sube y baja diario. Con muchos registros, los puntos se agrupan por semana o mes. */
 let bwListOpen = false;
+function bwTrend(arr) {
+  let t = null, pd0 = null;
+  return arr.map((x) => { if (t === null) t = x.kg; else { const dd = Math.max(1, (pd(x.d) - pd(pd0)) / 864e5); t += (1 - Math.pow(0.9, dd)) * (x.kg - t); } pd0 = x.d; return { d: x.d, v: x.kg, t }; });
+}
+function bwChart(pts, xf) {
+  const n = pts.length, W = 340, H = 150, l = 40, r = 12, tp = 12, b = 24;
+  const vs = pts.flatMap((p) => [p.v, p.t]);
+  let mn = Math.min(...vs), mx = Math.max(...vs);
+  const step = [0.5, 1, 2, 2.5, 5, 10, 20, 25, 50].find((s) => Math.max(mx - mn, 1) / s <= 3) || 50;
+  mn = Math.floor((mn - step * 0.2) / step) * step; mx = Math.ceil((mx + step * 0.2) / step) * step;
+  const t0 = pd(pts[0].d).getTime(), t1 = pd(pts[n - 1].d).getTime() || t0 + 1;
+  const X_ = (p) => (t1 === t0 ? l + (W - l - r) / 2 : l + ((pd(p.d).getTime() - t0) / (t1 - t0)) * (W - l - r));
+  const Y_ = (v) => tp + (1 - (v - mn) / (mx - mn || 1)) * (H - tp - b);
+  let g = '';
+  for (let v = mn; v <= mx + 1e-9; v += step) { const y = Y_(v).toFixed(1); g += `<line x1="${l}" x2="${W - r}" y1="${y}" y2="${y}" stroke="#262626"/><text x="${l - 7}" y="${y}" dy="4" text-anchor="end" font-size="11" fill="#8a8580">${nf(v, 1)}</text>`; }
+  const dots = pts.map((p) => `<circle cx="${X_(p).toFixed(1)}" cy="${Y_(p.v).toFixed(1)}" r="${n > 60 ? 2 : 2.8}" fill="#6b5546"/>`).join('');
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X_(p).toFixed(1)} ${Y_(p.t).toFixed(1)}`).join(' '), L = pts[n - 1];
+  const xl = `<text x="${l}" y="${H - 6}" font-size="11" fill="#8a8580">${xf(pts[0].d)}</text><text x="${W - r}" y="${H - 6}" text-anchor="end" font-size="11" fill="#8a8580">${xf(L.d)}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Peso y tendencia" style="width:100%;height:auto;display:block">${g}${dots}<path d="${line}" fill="none" stroke="#FF6A1F" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X_(L).toFixed(1)}" cy="${Y_(L.t).toFixed(1)}" r="5" fill="#FF6A1F"/>${xl}</svg>
+    <div class="bwleg"><span><i class="dot"></i>Lo que anotaste</span><span><i class="ln"></i>Tendencia</span></div>`;
+}
 function bwSection(days) {
-  const all = (S.bw || []).slice().sort((a, b) => (a.d < b.d ? -1 : 1));
-  const since = days ? iso(new Date(Date.now() - (days - 1) * 864e5)) : '0000';
-  const inP = all.filter((x) => x.d >= since);
-  const l = all[all.length - 1];
+  const all = (S.bw || []).slice().sort((a, b) => (a.d < b.d ? -1 : 1)), l = all[all.length - 1];
   if (!l) return `<div class="bwempty"><p>Anota tu peso de vez en cuando y aquí verás tu evolución.</p><button class="cta" data-act="bwadd">${ic('scale', 18)} Anotar mi peso</button></div>`;
-  const first = inP[0] || l, dv = l.kg - first.kg;
-  /* con muchos registros, el gráfico muestra el promedio de cada mes (o de cada 2, 3… meses) para no crecer sin fin */
-  let pts = inP.map((x) => ({ d: x.d, v: x.kg })), avgNote = '';
-  if (pts.length > 40) {
-    const f = pd(inP[0].d), t = pd(l.d), months = (t.getFullYear() - f.getFullYear()) * 12 + t.getMonth() - f.getMonth() + 1;
-    const step = Math.max(1, Math.ceil(months / 36)), g = {};
-    inP.forEach((x) => { const dd = pd(x.d), k = Math.floor(((dd.getFullYear() - f.getFullYear()) * 12 + dd.getMonth() - f.getMonth()) / step); (g[k] || (g[k] = [])).push(x); });
-    pts = Object.keys(g).map(Number).sort((a, b) => a - b).map((k) => ({ d: g[k][0].d, v: g[k].reduce((s, x) => s + x.kg, 0) / g[k].length }));
-    avgNote = `<p class="mu small" style="margin:6px 0 0">Cada punto es el promedio de ${step === 1 ? 'un mes' : step + ' meses'}.</p>`;
-  }
-  const mn = Math.min(...inP.map((x) => x.kg)), mx = Math.max(...inP.map((x) => x.kg));
-  const list = days ? inP.slice().reverse() : all.slice(-30).reverse();
-  const oldY = pd(first.d).getFullYear() !== pd(today()).getFullYear();
-  const my = (d) => `${fShort(d).split(' ')[1]} ${pd(d).getFullYear()}`;
-  const firstLbl = oldY ? my(first.d) : 'el ' + fShort(first.d);
-  return `<div class="bwhead"><div><b>${nf(l.kg)} kg</b><span>Último registro, ${fShort(l.d)}</span></div>${inP.length > 1 ? `<em class="${dv < 0 ? 'down' : dv > 0 ? 'up' : ''}">${dv > 0 ? '+' : dv < 0 ? '−' : ''}${nf(Math.abs(dv))} kg<small>desde ${firstLbl}</small></em>` : ''}</div>
-    ${inP.length > 1 ? lineSvg(pts, undefined, oldY ? my : fShort) + avgNote : '<p class="mu small" style="margin:8px 0 0">Con dos o más registros en este período aparece el gráfico.</p>'}
-    ${inP.length > 2 ? `<p class="bwmm"><span>Mínimo <b>${nf(mn)} kg</b></span><span>Máximo <b>${nf(mx)} kg</b></span></p>` : ''}
+  const since = days ? iso(new Date(Date.now() - (days - 1) * 864e5)) : '0000';
+  const tr = bwTrend(all), inP = tr.filter((x) => x.d >= since), last = tr[tr.length - 1];
+  const list = days ? inP.slice().reverse() : tr.slice(-30).reverse();
+  let main = '';
+  if (inP.length >= 2) {
+    const f = inP[0], z = inP[inP.length - 1], span = (pd(z.d) - pd(f.d)) / 864e5, dv = z.t - f.t;
+    // ritmo: pendiente de la tendencia (mínimos cuadrados), en kg por mes
+    let rate = null;
+    if (span >= 21) { const xs = inP.map((p) => (pd(p.d) - pd(f.d)) / 864e5), ys = inP.map((p) => p.t), mx = xs.reduce((a, v) => a + v, 0) / xs.length, my = ys.reduce((a, v) => a + v, 0) / ys.length; const num = xs.reduce((a, x, i) => a + (x - mx) * (ys[i] - my), 0), den = xs.reduce((a, x) => a + (x - mx) ** 2, 0); rate = den ? (num / den) * 30.44 : 0; }
+    // agrupar cuando hay muchos registros
+    let pts = inP, note = '';
+    if (inP.length > 45) {
+      const byM = span > 300, key = byM ? (d) => d.slice(0, 7) : (d) => iso(monday(d)), g = new Map();
+      inP.forEach((p) => { const k = key(p.d); if (!g.has(k)) g.set(k, []); g.get(k).push(p); });
+      pts = [...g.values()].map((a) => ({ d: a[0].d, v: a.reduce((s, p) => s + p.v, 0) / a.length, t: a[a.length - 1].t }));
+      note = `<p class="bcap">Cada punto: promedio de ${byM ? 'un mes' : 'una semana'}.</p>`;
+    }
+    const oldY = pd(f.d).getFullYear() !== pd(today()).getFullYear(), xf = oldY ? (d) => `${MES3[pd(d).getMonth()]} ${pd(d).getFullYear()}` : fShort;
+    const mn = Math.min(...inP.map((p) => p.v)), mxv = Math.max(...inP.map((p) => p.v));
+    main = `<div class="bwtiles">
+        <div><small>Cambio</small><b class="${Math.abs(dv) < 0.05 ? '' : dv < 0 ? 'down' : 'up'}">${Math.abs(dv) < 0.05 ? '=' : `${dv > 0 ? '+' : '−'}${nf(Math.abs(dv))} kg`}</b></div>
+        <div><small>Ritmo</small><b>${rate === null ? '—' : Math.abs(rate) < 0.05 ? 'Estable' : `${rate > 0 ? '+' : '−'}${nf(Math.abs(rate))}<span> kg/mes</span>`}</b></div>
+        <div><small>Mín – máx</small><b>${nf(mn)}–${nf(mxv)}</b></div>
+      </div>${bwChart(pts, xf)}${note}`;
+  } else main = '<p class="mu small" style="margin:8px 0 0">Con dos o más registros en este período aparece el gráfico.</p>';
+  return `<div class="bwhead"><div><b>${nf(l.kg)} kg</b><span>Último registro, ${fShort(l.d)}</span></div>${tr.length > 2 ? `<em>${nf(last.t)} kg<small>tendencia</small></em>` : ''}</div>
+    ${main}
     <button class="cta" data-act="bwadd" style="margin-top:12px">${ic('scale', 18)} Anotar peso de hoy</button>
     ${list.length ? `<button class="linkbtn" data-act="bwlist">${bwListOpen ? 'Ocultar registros' : days ? `Ver ${list.length === 1 ? 'el registro' : `los ${list.length} registros`} del período` : `Ver ${list.length === 1 ? 'el último registro' : `los últimos ${list.length} registros`}`} ${ic(bwListOpen ? 'up' : 'down', 16)}</button>` : ''}
-    ${bwListOpen ? `<div class="bwlist">${list.map((x) => `<div class="bwrow"><span>${cap(fLong(x.d))}</span><b>${nf(x.kg)} kg</b><button class="del" data-act="bwdel" data-d="${x.d}" aria-label="Borrar registro del ${fShort(x.d)}">${ic('x', 16)}</button></div>`).join('')}</div>` : ''}`;
+    ${bwListOpen ? `<div class="bwlist">${list.map((x) => `<div class="bwrow"><span>${cap(fLong(x.d))}</span><b>${nf(x.v)} kg</b><button class="del" data-act="bwdel" data-d="${x.d}" aria-label="Borrar registro del ${fShort(x.d)}">${ic('x', 16)}</button></div>`).join('')}</div>` : ''}`;
 }
 
 /* ---------- gráfico ---------- */
@@ -4075,13 +4331,17 @@ function openToday(rid) {
 
 /* calendario */
 let calM = null, calSel = null;
-function openCal() {
+let calTab = 'm';
+function openCal(tab = 'm') {
   const t = pd(today());
   calM = new Date(t.getFullYear(), t.getMonth(), 1);
   calSel = S.logs.some((l) => l.d === today()) ? today() : null;
+  calTab = tab; heatW = 0;
   renderCal();
 }
 function renderCal() {
+  const tabs = `<div class="seg wide caltabs" role="group" aria-label="Vista"><button data-act="caltab" data-t="m" class="${calTab === 'm' ? 'on' : ''}" aria-pressed="${calTab === 'm'}">Mes</button><button data-act="caltab" data-t="w" class="${calTab === 'w' ? 'on' : ''}" aria-pressed="${calTab === 'w'}">Semana</button></div>`;
+  if (calTab === 'w') { openSheet(tabs + weekSection()); return; }
   const y = calM.getFullYear(), m = calM.getMonth();
   const first = (new Date(y, m, 1).getDay() + 6) % 7;
   const nd = new Date(y, m + 1, 0).getDate();
@@ -4095,7 +4355,7 @@ function renderCal() {
     g += `<button class="${tr ? 'tr' : ''}${s === today() ? ' td' : ''}${s === calSel ? ' sel' : ''}" data-act="cday" data-d="${s}" ${tr ? '' : 'disabled'} aria-label="${fLong(s)}${tr ? ', entrenaste' : ''}">${d}</button>`;
   }
   const title = new Intl.DateTimeFormat('es-CL', { month: 'long', year: 'numeric' }).format(calM);
-  openSheet(`<div class="calh"><button class="iconbtn" data-act="cmove" data-d="-1" aria-label="Mes anterior">${ic('back')}</button><h2 class="sh-t">${cap(title.replace(' de ', ' '))}</h2><button class="iconbtn" data-act="cmove" data-d="1" aria-label="Mes siguiente">${ic('chev')}</button></div>
+  openSheet(`${tabs}<div class="calh"><button class="iconbtn" data-act="cmove" data-d="-1" aria-label="Mes anterior">${ic('back')}</button><h2 class="sh-t">${cap(title.replace(' de ', ' '))}</h2><button class="iconbtn" data-act="cmove" data-d="1" aria-label="Mes siguiente">${ic('chev')}</button></div>
     <p class="calsub">${cnt ? `Entrenaste ${plural(cnt, 'día', 'días')} este mes` : 'Sin entrenamientos este mes'}</p>
     <div class="cal">${g}</div>
     <p class="calsub" style="margin-top:16px">Toca un día naranjo para ver el resumen de ese entrenamiento.</p>`);
@@ -4482,7 +4742,11 @@ const A = {
     toast(JSON.stringify(SUG.picks) === before ? 'Ya son tus básicos o los elegiste tú: toca uno para cambiarlo' : 'Nueva combinación');
   },
   planoff: (el) => confirmS({ title: '¿Borrar el plan de hoy?', text: 'Vuelves a elegir cuántos ejercicios hacer.', cta: 'Borrar', ok: () => { delete S.plans[el.dataset.r]; SUG = null; save(); render(); } }),
-  heatw: (el) => { heatW = Number(el.dataset.w); render(); },
+  caltab: (el) => { calTab = el.dataset.t; heatW = 0; renderCal(); },
+  cwk: (el) => { heatW = Math.max(0, heatW + Number(el.dataset.d)); renderCal(); },
+  calw: () => openCal('w'),
+  fall: () => { fuerzaAll = !fuerzaAll; render(); },
+  bsel: (el) => { const c = el.closest('.bch')?.nextElementSibling; if (c && c.classList.contains('bcap')) c.textContent = el.dataset.t; el.parentElement.querySelectorAll('.bc.sel').forEach((b) => b.classList.remove('sel')); el.classList.add('sel'); },
   share: (el) => openShare(el.dataset.d, el.dataset.r || null),
   sharego: async (el) => {
     if (!shareBlob) return;
