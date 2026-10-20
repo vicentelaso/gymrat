@@ -763,6 +763,34 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .fsum b{font-family:var(--cond);font-size:18px;font-weight:800;color:var(--tx)}
 .fsum b.up{color:#7BE08A}.fsum b.dn{color:#FF9A8A}
 .vcard.lnk{display:block;background:var(--s1)}
+.exic.s44{width:44px;height:44px;border-radius:12px}
+.exic.s40{width:40px;height:40px;border-radius:11px}
+.exic.s36{width:36px;height:36px;border-radius:10px}
+.slist .exic,.prtop .exic{background:#000}
+.vcard .exic{background:var(--s2)}
+.pico{display:inline-flex;flex:none}
+.pico .fig{gap:0}
+.frow.lnk{gap:12px}
+.frow .grow,.prrow.xrow .grow,.nrow .grow{min-width:0;flex:1}
+.frr{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none}
+.frr .pct{min-width:0;font-size:20px;line-height:1}
+.prrow.xrow{align-items:center;gap:12px}
+.prrow.xrow > b{flex:none;text-align:right}
+.nrow.lnk{grid-template-columns:44px minmax(0,1fr) auto;gap:2px 12px}
+.nrow.lnk .exic{grid-row:1}
+.nrow.lnk .nbar{grid-column:2/-1}
+.stx{display:flex;align-items:center;gap:10px;margin-top:10px}
+.stx .stsub{margin-top:0}
+.prx{display:flex;align-items:center;gap:8px;margin:4px 0 2px}
+.prx b{margin:0!important}
+.vch{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:-4px -4px 2px 0}
+.vch small{line-height:1}
+.vcx{display:flex;align-items:center;gap:8px;margin-top:8px}
+.vcx > span:last-child{display:block;font-size:13px;line-height:1.25;color:var(--tx);min-width:0}
+.vcard > b{margin-top:0}
+.sbl .pl{display:inline-flex;align-items:center;gap:8px}
+.stop .exic{margin-left:2px}
+.stip + .vit,.stip + .prhero{margin-top:12px}
 .prhero > div:not(:first-child){background:var(--s1)}
 .vcard b.up{color:#7BE08A}
 .nrow.lnk{background:none}
@@ -815,7 +843,6 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .vcard{background:#000;border-radius:18px;padding:12px 14px;min-width:0}
 .vcard small{display:block;color:var(--ac);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .vcard b{display:block;font-family:var(--cond);font-weight:800;font-size:22px;line-height:1.15;margin-top:2px}
-.vcard span{display:block;font-size:13px;color:var(--tx);line-height:1.25;margin-top:2px}
 .vcard em{display:block;font-style:normal;font-size:12px;color:var(--mu);margin-top:4px}
 .ygrid{display:grid;grid-template-columns:38px repeat(12,minmax(0,1fr));gap:3px;align-items:center}
 .ygrid .yh{font-size:10px;color:var(--mu);text-align:center}
@@ -2859,9 +2886,9 @@ function vitrina() {
   S.parts.filter((p) => p.id !== 'cardio').forEach((p) => {
     const ids = new Set(p.ex.map((e) => e.id));
     const ls = S.logs.filter((l) => ids.has(l.x) && kindOf(l.x) === 'kg' && l.kg > 0);
-    if (ls.length) { const b = ls.reduce((m, l) => (!m || rm1(l) > rm1(m) ? l : m), null), e = X(b.x).e; out.push({ p: p.name, name: e.name, s: b, rm: rm1(b), xbw: fnOf(e, p.id) === 'C' ? rm1(b) / B : 0 }); return; }
+    if (ls.length) { const b = ls.reduce((m, l) => (!m || rm1(l) > rm1(m) ? l : m), null), e = X(b.x).e; out.push({ pid: p.id, p: p.name, name: e.name, s: b, rm: rm1(b), xbw: fnOf(e, p.id) === 'C' ? rm1(b) / B : 0 }); return; }
     const lb = S.logs.filter((l) => ids.has(l.x) && (kindOf(l.x) === 'bw' || kindOf(l.x) === 'assist'));
-    if (lb.length) { const b = lb.reduce((m, l) => (!m || score(l) > score(m) ? l : m), null); out.push({ p: p.name, name: X(b.x).e.name, s: b, rm: 0, xbw: 0 }); }
+    if (lb.length) { const b = lb.reduce((m, l) => (!m || score(l) > score(m) ? l : m), null); out.push({ pid: p.id, p: p.name, name: X(b.x).e.name, s: b, rm: 0, xbw: 0 }); }
   });
   return out;
 }
@@ -2916,7 +2943,7 @@ function statsData(days, offset = 0) {
   }
   // cardio
   const cardio = logs.filter((l) => kindOf(l.x) === 'cardio'), cTop = ec.find((o) => o.k === 'cardio');
-  const cBest = ec.filter((o) => o.k === 'cardio').slice(0, 3).map((o) => ({ name: o.name, n: o.days, maxT: Math.max(...o.ls.map((l) => l.reps)), maxKm: Math.max(0, ...o.ls.map((l) => l.km || 0)) }));
+  const cBest = ec.filter((o) => o.k === 'cardio').slice(0, 3).map((o) => ({ x: o.x, name: o.name, n: o.days, maxT: Math.max(...o.ls.map((l) => l.reps)), maxKm: Math.max(0, ...o.ls.map((l) => l.km || 0)) }));
   // mejor mes (en días entrenados)
   const mc = {}; dates.forEach((d) => { const m = d.slice(0, 7); mc[m] = (mc[m] || 0) + 1; });
   const bestMonth = Object.entries(mc).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? 1 : -1))[0];
@@ -3047,6 +3074,9 @@ function yearRows(rid = '') {
   }
   return out;
 }
+/* íconos: el dibujo del ejercicio y la figura de la parte del cuerpo (o de la rutina) */
+const xIco = (x, s = 44) => { const f = X(x); if (!f) return ''; const e = f.e; return `<span class="exic s${s}">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, f.p.id), s - 4, e.mode)}</span>`; };
+const pIco = (pids, h = 28) => `<span class="pico">${body(regsFor(pids), TH.dk, h)}</span>`;
 const stEmpty = (t = 'Sin entrenamientos en este período.') => `<div class="slist"><p class="mu" style="margin:14px 0">${t}</p></div>`;
 /* filtro desplegable (botón + lista), como "Filtrar por músculo": opts = [[valor, nombre, cantidad]] */
 const ddFilter = (key, label, allLabel, opts, cur, act, total) => {
@@ -3059,7 +3089,7 @@ const partDD = (key, ids, act, cur) => {
   const parts = S.parts.filter((p) => cnt[p.id]);
   return parts.length > 1 ? ddFilter(key, 'Parte del cuerpo', 'Todas las partes', parts.map((p) => [p.id, p.name, cnt[p.id]]), cur, act, ids.length) : '';
 };
-const nearHTML = (near) => (near.length ? `<p class="lbl">${ic('target', 15)} A punto de romper</p><div class="slist">${near.map((o) => `<button class="nrow lnk" data-act="nav" data-to="${exLink(o.x)}"><span class="grow">${esc(o.name)}<small class="sub2">${o.ratio >= 1 ? 'Tu nivel de hoy ya lo alcanza' : `Estás al ${nf(Math.floor(o.ratio * 100), 0)} % de tu récord`}</small></span><b>${tgtTxt(o.t)}</b><i class="nbar"><i style="width:${Math.min(100, o.ratio * 100)}%"></i></i></button>`).join('')}</div>` : '');
+const nearHTML = (near) => (near.length ? `<p class="lbl">${ic('target', 15)} A punto de romper</p><div class="slist">${near.map((o) => `<button class="nrow lnk" data-act="nav" data-to="${exLink(o.x)}">${xIco(o.x)}<span class="grow">${esc(o.name)}<small class="sub2">${o.ratio >= 1 ? 'Ya tienes el nivel' : `Al ${nf(Math.floor(o.ratio * 100), 0)} % de tu récord`}</small></span><b>${tgtTxt(o.t)}</b><i class="nbar"><i style="width:${Math.min(100, o.ratio * 100)}%"></i></i></button>`).join('')}</div>` : '');
 
 /* ---------- pantalla principal ---------- */
 function vStats() {
@@ -3079,9 +3109,9 @@ function vStats() {
     const vit = all ? vitrina() : [];
     html += `<div class="stcards">
       ${card('/stats/resumen', 'stats', 'Resumen', `<span class="stnums"><span><b>${nf(A.days, 0)}</b><small>${A.days === 1 ? 'día' : 'días'}${dlt(A.days, Bp?.days, (v) => nf(v, 0))}</small></span><span><b>${nf(A.perWeek, 1)}</b><small>por semana${dlt(A.perWeek, Bp?.perWeek)}</small></span><span><b>${fmtDur(A.avgMin)}</b><small>promedio</small></span></span>`, true)}
-      ${card('/stats/fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `<span class="stdir"><em class="up">${ic('up', 14)}${up}</em><em class="eq">= ${eq}</em><em class="dn">${ic('down', 14)}${dn}</em></span><small class="stsub">${st.prog[0].pct > 0.01 ? `Más subió: <b>${esc(st.prog[0].name)}</b> ${pctTxt(st.prog[0].pct)}` : 'Ninguno subió en este período'}</small>` : '<small class="stsub">Con dos sesiones de un mismo ejercicio verás cuánto sube.</small>')}
+      ${card('/stats/fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `<span class="stdir"><em class="up">${ic('up', 14)}${up}</em><em class="eq">= ${eq}</em><em class="dn">${ic('down', 14)}${dn}</em></span>${st.prog[0].pct > 0.01 ? `<span class="stx">${xIco(st.prog[0].x, 36)}<small class="stsub">Más subió: <b>${esc(st.prog[0].name)}</b> ${pctTxt(st.prog[0].pct)}</small></span>` : '<small class="stsub">Ninguno subió en este período</small>'}` : '<small class="stsub">Con dos sesiones de un mismo ejercicio verás cuánto sube.</small>')}
       ${all ? card('/stats/records', 'starf', 'Mejores marcas', `<small class="stsub">${vit.length ? vit.slice(0, 2).map((o) => `${esc(o.p)}: <b>${setTxt(o.s)}</b>`).join(' · ') : 'Lo más fuerte de cada parte del cuerpo'}</small>`)
-        : card('/stats/records', 'starf', 'Récords', grp.length ? `<span class="stnums one"><span><b>${grp.length}</b><small>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</small></span></span><small class="stsub">Mayor subida: <b>${esc(X(top.x).e.name)}</b> ${pctTxt(top.e.gain)}</small>` : '<small class="stsub">Sin récords en este período</small>')}
+        : card('/stats/records', 'starf', 'Récords', grp.length ? `<span class="stnums one"><span><b>${grp.length}</b><small>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</small></span></span><span class="stx">${xIco(top.x, 36)}<small class="stsub">Mayor subida: <b>${esc(X(top.x).e.name)}</b> ${pctTxt(top.e.gain)}</small></span>` : '<small class="stsub">Sin récords en este período</small>')}
     </div>`;
   }
   // constancia
@@ -3106,7 +3136,7 @@ function vStats() {
       <div class="heatfig">${body(new Set(), TH.dk, 170, true, fillFn)}</div>
       <div class="heatleg">${HEAT.map((col, i) => `<span><i style="background:${col}"></i>${['0', '1–2', '3–5', '6–9', '10+'][i]}</span>`).join('')}<em>series por semana${all ? ' (promedio)' : ''}</em></div>
       ${st.parts.map((p) => { const a = p.n / st.weeks, b = pv && pvMap[p.id] !== undefined ? pvMap[p.id] / pv.weeks : null, d = b === null ? 0 : a - b;
-        return bar(esc(p.name), p.n, pmax, `${nf(a, 1)}<small class="mu">/sem</small>${Math.abs(d) >= 0.3 ? ` <em class="dl ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : '−'}${nf(Math.abs(d), 1)}</em>` : ''}`); }).join('')}
+        return bar(`<span class="pl">${pIco([p.id], 24)}${esc(p.name)}</span>`, p.n, pmax, `${nf(a, 1)}<small class="mu">/sem</small>${Math.abs(d) >= 0.3 ? ` <em class="dl ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : '−'}${nf(Math.abs(d), 1)}</em>` : ''}`); }).join('')}
       ${low.length ? `<p class="heatzero">Poco trabajado: <b>${esc(low.slice(-3).join(', '))}</b> (menos de 2 series por semana).</p>` : ''}`);
   }
   // peso corporal
@@ -3131,15 +3161,15 @@ function vStats() {
     </div>`);
   // lo que más haces
   html += sec('top', 'starf', 'Lo que más haces', st.routines[0] ? `${esc(st.routines[0].name)} · ${esc(st.exs[0]?.name || '')}` : '', `
-    ${st.routines.map((o) => bar(esc(o.name), o.n, st.routines[0].n, `${nf(o.n, 0)} ${o.n === 1 ? 'vez' : 'veces'}`, 'yl')).join('')}
+    ${st.routines.map((o) => bar(`<span class="pl">${pIco(R(o.r)?.parts || [], 24)}${esc(o.name)}</span>`, o.n, st.routines[0].n, `${nf(o.n, 0)} ${o.n === 1 ? 'vez' : 'veces'}`, 'yl')).join('')}
     <p class="lbl">Ejercicios</p>
-    ${st.exs.map((o, i) => `<div class="stop"><span class="rk">${i + 1}</span><span class="grow">${esc(o.name)}</span><small>${plural(o.days, 'día', 'días')}</small></div>`).join('')}
+    ${st.exs.map((o, i) => `<div class="stop"><span class="rk">${i + 1}</span>${xIco(o.x, 40)}<span class="grow">${esc(o.name)}</span><small>${plural(o.days, 'día', 'días')}</small></div>`).join('')}
     ${!all && st.newEx ? `<p class="ssub" style="margin-top:10px">${ic('spark', 14)} ${plural(st.newEx, 'ejercicio nuevo', 'ejercicios nuevos')} en este período.</p>` : ''}
     ${all ? `<p class="ssub" style="margin-top:10px">${plural(st.nEx, 'ejercicio distinto', 'ejercicios distintos')} en total.</p>` : ''}`);
   // cardio
   if (st.cN) {
     html += sec('cardio', 'heart', 'Cardio', all ? (st.cBest[0] ? `Más largo: ${fmtT(st.cBest[0].maxT)}` : '') : `${fmtDur(st.cMin / 60)}${st.cKm ? ` · ${nf(st.cKm, 1)} km` : ''}`, all ? `
-      ${st.cBest.map((c) => `<div class="prrow"><span>${esc(c.name)}<small class="sub2">${c.maxKm ? `Mayor distancia: ${nf(c.maxKm, 2)} km` : plural(c.n, 'día', 'días')}</small></span><b>${fmtT(c.maxT)}</b></div>`).join('')}` : `
+      ${st.cBest.map((c) => `<div class="prrow xrow">${xIco(c.x)}<span class="grow">${esc(c.name)}<small class="sub2">${c.maxKm ? `Mayor distancia: ${nf(c.maxKm, 2)} km` : plural(c.n, 'día', 'días')}</small></span><b>${fmtT(c.maxT)}</b></div>`).join('')}` : `
       <div class="sgrid">
         <div class="scard"><b>${fmtDur(st.cMin / 60)}</b><span>de cardio</span></div>
         <div class="scard"><b>${st.cN}</b><span>${st.cN === 1 ? 'registro' : 'registros'}</span></div>
@@ -3212,7 +3242,7 @@ function vStatsF() {
   html += partDD('fz', list.map((p) => p.pid), 'sfpart', SF.part);
   const rows = byPart.filter((p) => SF.dir === 'all' || pctCls(p.pct) === SF.dir);
   if (rows.length >= 2) html += `<p class="fsum">Mediana: <b class="${pctCls(median(rows.map((p) => p.pct)))}">${pctTxt(median(rows.map((p) => p.pct)))}</b> en ${plural(rows.length, 'ejercicio', 'ejercicios')}</p>`;
-  html += `<div class="slist">${rows.map((p) => `<button class="frow lnk" data-act="nav" data-to="${exLink(p.x)}"><span class="grow">${esc(p.name)}<small class="sub2">${esc(p.pname)} · ${p.k === 'kg' ? `1RM ${nf(p.a, 0)} → ${nf(p.b, 0)} kg` : `${setTxt(p.s0, true)} → ${setTxt(p.s1, true)}`}${all ? ` · ${spanTxt(p.d0, p.d1)}` : ''}</small></span>${all ? '' : spark(p.sp, 84, 28)}<b class="pct ${pctCls(p.pct)}">${pctTxt(p.pct)}</b></button>`).join('') || '<p class="mu" style="margin:14px 0">Ningún ejercicio con este filtro.</p>'}</div>`;
+  html += `<div class="slist">${rows.map((p) => `<button class="frow lnk" data-act="nav" data-to="${exLink(p.x)}">${xIco(p.x)}<span class="grow">${esc(p.name)}<small class="sub2">${esc(p.pname)} · ${p.k === 'kg' ? `1RM ${nf(p.a, 0)} → ${nf(p.b, 0)} kg` : `${setTxt(p.s0, true)} → ${setTxt(p.s1, true)}`}${all ? ` · ${spanTxt(p.d0, p.d1)}` : ''}</small></span><span class="frr"><b class="pct ${pctCls(p.pct)}">${pctTxt(p.pct)}</b>${all ? '' : spark(p.sp, 72, 22)}</span></button>`).join('') || '<p class="mu" style="margin:14px 0">Ningún ejercicio con este filtro.</p>'}</div>`;
   return html;
 }
 
@@ -3223,23 +3253,23 @@ function vStatsR() {
   let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Récords</h2>${stSeg()}${stTip('Uno por ejercicio: cuando tu mejor serie supera a todas las anteriores. Si lo rompiste varias veces, se muestra el último.')}`;
   if (!grp.length) return html + stEmpty('Aún no hay récords en este período.') + nearHTML(near);
   const top = grp.reduce((b, g) => (!b || g.e.gain > b.e.gain ? g : b), null), nm = (x) => esc(X(x)?.e.name || 'Ejercicio');
-  html += `<div class="prhero"><div><b>${grp.length}</b><span>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord</span>${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</div><div class="prtop"><small>Mayor subida</small><b>${nm(top.x)}</b><em>${pctTxt(top.e.gain)}</em></div></div>`;
+  html += `<div class="prhero"><div><b>${grp.length}</b><span>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord</span>${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</div><div class="prtop"><small>Mayor subida</small><span class="prx">${xIco(top.x, 36)}<b>${nm(top.x)}</b></span><em>${pctTxt(top.e.gain)}</em></div></div>`;
   // la mayor subida de cada parte del cuerpo (último récord vs. la marca anterior)
   const byP = new Map(); grp.forEach((g) => { const b = byP.get(g.p.id); if (!b || g.e.gain > b.e.gain) byP.set(g.p.id, g); });
   const pl = S.parts.filter((p) => byP.has(p.id)).map((p) => byP.get(p.id));
-  html += `<p class="lbl">${ic('up', 15)} Mayor subida por parte del cuerpo</p><div class="vit">${pl.map((g) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(g.x)}"><small>${esc(g.p.name)}</small><b class="up">${pctTxt(g.e.gain)}</b><span>${nm(g.x)}</span><em>${setTxt(g.e.s, true)}${g.e.ps ? ` · antes ${setTxt(g.e.ps, true)}` : ''}</em></button>`).join('')}</div>`;
+  html += `<p class="lbl">${ic('up', 15)} Mayor subida por parte del cuerpo</p><div class="vit">${pl.map((g) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(g.x)}"><span class="vch"><small>${esc(g.p.name)}</small>${pIco([g.p.id], 40)}</span><b class="up">${pctTxt(g.e.gain)}</b><span class="vcx">${xIco(g.x, 36)}<span>${nm(g.x)}</span></span><em>${setTxt(g.e.s, true)}${g.e.ps ? ` · antes ${setTxt(g.e.ps, true)}` : ''}</em></button>`).join('')}</div>`;
   // cada ejercicio con récord (el último)
   if (SF.rpart && !grp.some((g) => g.p.id === SF.rpart)) SF.rpart = '';
   const rows = grp.filter((g) => !SF.rpart || g.p.id === SF.rpart);
   html += `<p class="lbl">Ejercicios con récord</p>${partDD('rc', grp.map((g) => g.p.id), 'srpart', SF.rpart)}
-    <div class="slist">${rows.map((g) => `<button class="prrow lnk" data-act="nav" data-to="${exLink(g.x)}"><span>${nm(g.x)}<small class="sub2">${cap(rel(g.e.d))} · ${pctTxt(g.e.gain)}${g.n > 1 ? ` · ${g.n} veces` : ''}</small></span><b>${setTxt(g.e.s)}</b></button>`).join('')}</div>`;
+    <div class="slist">${rows.map((g) => `<button class="prrow lnk xrow" data-act="nav" data-to="${exLink(g.x)}">${xIco(g.x)}<span class="grow">${nm(g.x)}<small class="sub2">${cap(rel(g.e.d))} · ${pctTxt(g.e.gain)}${g.n > 1 ? ` · ${g.n} veces` : ''}</small></span><b>${setTxt(g.e.s)}</b></button>`).join('')}</div>`;
   return html + nearHTML(near);
 }
 function vMarks() {
   let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Mejores marcas</h2>${stSeg()}${stTip('Tu marca más fuerte de siempre: por parte del cuerpo y en cada ejercicio que haces.')}`;
   const v = vitrina();
   if (!v.length) return html + stEmpty('Aún no tienes marcas.');
-  html += `<div class="vit">${v.map((o) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(o.s.x)}"><small>${esc(o.p)}</small><b>${setTxt(o.s)}</b><span>${esc(o.name)}</span>${o.rm ? `<em>1RM ${nf(o.rm, 0)} kg${o.xbw >= 0.5 ? ` · ${nf(o.xbw, 2)}× tu peso` : ''}</em>` : ''}</button>`).join('')}</div>`;
+  html += `<div class="vit">${v.map((o) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(o.s.x)}"><span class="vch"><small>${esc(o.p)}</small>${pIco([o.pid], 40)}</span><b>${setTxt(o.s)}</b><span class="vcx">${xIco(o.s.x, 36)}<span>${esc(o.name)}</span></span>${o.rm ? `<em>1RM ${nf(o.rm, 0)} kg${o.xbw >= 0.5 ? ` · ${nf(o.xbw, 2)}× tu peso` : ''}</em>` : ''}</button>`).join('')}</div>`;
   html += nearHTML(nearPRs());
   // la mejor serie de cada ejercicio (con 2 o más días), filtrable por parte
   const B = bodyKg(), byX = {};
@@ -3248,7 +3278,7 @@ function vMarks() {
     .sort((a, b) => S.parts.indexOf(a.f.p) - S.parts.indexOf(b.f.p) || b.rm - a.rm || b.days - a.days);
   const rows = list.filter((o) => !SF.mpart || o.f.p.id === SF.mpart), show = SF.mall ? rows : rows.slice(0, 12);
   html += `<p class="lbl">Por ejercicio</p>${partDD('mk', list.map((o) => o.f.p.id), 'smpart', SF.mpart)}
-    <div class="slist">${show.map((o) => `<button class="prrow lnk" data-act="nav" data-to="${exLink(o.x)}"><span>${esc(o.f.e.name)}<small class="sub2">${esc(o.f.p.name)} · ${cap(fShortY(o.b.d))}${o.rm ? ` · 1RM ${nf(o.rm, 0)} kg` : ''}</small></span><b>${setTxt(o.b)}</b></button>`).join('')}</div>
+    <div class="slist">${show.map((o) => `<button class="prrow lnk xrow" data-act="nav" data-to="${exLink(o.x)}">${xIco(o.x)}<span class="grow">${esc(o.f.e.name)}<small class="sub2">${esc(o.f.p.name)} · ${cap(fShortY(o.b.d))}${o.rm ? ` · 1RM ${nf(o.rm, 0)} kg` : ''}</small></span><b>${setTxt(o.b)}</b></button>`).join('')}</div>
     ${rows.length > 12 ? `<button class="linkbtn" data-act="small">${SF.mall ? 'Ver menos' : `Ver los ${rows.length}`} ${ic(SF.mall ? 'up' : 'down', 16)}</button>` : ''}`;
   return html;
 }
