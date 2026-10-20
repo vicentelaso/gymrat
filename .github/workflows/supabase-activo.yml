@@ -1,0 +1,40 @@
+# Mantiene activo el proyecto de Supabase (el plan gratis se pausa tras ~7 días sin uso).
+# Cada 3 días hace una consulta mínima a la función "keepalive" de la base de datos.
+name: Mantener Supabase activo
+
+on:
+  schedule:
+    - cron: '17 12 */3 * *'   # cada 3 días a las 12:17 UTC (09:17 en Chile)
+  workflow_dispatch:           # botón "Run workflow" para probarlo a mano
+
+permissions:
+  contents: read
+
+jobs:
+  consulta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Consulta a Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "Faltan los secretos SUPABASE_URL y SUPABASE_KEY (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          URL="${SUPABASE_URL%/}"
+          llamar() {
+            curl -s -o respuesta.txt -w '%{http_code}' -X POST "$URL/rest/v1/rpc/keepalive" \
+              -H "apikey: $SUPABASE_KEY" -H "Content-Type: application/json" "$@" -d '{}'
+          }
+          for i in 1 2 3; do
+            code=$(llamar -H "Authorization: Bearer $SUPABASE_KEY")
+            if [ "$code" = "401" ]; then code=$(llamar); fi
+            echo "Intento $i: HTTP $code · $(head -c 200 respuesta.txt)"
+            if [ "$code" = "200" ]; then exit 0; fi
+            sleep 30
+          done
+          echo "No se pudo consultar Supabase. Revisa los secretos y que la función keepalive exista."
+          exit 1
