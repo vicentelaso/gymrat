@@ -727,6 +727,55 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .stat b{display:block;font-family:var(--cond);font-size:38px;font-weight:800;line-height:1.05}
 .stat span{color:var(--mu);font-size:14px}
 .prrow{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+/* estadísticas: tarjetas que abren página y páginas de detalle */
+.stcards{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.stcard{display:block;width:100%;text-align:left;background:var(--s1);border-radius:22px;padding:12px 14px 14px;box-shadow:inset 0 0 0 1.5px #262626}
+.stcard.hot{background:linear-gradient(135deg,#2a1307,var(--s1) 70%);box-shadow:inset 0 0 0 1.5px #4a2610}
+.stcard:active{transform:scale(.99)}
+.sth{display:flex;align-items:center;gap:12px}
+.sth b{flex:1;font-family:var(--cond);font-weight:800;font-size:22px;line-height:1.1}
+.sth > svg{color:var(--mu);flex:none}
+.stnums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.stnums.one{grid-template-columns:1fr}
+.stnums b{display:block;font-family:var(--cond);font-weight:800;font-size:28px;line-height:1}
+.stcard.hot .stnums b{color:var(--ac)}
+.stnums small{display:block;color:var(--mu);font-size:12px;margin-top:4px}
+.stnums .dl{display:inline;font-style:normal;font-weight:700;margin-left:4px}
+.stdir{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.stdir em{font-style:normal;display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:999px;font-weight:800;font-family:var(--cond);font-size:20px;background:#000}
+.stdir em.up{color:#7BE08A}.stdir em.eq{color:var(--mu)}.stdir em.dn{color:#FF9A8A}
+.stsub{display:block;color:#8a857f;font-size:13px;margin-top:10px;line-height:1.35}
+.stsub b{color:var(--tx);font-weight:600}
+.dl.nt{color:var(--mu)!important}
+.slist{background:var(--s1);border-radius:22px;padding:2px 14px;margin-top:10px}
+.slist > .lnk:first-child,.slist > div:first-child{border-top:0}
+.lnk{width:100%;text-align:left}
+.frow.lnk{padding:12px 0}
+.hchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -18px 0;padding:0 18px}
+.hchips::-webkit-scrollbar{display:none}
+.hchips .chip{flex:none;white-space:nowrap;min-height:38px;font-size:14px;padding:0 14px}
+.sfseg{margin-top:12px;background:var(--s1)}
+.sfseg button{padding:0 4px;gap:4px;font-size:14px;min-width:0}
+.sfseg button i{min-width:18px;height:18px;padding:0 5px;font-size:11px}
+.sfbar{margin:10px 0 0}
+.sfbar + .flist{margin:8px 0 0}
+.fsum{margin:12px 2px 0;font-size:14px;color:var(--mu)}
+.fsum b{font-family:var(--cond);font-size:18px;font-weight:800;color:var(--tx)}
+.fsum b.up{color:#7BE08A}.fsum b.dn{color:#FF9A8A}
+.vcard.lnk{display:block;background:var(--s1)}
+.prhero > div:not(:first-child){background:var(--s1)}
+.vcard b.up{color:#7BE08A}
+.nrow.lnk{background:none}
+.scard .ssm{display:block;color:#8a857f;font-size:12px;margin-top:4px}
+.scard.mdv b{font-size:26px;line-height:1.1}
+.scard.pos b{color:#7BE08A}.scard.neg b{color:#FF9A8A}
+.ytable{display:grid;grid-template-columns:58px repeat(4,minmax(0,1fr));gap:0;background:var(--s1);border-radius:18px;padding:6px 12px;font-size:15px}
+.ytable > span{padding:9px 0;border-top:1px solid var(--line);text-align:right;font-family:var(--cond);font-weight:700;font-size:18px}
+.ytable > span:nth-child(5n+1){text-align:left}
+.ytable .yh{border-top:0;font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;color:var(--mu)}
+.ytable .yy{color:var(--ac)}
+.ytable .yy i{font-style:normal;color:var(--mu);font-size:13px}
+
 /* estadísticas v2 */
 .sgrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .sgrid.three .scard{padding:12px}
@@ -2197,7 +2246,7 @@ window.addEventListener('popstate', () => {
 });
 
 function render() {
-  bwCache = null; TGC = new Map(); RST = null;
+  bwCache = null; TGC = new Map(); RST = null; PRC = null;
   const v0 = $('#view');
   if (booting) { v0.innerHTML = `<div class="login"><div class="lg-logo">${logo(76)}</div><p class="mu" style="text-align:center">Cargando…</p></div>`; $('#dockwrap').innerHTML = ''; return; }
   if (!USER || !S) {
@@ -2214,11 +2263,11 @@ function render() {
   const path = s.join('/');
   const changed = path !== lastPath;
   if (!history.state?.sheet) { const dd = history.state?.d || 0; NAVS[dd] = '/' + path; NAVS.length = dd + 1; }
-  if (changed) { edit = false; hidView = false; chartSel = null; kmOpen = false; if (s[2] === 'x') chartM = null; if (s[0] === 'stats') { statsP = 90; heatW = 0; } }
+  if (changed) { edit = false; hidView = false; chartSel = null; kmOpen = false; if (s[2] === 'x') chartM = null; if (s[0] === 'stats' && !String(lastPath || '').startsWith('stats')) { statsP = 90; heatW = 0; SF = { dir: 'all', part: '', rpart: '', mpart: '', rid: '', mall: false, open: '' }; } }
   lastPath = path;
   let html = null, rid = null;
   if (!s.length) html = vHome();
-  else if (s[0] === 'stats') html = vStats();
+  else if (s[0] === 'stats') html = s[1] === 'resumen' ? vStatsS() : s[1] === 'fuerza' ? vStatsF() : s[1] === 'records' ? vStatsR() : vStats();
   else if (s[0] === 'r' && R(s[1])) {
     const r = R(s[1]); rid = r.id;
     if (s.length === 2) html = vRoutine(r);
@@ -2541,7 +2590,7 @@ const tgo = (p) => { if (location.hash !== '#' + p) history.replaceState({ d: 0 
 const tb = () => { tourBuild(); S.plans.tour_pt.draft = 1; tgo('/r/tour_pt/plan'); render(); }, tl = () => { tourLive(); render(); };
 /* en el mapa muscular muestra la semana pasada si esta semana recién empieza */
 /* estadísticas del recorrido: período, secciones abiertas y, si esta semana recién empieza, la semana pasada */
-function tourStats(p, open) { statsP = p; TOUR.open = open || {}; const m = iso(monday(today())); heatW = new Set(S.logs.filter((l) => l.d >= m).map((l) => l.d)).size >= 2 ? 0 : 1; render(); }
+function tourStats(p, open) { statsP = p; SF = { dir: 'all', part: '', rpart: '', mpart: '', rid: '', mall: false, open: '' }; TOUR.open = open || {}; const m = iso(monday(today())); heatW = new Set(S.logs.filter((l) => l.d >= m).map((l) => l.d)).size >= 2 ? 0 : 1; render(); }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 function tourDemo() {
   S.routines = [
@@ -2619,13 +2668,14 @@ const TOUR_STEPS = [
   { go: '/', prep: () => openCal(), el: '#sheet .cal', title: 'Calendario', text: 'Toca un día para ver qué hiciste.' },
   { go: '/', prep: () => { openCal('w'); if (new Set(S.logs.filter((l) => l.d >= iso(monday(today()))).map((l) => l.d)).size < 2) { heatW = 1; renderCal(); } }, el: () => [document.querySelector('#sheet .wknav'), document.querySelector('#sheet .heatfig')], title: 'Tu semana', text: 'En "Semana": qué días entrenaste y qué músculos trabajaste. Las flechas te llevan a semanas anteriores.' },
   { go: '/', prep: () => renderDay(iso(new Date(Date.now() - 4 * 864e5))), el: () => [document.querySelector('.dtitle'), document.querySelector('.dstats')], title: 'Resumen de un día', text: 'Tiempo, series y kilos de ese día. Aquí también editas el horario, lo compartes o lo borras.' },
-  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('#view .seg.wide'), document.querySelectorAll('.ssec[data-sec="resumen"] .scard')[3] || document.querySelector('.ssec[data-sec="resumen"]')], title: 'Estadísticas', text: 'Elige el período: 30 o 90 días, 1 año o Todo. Lo pequeño compara con el período anterior.' },
-  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('.ssec[data-sec="fuerza"] .ssh'), document.querySelectorAll('.ssec[data-sec="fuerza"] .frow')[2] || document.querySelector('.ssec[data-sec="fuerza"]')], title: 'Progreso de fuerza', text: 'Cuánto subió tu fuerza en cada ejercicio, con su curva. Toca un título para abrir o cerrar la sección.' },
-  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('.ssec[data-sec="records"] .prhero'), document.querySelector('.ssec[data-sec="records"] .nrow') || document.querySelector('.ssec[data-sec="records"] .bcap')], title: 'Récords', text: 'Cuántos hiciste, tu mayor salto y los que estás a punto de romper, con la serie que te falta.' },
+  { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('#view .seg.wide'), document.querySelector('.stcards')], title: 'Estadísticas', text: 'Elige el período. Resumen, Fuerza y Récords se abren en su propia página; lo de más abajo se despliega aquí.' },
+  { go: '/stats/resumen', prep: () => tourStats(90), el: () => document.querySelector('#view .sgrid'), title: 'Resumen', text: 'Lo esencial del período comparado con el anterior. Arriba puedes verlo por rutina.' },
+  { go: '/stats/fuerza', prep: () => tourStats(90), el: () => [document.querySelector('.sfseg'), document.querySelectorAll('.slist .frow')[2] || document.querySelector('.slist')], title: 'Progreso de fuerza', text: 'Filtra los que suben, se mantienen o bajan, y por parte del cuerpo. Toca uno para ver su gráfico.' },
+  { go: '/stats/records', prep: () => tourStats(90), el: () => [document.querySelector('.prhero'), document.querySelector('.vit')], title: 'Récords', text: 'La mayor subida de cada parte del cuerpo y cada ejercicio con récord (uno por ejercicio, el último).' },
   { go: '/stats', prep: () => tourStats(90, { constancia: 1 }), el: () => [document.querySelector('.ssec[data-sec="constancia"] .ssh'), document.querySelector('.ssec[data-sec="constancia"] .bch') || document.querySelector('.ssec[data-sec="constancia"]')], title: 'Constancia', text: 'Tu racha y cuántos días entrenas cada semana (o cada mes, en 1 año).' },
   { go: '/stats', prep: () => tourStats(90, { musculos: 1 }), el: () => [document.querySelector('.ssec[data-sec="musculos"] .ssh'), document.querySelector('.ssec[data-sec="musculos"] .heatleg')], title: 'Músculos', text: 'Las series por semana de cada músculo: en rojo intenso lo que más trabajas.' },
   { go: '/stats', prep: () => tourStats(90, { peso: 1 }), el: () => [document.querySelector('.ssec[data-sec="peso"] .bwhead'), document.querySelector('.ssec[data-sec="peso"] .bwleg') || document.querySelector('.ssec[data-sec="peso"]')], title: 'Peso corporal', text: 'Tus registros y la tendencia (la línea naranja), sin el sube y baja de cada día.' },
-  { go: '/stats', prep: () => tourStats(0), el: () => document.querySelector('.ssec[data-sec="records"] .vit') || document.querySelector('.ssec[data-sec="resumen"]'), title: 'Todo tu historial', text: 'En Todo: tu vitrina con lo más fuerte de cada parte del cuerpo y un mapa de tus años entrenando.' },
+  { go: '/stats/resumen', prep: () => tourStats(0), el: () => document.querySelector('.ytable') || document.querySelector('#view .sgrid'), title: 'Todo tu historial', text: 'En Todo: tus números año a año y, en Mejores marcas, lo más fuerte de cada parte del cuerpo.' },
   { go: '/', prep: () => openSettings(), el: '.rord', title: 'Orden de rutinas', text: '"Te toca" sigue este orden. Si te saltas una, te la sugiere una vez más.' },
   { go: '/', prep: () => openSettings(), el: '#bwset', title: 'Tus preferencias', text: 'Peso corporal, kilos o libras, respaldo y cerrar sesión.' },
   { go: '/', prep: () => openSettings(), el: '#tourbtn', title: 'Vuelve cuando quieras', text: 'Este recorrido queda al final de Ajustes.' },
@@ -2764,7 +2814,9 @@ function binsFor(since, until) {
   return { unit: per === 1 ? 'mes' : per === 3 ? 'trimestre' : 'año', bins: out };
 }
 /* récords: el día en que tu mejor serie de un ejercicio superó todo lo anterior (uno por ejercicio y día) */
+let PRC = null;
 function prEvents() {
+  if (PRC) return PRC;
   const byX = {};
   S.logs.forEach((l) => { if (kindOf(l.x) !== 'cardio') (byX[l.x] || (byX[l.x] = [])).push(l); });
   const ev = [];
@@ -2776,7 +2828,7 @@ function prEvents() {
       if (sc > best) { best = sc; bs = t; }
     });
   });
-  return ev.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : b.gain - a.gain));
+  return (PRC = ev.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : b.gain - a.gain)));
 }
 const prGain = (e) => (kindOf(e.x) === 'kg' ? `+${nf(e.sc - e.prev, 1)} kg` : `+${nf(e.gain * 100, 0)} %`);
 /* los que estás a punto de romper: tu capacidad de hoy (la del motor de recomendación) contra tu récord */
@@ -2844,14 +2896,8 @@ function statsData(days, offset = 0) {
   S.routines.forEach((r) => r.parts.forEach((pid) => { if (pid !== 'cardio' && P(pid)) pc[pid] = pc[pid] || 0; }));
   logs.forEach((l) => { const f = XM.get(l.x); if (!f || kindOf(l.x) === 'cardio') return; pc[f.p.id] = (pc[f.p.id] || 0) + 1; });
   const parts = Object.entries(pc).map(([id, n]) => ({ id, name: P(id)?.name || id, n })).sort((a, b) => b.n - a.n);
-  // progreso de fuerza: todos los ejercicios de fuerza con 2 o más días (el mejor de cada sesión, al inicio vs. al final)
-  const B = bodyKg();
-  const prog = ec.filter((o) => (o.k === 'kg' || o.k === 'bw' || o.k === 'assist') && o.days >= 2).map((o) => {
-    const vals = byDay(o.ls).map((d) => Math.max(...d.sets.map((s) => capOf(o.k, s, B)))), n = vals.length;
-    const a = n >= 4 ? Math.max(vals[0], vals[1]) : vals[0], b = n >= 4 ? Math.max(vals[n - 1], vals[n - 2]) : vals[n - 1];
-    const g = Math.ceil(n / 16), sp = []; for (let i = 0; i < n; i += g) sp.push(Math.max(...vals.slice(i, i + g)));
-    return a > 0 ? { x: o.x, name: o.name, k: o.k, a, b, pct: (b - a) / a, n, sp } : null;
-  }).filter(Boolean).sort((p, q) => q.pct - p.pct);
+  // progreso de fuerza: todos los ejercicios de fuerza con 2 o más días
+  const prog = progList(logs);
   // récords del período
   const prs = prEvents().filter((e) => e.d >= since && e.d <= until);
   // rachas en semanas (lunes a domingo) sobre todo el historial
@@ -2934,60 +2980,109 @@ function yearGrid(dates) {
   }
   return h + '</div><p class="bcap">Días entrenados cada mes.</p>';
 }
+/* ---------- estadísticas: pantalla principal y páginas de detalle ----------
+   Resumen, Progreso de fuerza y Récords se abren en su propia página (con filtros); el resto se despliega aquí.
+   En "Todo" se muestran números que siguen teniendo sentido con años de datos: promedios, año a año y mejores
+   marcas; nada que crezca sin límite. */
+let SF = { dir: 'all', part: '', rpart: '', mpart: '', rid: '', mall: false, open: '' };
+const P_STATS = [[30, '30 días'], [90, '90 días'], [365, '1 año'], [0, 'Todo']];
+const stSeg = () => `<div class="seg wide" role="group" aria-label="Período">${P_STATS.map(([v, l]) => `<button data-act="statsp" data-p="${v}" class="${statsP === v ? 'on' : ''}" aria-pressed="${statsP === v}">${l}</button>`).join('')}</div>`;
+const stTip = (txt) => `<p class="stip">${txt || (!statsP ? `Todo tu historial, ${trainingFor(firstLogD()).s}.` : `Últimos ${statsP === 365 ? '365 días' : statsP + ' días'}. Lo pequeño compara con el período anterior.`)}</p>`;
+/* diferencia con el período anterior; good: 1 si más es mejor, -1 si menos es mejor, 0 neutro */
+function dlt(a, b, fmt = (v) => nf(v, 1), good = 1) {
+  if (b == null || a == null) return '';
+  const d = a - b; if (Math.abs(d) < 1e-9 || !/[1-9]/.test(fmt(Math.abs(d)))) return '<em class="dl">= igual</em>';
+  const cls = good === 0 ? 'nt' : (d > 0) === (good > 0) ? 'up' : 'down';
+  return `<em class="dl ${cls}">${d > 0 ? '+' : '−'}${fmt(Math.abs(d))}</em>`;
+}
+const pctTxt = (p) => (Math.abs(p) < 0.01 ? '=' : `${p > 0 ? '+' : '−'}${nf(Math.abs(p) * 100, Math.abs(p) < 0.1 ? 1 : 0)} %`);
+const pctCls = (p) => (p > 0.01 ? 'up' : p < -0.01 ? 'dn' : 'eq');
+/* para abrir el gráfico de un ejercicio desde estadísticas: la rutina donde lo hiciste por última vez */
+const exLink = (x) => { let m = null; S.logs.forEach((q) => { if (q.x === x && R(q.r) && (!m || q.ts > m.ts)) m = q; }); const r = m ? m.r : S.routines[0]?.id; return r ? `/r/${r}/v/${x}` : '/stats'; };
+const spanTxt = (a, b) => { const A = pd(a), Z = pd(b), m = (Z.getFullYear() - A.getFullYear()) * 12 + Z.getMonth() - A.getMonth(); return m < 1 ? `en ${plural(Math.max(1, Math.round((Z - A) / 864e5)), 'día', 'días')}` : m < 12 ? `en ${plural(m, 'mes', 'meses')}` : `en ${nf(m / 12, m % 12 && m < 36 ? 1 : 0)} años`; };
+/* progreso de fuerza de cada ejercicio (2 o más días): mejor serie (1RM estimado, o tu peso ± lastre/ayuda) al inicio vs. al final.
+   Con 4 o más sesiones se toma la mejor de las 2 primeras y de las 2 últimas, para que un día malo no distorsione. */
+function progList(logs) {
+  const B = bodyKg(), byX = {};
+  logs.forEach((l) => { const k = kindOf(l.x); if (k === 'kg' || k === 'bw' || k === 'assist') (byX[l.x] || (byX[l.x] = [])).push(l); });
+  return Object.entries(byX).map(([x, ls]) => {
+    const f = X(x), k = kindOf(x), dd = byDay(ls); if (!f || dd.length < 2) return null;
+    const bestOf = (d) => d.sets.reduce((m, s) => (!m || capOf(k, s, B) > capOf(k, m, B) ? s : m), null);
+    const vals = dd.map((d) => capOf(k, bestOf(d), B)), n = vals.length;
+    const ia = n >= 4 && vals[1] > vals[0] ? 1 : 0, ib = n >= 4 && vals[n - 2] > vals[n - 1] ? n - 2 : n - 1, a = vals[ia], b = vals[ib];
+    const g = Math.ceil(n / 16), sp = []; for (let i = 0; i < n; i += g) sp.push(Math.max(...vals.slice(i, i + g)));
+    return a > 0 ? { x, name: f.e.name, k, pid: f.p.id, pname: f.p.name, a, b, pct: (b - a) / a, n, sp, s0: bestOf(dd[ia]), s1: bestOf(dd[ib]), d0: dd[0].d, d1: dd[n - 1].d } : null;
+  }).filter(Boolean).sort((p, q) => q.pct - p.pct);
+}
+/* récords agrupados por ejercicio: cuenta uno por ejercicio y se queda con el último */
+function recGroups(evs) { const m = new Map(); evs.forEach((e) => { const g = m.get(e.x); if (g) g.n++; else m.set(e.x, { x: e.x, e, n: 1, p: X(e.x)?.p }); }); return [...m.values()].filter((g) => g.p); }
+/* datos del resumen (opcional: solo una rutina) */
+function resData(days, offset = 0, rid = '') {
+  const { since, until } = periodOf(days, offset);
+  const logs = S.logs.filter((l) => l.d >= since && l.d <= until && (!rid || l.r === rid));
+  if (!logs.length) return null;
+  const fe = firstLogD(), a = fe > since ? fe : since, weeks = Math.max(1, ((pd(until) - pd(a)) / 864e5 + 1) / 7);
+  const dates = [...new Set(logs.map((l) => l.d))];
+  const wk = new Set(dates.map((d) => iso(monday(d)))); let wTotal = 0; for (const t = monday(a); iso(t) <= until; t.setDate(t.getDate() + 7)) wTotal++;
+  const sm = {}; logs.forEach((l) => { const k = l.d + '|' + l.r; (sm[k] || (sm[k] = [])).push(l); });
+  const dm = {}; Object.entries(sm).forEach(([k, arr]) => { arr.sort(byTs); const [d, r] = k.split('|'), t = sessionTime(d, r, arr); dm[d] = (dm[d] || 0) + Math.max(0, (t.end - t.start) / 60000); });
+  const timed = Object.values(dm).filter((m) => m >= 5);
+  const str = logs.filter((l) => kindOf(l.x) !== 'cardio'), cmin = logs.filter((l) => kindOf(l.x) === 'cardio').reduce((s, l) => s + l.reps, 0) / 60;
+  const ev = prEvents().filter((e) => e.d >= since && e.d <= until && (!rid || e.s.r === rid));
+  const pr = progList(logs), med = pr.length ? median(pr.map((p) => p.pct)) : 0;
+  const firstOf = {}; S.logs.forEach((l) => { if (!firstOf[l.x] || l.d < firstOf[l.x]) firstOf[l.x] = l.d; });
+  const exs = [...new Set(str.map((l) => l.x))];
+  return { since, until, days: dates.length, weeks, perWeek: dates.length / weeks, wTrained: wk.size, wTotal, avgMin: timed.length ? timed.reduce((s, m) => s + m, 0) / timed.length : 0,
+    setsPer: str.length / Math.max(1, dates.length), volW: str.reduce((s, l) => s + volKg(l), 0) / weeks, cardioW: cmin / weeks,
+    prEx: new Set(ev.map((e) => e.x)).size, fMed: med, fN: pr.length, nEx: exs.length, newEx: exs.filter((x) => firstOf[x] >= since).length };
+}
+/* año a año (para "Todo"): días, frecuencia, volumen semanal y ejercicios con récord */
+function yearRows(rid = '') {
+  const fe = firstLogD(), y0 = Number(fe.slice(0, 4)), y1 = Number(today().slice(0, 4)), ev = prEvents(), out = [];
+  for (let y = y1; y >= y0; y--) {
+    const a = `${y}-01-01` < fe ? fe : `${y}-01-01`, b = `${y}-12-31` > today() ? today() : `${y}-12-31`;
+    const logs = S.logs.filter((l) => l.d >= a && l.d <= b && (!rid || l.r === rid));
+    const weeks = Math.max(1, ((pd(b) - pd(a)) / 864e5 + 1) / 7), days = new Set(logs.map((l) => l.d)).size;
+    out.push({ y, days, pw: days / weeks, volW: logs.reduce((s, l) => s + volKg(l), 0) / weeks, rec: new Set(ev.filter((e) => e.d >= a && e.d <= b && (!rid || e.s.r === rid)).map((e) => e.x)).size, part: y === y1 || a !== `${y}-01-01` });
+  }
+  return out;
+}
+const stEmpty = (t = 'Sin entrenamientos en este período.') => `<div class="slist"><p class="mu" style="margin:14px 0">${t}</p></div>`;
+/* filtro desplegable (botón + lista), como "Filtrar por músculo": opts = [[valor, nombre, cantidad]] */
+const ddFilter = (key, label, allLabel, opts, cur, act, total) => {
+  const open = SF.open === key, curName = opts.find((o) => o[0] === cur)?.[1];
+  return `<div class="fbar sfbar"><button class="fbtn${cur ? ' act' : ''}" data-act="sfopen" data-k="${key}" aria-expanded="${open}">${ic('filter', 18)}<span class="grow">${cur ? `${label}: <b>${esc(curName || '')}</b>` : `Filtrar por ${label.toLowerCase()}`}</span>${ic(open ? 'up' : 'down', 18)}</button>${cur ? `<button class="fclr" data-act="${act}" data-v="" aria-label="Quitar filtro">${ic('x', 18)}</button>` : ''}</div>
+    ${open ? `<div class="flist" role="listbox" aria-label="${esc(label)}">${[['', allLabel, total]].concat(opts).map(([v, n, c]) => `<button class="fopt${(cur || '') === v ? ' on' : ''}" role="option" aria-selected="${(cur || '') === v}" data-act="${act}" data-v="${v}"><i></i><span class="grow">${esc(n)}</span><span class="fn">${c}</span></button>`).join('')}</div>` : ''}`;
+};
+const partDD = (key, ids, act, cur) => {
+  const cnt = {}; ids.forEach((id) => { cnt[id] = (cnt[id] || 0) + 1; });
+  const parts = S.parts.filter((p) => cnt[p.id]);
+  return parts.length > 1 ? ddFilter(key, 'Parte del cuerpo', 'Todas las partes', parts.map((p) => [p.id, p.name, cnt[p.id]]), cur, act, ids.length) : '';
+};
+const nearHTML = (near) => (near.length ? `<p class="lbl">${ic('target', 15)} A punto de romper</p><div class="slist">${near.map((o) => `<button class="nrow lnk" data-act="nav" data-to="${exLink(o.x)}"><span class="grow">${esc(o.name)}<small class="sub2">${o.ratio >= 1 ? 'Tu nivel de hoy ya lo alcanza' : `Estás al ${nf(Math.floor(o.ratio * 100), 0)} % de tu récord`}</small></span><b>${tgtTxt(o.t)}</b><i class="nbar"><i style="width:${Math.min(100, o.ratio * 100)}%"></i></i></button>`).join('')}</div>` : '');
+
+/* ---------- pantalla principal ---------- */
 function vStats() {
-  const P_ = [[30, '30 días'], [90, '90 días'], [365, '1 año'], [0, 'Todo']];
   const all = !statsP, lbw = lastBW();
   const st = statsData(statsP), pv = statsP ? statsData(statsP, 1) : null;
-  const seg = `<div class="seg wide" role="group" aria-label="Período">${P_.map(([v, l]) => `<button data-act="statsp" data-p="${v}" class="${statsP === v ? 'on' : ''}" aria-pressed="${statsP === v}">${l}</button>`).join('')}</div>`;
   const hm = (m) => m == null ? '—' : `${pad(Math.floor(m / 60))}:${pad(Math.round(m % 60) % 60)}`;
   const bar = (label, v, max, right, cls = '') => `<div class="sbar ${cls}"><div class="sbl"><span>${label}</span><b>${right}</b></div><div class="sbt"><i style="width:${max && v ? Math.max(4, (v / max) * 100) : 0}%"></i></div></div>`;
-  const delta = (a, b, fmt = (v) => nf(v, 1)) => { if (!pv || b == null) return ''; const d = a - b; if (Math.abs(d) < 1e-9 || !/[1-9]/.test(fmt(Math.abs(d)))) return '<em class="dl">= igual</em>'; return `<em class="dl ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : '−'}${fmt(Math.abs(d))}</em>`; };
   const L = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-  const none = '<p class="mu" style="margin:0">Sin entrenamientos en este período.</p>';
-  const pl = P_.find((p) => p[0] === statsP)[1].toLowerCase();
-  let html = `${hdr('/', '')}<h2 class="pt">Estadísticas</h2>${seg}
-    <p class="stip">${all ? (st ? `Todo tu historial, ${trainingFor(st.firstEver).s}.` : 'Todo tu historial.') : `Últimos ${pl === '1 año' ? '365 días' : pl}. Lo pequeño compara con el período anterior.`}</p>`;
-  if (!st) return html + `<section class="ssec open"><div class="ssb">${none}</div></section>` + sec('peso', 'scale', 'Peso corporal', lbw ? `${nf(lbw.kg)} kg · ${fShort(lbw.d)}` : 'Sin registrar', bwSection(statsP));
-  // resumen
-  if (!all) {
-    html += sec('resumen', 'stats', 'Resumen', `${plural(st.days, 'día entrenado', 'días entrenados')} · ${nf(st.perWeek, 1)} por semana`, `
-    <div class="sgrid">
-      <div class="scard hot"><b>${st.days}</b><span>${st.days === 1 ? 'día entrenado' : 'días entrenados'}</span>${delta(st.days, pv?.days, (v) => nf(v, 0))}</div>
-      <div class="scard"><b>${nf(st.perWeek, 1)}</b><span>veces por semana</span>${delta(st.perWeek, pv?.perWeek)}</div>
-      <div class="scard"><b>${nf(st.sets, 0)}</b><span>series</span>${delta(st.sets, pv?.sets, (v) => nf(v, 0))}</div>
-      <div class="scard"><b>${nf(st.vol / 1000, 1)} t</b><span>levantadas</span>${delta(st.vol / 1000, pv ? pv.vol / 1000 : null, (v) => nf(v, 1) + ' t')}</div>
-    </div>`);
-  } else {
-    const tf = trainingFor(st.firstEver), bm = st.bestMonth;
-    html += sec('resumen', 'stats', 'Resumen', `${plural(st.days, 'día entrenado', 'días entrenados')} · ${tf.b}`, `
-    <div class="sgrid">
-      <div class="scard hot"><b>${nf(st.days, 0)}</b><span>${st.days === 1 ? 'día entrenado' : 'días entrenados'}</span></div>
-      <div class="scard"><b class="md">${tf.b}</b><span>entrenando · ${tf.s}</span></div>
-      <div class="scard"><b>${nf(st.perWeek, 1)}</b><span>veces por semana</span></div>
-      <div class="scard"><b class="md">${plural(bm[1], 'día', 'días')}</b><span>mejor mes: ${MES3[Number(bm[0].slice(5)) - 1]} ${bm[0].slice(0, 4)}</span></div>
-    </div>`);
-  }
-  // fuerza
+  let html = `${hdr('/', '')}<h2 class="pt">Estadísticas</h2>${stSeg()}${stTip()}`;
+  if (!st) return html + stEmpty() + sec('peso', 'scale', 'Peso corporal', lbw ? `${nf(lbw.kg)} kg · ${fShort(lbw.d)}` : 'Sin registrar', bwSection(statsP));
+  // las tres tarjetas que abren su página
   {
+    const A = resData(statsP), Bp = statsP ? resData(statsP, 1) : null;
     const up = st.prog.filter((p) => p.pct > 0.01).length, dn = st.prog.filter((p) => p.pct < -0.01).length, eq = st.prog.length - up - dn;
-    const rows = fuerzaAll ? st.prog : st.prog.slice(0, 6);
-    html += sec('fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `${up} subiendo · ${eq} igual · ${dn} bajando` : 'Faltan sesiones para comparar', st.prog.length ? `
-      ${rows.map((p) => { const c = p.pct > 0.01 ? 'up' : p.pct < -0.01 ? 'dn' : 'eq';
-        return `<div class="frow"><span class="grow">${esc(p.name)}<small class="sub2">${p.k === 'kg' ? `1RM ${nf(p.a, 0)} → ${nf(p.b, 0)} kg` : plural(p.n, 'sesión', 'sesiones')}</small></span>${spark(p.sp)}<b class="pct ${c}">${c === 'eq' ? '=' : (c === 'up' ? '+' : '−') + nf(Math.abs(p.pct) * 100, 0) + ' %'}</b></div>`; }).join('')}
-      ${st.prog.length > 6 ? `<button class="linkbtn" data-act="fall">${fuerzaAll ? 'Ver menos' : `Ver los ${st.prog.length}`} ${ic(fuerzaAll ? 'up' : 'down', 16)}</button>` : ''}`
-      : '<p class="mu" style="margin:0">Con dos sesiones de un mismo ejercicio verás aquí cuánto subió tu fuerza.</p>');
-  }
-  // récords
-  {
-    const near = nearPRs(), last = st.prs.slice(0, 5), top = st.prs.reduce((b, e) => (!b || e.gain > b.gain ? e : b), null);
-    const nm = (x) => esc(X(x)?.e.name || 'Ejercicio');
-    let body = `<div class="prhero"><div><b>${nf(st.prs.length, 0)}</b><span>${st.prs.length === 1 ? 'récord' : 'récords'}${all ? ' en total' : ''}</span>${!all ? delta(st.prs.length, pv?.prs.length, (v) => nf(v, 0)) : ''}</div>${top ? `<div class="prtop"><small>Mayor salto</small><b>${nm(top.x)}</b><em>${prGain(top)}</em></div>` : ''}</div>`;
-    if (st.prs.length) body += barsHTML(st.bk.bins, (b) => b.prs, (v, l) => (l ? plural(v, 'récord', 'récords') : String(v)));
-    if (near.length) body += `<p class="lbl">${ic('target', 15)} A punto de romper</p>${near.map((o) => `<div class="nrow"><span class="grow">${esc(o.name)}<small class="sub2">${o.ratio >= 1 ? 'Tu nivel de hoy ya lo alcanza' : `Estás al ${nf(Math.floor(o.ratio * 100), 0)} % de tu récord`}</small></span><b>${tgtTxt(o.t)}</b><i class="nbar"><i style="width:${Math.min(100, o.ratio * 100)}%"></i></i></div>`).join('')}`;
-    if (last.length) body += `<p class="lbl">${all ? 'Últimos récords' : 'Récords recientes'}</p>${last.map((e) => `<div class="prrow"><span>${nm(e.x)}<small class="sub2">${cap(rel(e.d))} · ${prGain(e)}</small></span><b>${setTxt(e.s)}</b></div>`).join('')}`;
-    if (all) { const v = vitrina(); if (v.length) body += `<p class="lbl">${ic('starf', 15)} Tu vitrina: lo más fuerte de cada parte</p><div class="vit">${v.map((o) => `<div class="vcard"><small>${esc(o.p)}</small><b>${setTxt(o.s)}</b><span>${esc(o.name)}</span>${o.rm ? `<em>1RM ${nf(o.rm, 0)} kg${o.xbw >= 0.5 ? ` · ${nf(o.xbw, 2)}× tu peso` : ''}</em>` : ''}</div>`).join('')}</div>`; }
-    if (!st.prs.length && !near.length && !all) body += '<p class="mu small" style="margin:8px 0 0">Aún no hay récords en este período.</p>';
-    html += sec('records', 'starf', 'Récords', st.prs[0] ? `${plural(st.prs.length, 'récord', 'récords')} · último: ${nm(st.prs[0].x)}` : near.length ? `${plural(near.length, 'récord', 'récords')} a punto de caer` : 'Sin récords en este período', body);
+    const grp = recGroups(st.prs), top = grp.reduce((b, g) => (!b || g.e.gain > b.e.gain ? g : b), null);
+    const card = (to, icon, title, body, hot) => `<button class="stcard${hot ? ' hot' : ''}" data-act="nav" data-to="${to}"><span class="sth"><span class="ssi">${ic(icon, 20)}</span><b>${title}</b>${ic('chev', 20)}</span>${body}</button>`;
+    const vit = all ? vitrina() : [];
+    html += `<div class="stcards">
+      ${card('/stats/resumen', 'stats', 'Resumen', `<span class="stnums"><span><b>${nf(A.days, 0)}</b><small>${A.days === 1 ? 'día' : 'días'}${dlt(A.days, Bp?.days, (v) => nf(v, 0))}</small></span><span><b>${nf(A.perWeek, 1)}</b><small>por semana${dlt(A.perWeek, Bp?.perWeek)}</small></span><span><b>${fmtDur(A.avgMin)}</b><small>promedio</small></span></span>`, true)}
+      ${card('/stats/fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `<span class="stdir"><em class="up">${ic('up', 14)}${up}</em><em class="eq">= ${eq}</em><em class="dn">${ic('down', 14)}${dn}</em></span><small class="stsub">${st.prog[0].pct > 0.01 ? `Más subió: <b>${esc(st.prog[0].name)}</b> ${pctTxt(st.prog[0].pct)}` : 'Ninguno subió en este período'}</small>` : '<small class="stsub">Con dos sesiones de un mismo ejercicio verás cuánto sube.</small>')}
+      ${all ? card('/stats/records', 'starf', 'Mejores marcas', `<small class="stsub">${vit.length ? vit.slice(0, 2).map((o) => `${esc(o.p)}: <b>${setTxt(o.s)}</b>`).join(' · ') : 'Lo más fuerte de cada parte del cuerpo'}</small>`)
+        : card('/stats/records', 'starf', 'Récords', grp.length ? `<span class="stnums one"><span><b>${grp.length}</b><small>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</small></span></span><small class="stsub">Mayor subida: <b>${esc(X(top.x).e.name)}</b> ${pctTxt(top.e.gain)}</small>` : '<small class="stsub">Sin récords en este período</small>')}
+    </div>`;
   }
   // constancia
   {
@@ -2998,8 +3093,8 @@ function vStats() {
     else if (statsP === 30) vis = `<div class="wklist">${st.bk.bins.slice().reverse().map((w) => `<div class="wkrow${w.days ? '' : ' zero'}${w.a === thisMon ? ' now' : ''}"><span class="wkl">${w.long}</span><span class="wkb"><i style="width:${(w.days / 7) * 100}%"></i></span><b>${plural(w.days, 'día', 'días')}</b></div>`).join('')}</div>`;
     else vis = barsHTML(st.bk.bins, (b) => b.days, (v, l) => (l ? plural(v, 'día', 'días') : String(v)), { min: st.bk.unit === 'semana' ? 7 : 1 });
     const wmax = Math.max(...st.wd);
-    html += sec('constancia', 'cal', 'Constancia', `${plural(st.cur, 'semana', 'semanas')} de racha · ${nf(st.perWeek, 1)} por semana`, `${tiles}<p class="lbl">${all ? 'Mes a mes' : st.bk.unit === 'semana' ? 'Días por semana' : 'Días por mes'}</p>${vis}
-      <p class="lbl">Tus días</p><div class="wbars">${st.wd.map((n, i) => `<div class="wb${n === wmax && n ? ' top' : ''}"><em>${n || ''}</em><i style="height:${wmax ? Math.max(4, (n / wmax) * 100) : 4}%"></i><span>${L[i]}</span></div>`).join('')}</div>`);
+    html += sec('constancia', 'cal', 'Constancia', `${plural(st.cur, 'semana', 'semanas')} de racha · ${nf(st.perWeek, 1)} por semana`, `${tiles}<p class="lbl">${all ? 'Días entrenados cada mes' : st.bk.unit === 'semana' ? 'Días por semana' : 'Días por mes'}</p>${vis}
+      <p class="lbl">Tus días</p><div class="wbars">${st.wd.map((n, i) => `<div class="wb${n === wmax && n ? ' top' : ''}"><em>${all ? '' : n || ''}</em><i style="height:${wmax ? Math.max(4, (n / wmax) * 100) : 4}%"></i><span>${L[i]}</span></div>`).join('')}</div>`);
   }
   // músculos
   {
@@ -3009,29 +3104,30 @@ function vStats() {
     const pvMap = {}; (pv?.parts || []).forEach((p) => { pvMap[p.id] = p.n; });
     html += sec('musculos', 'body', 'Músculos', st.parts[0] ? `Más: ${esc(st.parts[0].name)}${low.length ? ` · poco: ${esc(low[low.length - 1])}` : ''}` : '', `
       <div class="heatfig">${body(new Set(), TH.dk, 170, true, fillFn)}</div>
-      <div class="heatleg">${HEAT.map((col, i) => `<span><i style="background:${col}"></i>${['0', '1–2', '3–5', '6–9', '10+'][i]}</span>`).join('')}<em>series por semana</em></div>
+      <div class="heatleg">${HEAT.map((col, i) => `<span><i style="background:${col}"></i>${['0', '1–2', '3–5', '6–9', '10+'][i]}</span>`).join('')}<em>series por semana${all ? ' (promedio)' : ''}</em></div>
       ${st.parts.map((p) => { const a = p.n / st.weeks, b = pv && pvMap[p.id] !== undefined ? pvMap[p.id] / pv.weeks : null, d = b === null ? 0 : a - b;
         return bar(esc(p.name), p.n, pmax, `${nf(a, 1)}<small class="mu">/sem</small>${Math.abs(d) >= 0.3 ? ` <em class="dl ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : '−'}${nf(Math.abs(d), 1)}</em>` : ''}`); }).join('')}
       ${low.length ? `<p class="heatzero">Poco trabajado: <b>${esc(low.slice(-3).join(', '))}</b> (menos de 2 series por semana).</p>` : ''}`);
   }
   // peso corporal
   html += sec('peso', 'scale', 'Peso corporal', lbw ? `${nf(lbw.kg)} kg · ${fShort(lbw.d)}` : 'Sin registrar', bwSection(statsP));
-  // volumen
+  // volumen (en "Todo", solo números: un gráfico de años no dice mucho)
   {
-    const b = st.bk.bins, bb = b.reduce((m, x) => (!m || x.vol > m.vol ? x : m), null), uw = st.bk.unit;
+    const wv = {}; S.logs.forEach((l) => { if (all || (l.d >= st.since && l.d <= st.until)) { const k = iso(monday(l.d)); wv[k] = (wv[k] || 0) + volKg(l); } });
+    const bw = Object.entries(wv).sort((a, b) => b[1] - a[1])[0];
     html += sec('volumen', 'stats', 'Volumen', `${nf(st.vol / 1000 / st.weeks, 1)} t por semana`, `
-      ${barsHTML(b, (x) => x.vol / 1000, (v, l) => (l ? `${nf(v, 1)} t` : nf(v, v >= 10 ? 0 : 1)))}
-      <div class="srow"><span>Por semana</span><b>${nf(st.vol / 1000 / st.weeks, 1)} t</b></div>
+      ${all ? '' : barsHTML(st.bk.bins, (x) => x.vol / 1000, (v, l) => (l ? `${nf(v, 1)} t` : nf(v, v >= 10 ? 0 : 1)))}
+      <div class="srow"><span>Por semana${all ? ' (promedio)' : ''}</span><b>${nf(st.vol / 1000 / st.weeks, 1)} t</b>${pv ? `<small>${dlt(st.vol / st.weeks / 1000, pv.vol / pv.weeks / 1000, (v) => nf(v, 1) + ' t')} vs. el período anterior</small>` : ''}</div>
       <div class="srow"><span>Series por entrenamiento</span><b>${nf(st.sets / Math.max(1, st.days), 0)}</b></div>
-      ${bb && bb.vol ? `<div class="srow"><span>Mejor ${uw}</span><b>${nf(bb.vol / 1000, 1)} t</b><small>${esc(bb.long)}</small></div>` : ''}`);
+      ${bw && bw[1] ? `<div class="srow"><span>Mejor semana${all ? ' de siempre' : ''}</span><b>${nf(bw[1] / 1000, 1)} t</b><small>${wkLabel(bw[0])}${pd(bw[0]).getFullYear() !== pd(today()).getFullYear() ? ' ' + pd(bw[0]).getFullYear() : ''}</small></div>` : ''}`);
   }
   // tiempo en el gym
   html += sec('tiempo', 'clock', 'Tiempo en el gym', `Promedio ${fmtDur(st.avgMin)} · hora habitual ${hm(st.avgStart)}`, `
     <div class="sgrid">
-      <div class="scard"><b>${fmtDur(st.avgMin)}</b><span>promedio por día</span>${delta(st.avgMin, pv?.avgMin, (v) => fmtDur(v))}</div>
+      <div class="scard"><b>${fmtDur(st.avgMin)}</b><span>promedio por día</span>${pv ? dlt(st.avgMin, pv.avgMin, (v) => fmtDur(v), 0) : ''}</div>
       <div class="scard"><b>${hm(st.avgStart)}</b><span>hora habitual</span></div>
       ${all ? '' : `<div class="scard"><b>${nf(st.totalMin / 60, st.totalMin >= 6000 ? 0 : 1)} h</b><span>en total</span></div>`}
-      ${st.longest ? `<div class="scard"><b>${fmtDur(st.longestMin)}</b><span>día más largo · ${fShort(st.longest)}</span></div>` : ''}
+      ${st.longest ? `<div class="scard"><b>${fmtDur(st.longestMin)}</b><span>día más largo · ${fShort(st.longest)}${all && pd(st.longest).getFullYear() !== pd(today()).getFullYear() ? ' ' + pd(st.longest).getFullYear() : ''}</span></div>` : ''}
     </div>`);
   // lo que más haces
   html += sec('top', 'starf', 'Lo que más haces', st.routines[0] ? `${esc(st.routines[0].name)} · ${esc(st.exs[0]?.name || '')}` : '', `
@@ -3051,6 +3147,109 @@ function vStats() {
         ${st.cTop ? `<div class="scard"><b class="sm">${esc(st.cTop.name)}</b><span>el que más haces</span></div>` : ''}
       </div>`);
   }
+  return html;
+}
+
+/* ---------- Resumen ---------- */
+function vStatsS() {
+  const all = !statsP, rid = SF.rid && R(SF.rid) ? SF.rid : '';
+  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Resumen</h2>${stSeg()}${stTip()}`;
+  const { since, until } = periodOf(statsP);
+  const rids = [...new Set(S.logs.filter((l) => l.d >= since && l.d <= until && R(l.r)).map((l) => l.r))];
+  if (rids.length > 1) {
+    const dn = {}; S.logs.forEach((l) => { if (l.d >= since && l.d <= until && R(l.r)) (dn[l.r] || (dn[l.r] = new Set())).add(l.d); });
+    html += ddFilter('res', 'Rutina', 'Todas las rutinas', S.routines.filter((r) => rids.includes(r.id)).map((r) => [r.id, r.name, dn[r.id].size]), rid, 'sres', new Set(S.logs.filter((l) => l.d >= since && l.d <= until).map((l) => l.d)).size);
+  }
+  if (rid && !rids.includes(rid)) { SF.rid = ''; return vStatsS(); }
+  const A = resData(statsP, 0, rid), B = statsP ? resData(statsP, 1, rid) : null;
+  if (!A) return html + stEmpty();
+  const tile = (v, l, extra = '', cls = '') => `<div class="scard${cls ? ' ' + cls : ''}"><b>${v}</b><span>${l}</span>${extra}</div>`;
+  const T = [];
+  if (!all) {
+    T.push(tile(nf(A.days, 0), A.days === 1 ? 'día entrenado' : 'días entrenados', `${dlt(A.days, B?.days, (v) => nf(v, 0))}<small class="ssm">${A.wTrained} de ${plural(A.wTotal, 'semana', 'semanas')} con entrenamiento</small>`, 'hot'));
+    T.push(tile(nf(A.perWeek, 1), 'veces por semana', dlt(A.perWeek, B?.perWeek)));
+    T.push(tile(fmtDur(A.avgMin), 'duración promedio', dlt(A.avgMin, B?.avgMin, (v) => fmtDur(v), 0)));
+    T.push(tile(nf(A.setsPer, 0), 'series por entrenamiento', dlt(A.setsPer, B?.setsPer, (v) => nf(v, 0))));
+    T.push(tile(`${nf(A.volW / 1000, 1)} t`, 'volumen por semana', dlt(A.volW / 1000, B ? B.volW / 1000 : null, (v) => nf(v, 1) + ' t')));
+    T.push(tile(nf(A.prEx, 0), A.prEx === 1 ? 'ejercicio con récord' : 'ejercicios con récord', dlt(A.prEx, B?.prEx, (v) => nf(v, 0))));
+    if (A.fN >= 2) T.push(tile(pctTxt(A.fMed), `fuerza: mediana de ${A.fN} ejercicios`, '', A.fMed > 0.01 ? 'pos' : A.fMed < -0.01 ? 'neg' : ''));
+    if (A.cardioW > 0.5) T.push(tile(fmtDur(A.cardioW), 'cardio por semana', dlt(A.cardioW, B?.cardioW, (v) => fmtDur(v))));
+    if (!rid) { const bw = (S.bw || []).slice().sort((a, b) => (a.d < b.d ? -1 : 1)), tr = bwTrend(bw).filter((x) => x.d >= since); if (tr.length >= 2) { const c = tr[tr.length - 1].t - tr[0].t; T.push(tile(Math.abs(c) < 0.05 ? '=' : `${c > 0 ? '+' : '−'}${nf(Math.abs(c))} kg`, 'peso corporal (tendencia)')); } }
+    T.push(tile(nf(A.nEx, 0), 'ejercicios distintos', A.newEx ? `<em class="dl nt">${plural(A.newEx, 'nuevo', 'nuevos')}</em>` : ''));
+    html += `<div class="sgrid">${T.join('')}</div>`;
+    return html;
+  }
+  // Todo: totales que tienen sentido, promedios y año a año
+  const st = statsData(0), tf = trainingFor(firstLogD());
+  const yr = yearRows(rid), mc = {};
+  S.logs.forEach((l) => { if (rid && l.r !== rid) return; const k = l.d.slice(0, 7); (mc[k] || (mc[k] = new Set())).add(l.d); });
+  const bm = Object.entries(mc).map(([k, s]) => [k, s.size]).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? 1 : -1))[0];
+  T.push(tile(nf(A.days, 0), A.days === 1 ? 'día entrenado' : 'días entrenados', '', 'hot'));
+  T.push(tile(tf.b, `entrenando · ${tf.s}`, '', 'mdv'));
+  T.push(tile(nf(A.perWeek, 1), 'veces por semana (promedio)'));
+  T.push(tile(fmtDur(A.avgMin), 'duración promedio'));
+  if (!rid) T.push(tile(nf(st.best, 0), st.best === 1 ? 'semana: tu mejor racha' : 'semanas: tu mejor racha'));
+  if (bm) T.push(tile(plural(bm[1], 'día', 'días'), `mejor mes: ${MES3[Number(bm[0].slice(5)) - 1]} ${bm[0].slice(0, 4)}`, '', 'mdv'));
+  if (A.fN >= 2) T.push(tile(pctTxt(A.fMed), `fuerza desde que empezaste (mediana de ${A.fN})`, '', A.fMed > 0.01 ? 'pos' : ''));
+  T.push(tile(nf(A.nEx, 0), 'ejercicios distintos'));
+  html += `<div class="sgrid">${T.join('')}</div>
+    <p class="lbl">Año a año</p>
+    <div class="ytable"><span class="yh">Año</span><span class="yh">Días</span><span class="yh">Por sem.</span><span class="yh">t/sem</span><span class="yh">Récords</span>
+      ${yr.map((r) => `<span class="yy">${r.y}${r.part ? '<i>*</i>' : ''}</span><span>${nf(r.days, 0)}</span><span>${nf(r.pw, 1)}</span><span>${nf(r.volW / 1000, 1)}</span><span>${nf(r.rec, 0)}</span>`).join('')}</div>
+    <p class="bcap">Récords: ejercicios en que superaste tu marca ese año.${yr.some((r) => r.part) ? ' * Año incompleto: promedios sobre las semanas transcurridas.' : ''}</p>`;
+  return html;
+}
+
+/* ---------- Progreso de fuerza ---------- */
+function vStatsF() {
+  const all = !statsP, st = statsData(statsP), list = st ? st.prog : [];
+  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Progreso de fuerza</h2>${stSeg()}${stTip(all ? 'Tu mejor serie (1RM estimado) en tus primeras sesiones vs. las últimas.' : 'Tu mejor serie (1RM estimado) al inicio vs. al final del período. Solo ejercicios con 2 o más días.')}`;
+  if (!list.length) return html + stEmpty('Con dos días de un mismo ejercicio verás aquí cuánto sube.');
+  if (SF.part && !list.some((p) => p.pid === SF.part)) SF.part = '';
+  const byPart = list.filter((p) => !SF.part || p.pid === SF.part);
+  const cnt = { all: byPart.length, up: byPart.filter((p) => pctCls(p.pct) === 'up').length, eq: byPart.filter((p) => pctCls(p.pct) === 'eq').length, dn: byPart.filter((p) => pctCls(p.pct) === 'dn').length };
+  html += `<div class="seg hseg sfseg" role="group" aria-label="Filtrar">${[['all', 'Todos'], ['up', 'Suben'], ['eq', 'Igual'], ['dn', 'Bajan']].map(([k, l]) => `<button data-act="sfdir" data-v="${k}" class="${SF.dir === k ? 'on' : ''}" aria-pressed="${SF.dir === k}">${l}<i>${cnt[k]}</i></button>`).join('')}</div>`;
+  html += partDD('fz', list.map((p) => p.pid), 'sfpart', SF.part);
+  const rows = byPart.filter((p) => SF.dir === 'all' || pctCls(p.pct) === SF.dir);
+  if (rows.length >= 2) html += `<p class="fsum">Mediana: <b class="${pctCls(median(rows.map((p) => p.pct)))}">${pctTxt(median(rows.map((p) => p.pct)))}</b> en ${plural(rows.length, 'ejercicio', 'ejercicios')}</p>`;
+  html += `<div class="slist">${rows.map((p) => `<button class="frow lnk" data-act="nav" data-to="${exLink(p.x)}"><span class="grow">${esc(p.name)}<small class="sub2">${esc(p.pname)} · ${p.k === 'kg' ? `1RM ${nf(p.a, 0)} → ${nf(p.b, 0)} kg` : `${setTxt(p.s0, true)} → ${setTxt(p.s1, true)}`}${all ? ` · ${spanTxt(p.d0, p.d1)}` : ''}</small></span>${all ? '' : spark(p.sp, 84, 28)}<b class="pct ${pctCls(p.pct)}">${pctTxt(p.pct)}</b></button>`).join('') || '<p class="mu" style="margin:14px 0">Ningún ejercicio con este filtro.</p>'}</div>`;
+  return html;
+}
+
+/* ---------- Récords (en "Todo": mejores marcas) ---------- */
+function vStatsR() {
+  if (!statsP) return vMarks();
+  const st = statsData(statsP), pv = statsData(statsP, 1), grp = st ? recGroups(st.prs) : [], near = nearPRs();
+  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Récords</h2>${stSeg()}${stTip('Uno por ejercicio: cuando tu mejor serie supera a todas las anteriores. Si lo rompiste varias veces, se muestra el último.')}`;
+  if (!grp.length) return html + stEmpty('Aún no hay récords en este período.') + nearHTML(near);
+  const top = grp.reduce((b, g) => (!b || g.e.gain > b.e.gain ? g : b), null), nm = (x) => esc(X(x)?.e.name || 'Ejercicio');
+  html += `<div class="prhero"><div><b>${grp.length}</b><span>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord</span>${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</div><div class="prtop"><small>Mayor subida</small><b>${nm(top.x)}</b><em>${pctTxt(top.e.gain)}</em></div></div>`;
+  // la mayor subida de cada parte del cuerpo (último récord vs. la marca anterior)
+  const byP = new Map(); grp.forEach((g) => { const b = byP.get(g.p.id); if (!b || g.e.gain > b.e.gain) byP.set(g.p.id, g); });
+  const pl = S.parts.filter((p) => byP.has(p.id)).map((p) => byP.get(p.id));
+  html += `<p class="lbl">${ic('up', 15)} Mayor subida por parte del cuerpo</p><div class="vit">${pl.map((g) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(g.x)}"><small>${esc(g.p.name)}</small><b class="up">${pctTxt(g.e.gain)}</b><span>${nm(g.x)}</span><em>${setTxt(g.e.s, true)}${g.e.ps ? ` · antes ${setTxt(g.e.ps, true)}` : ''}</em></button>`).join('')}</div>`;
+  // cada ejercicio con récord (el último)
+  if (SF.rpart && !grp.some((g) => g.p.id === SF.rpart)) SF.rpart = '';
+  const rows = grp.filter((g) => !SF.rpart || g.p.id === SF.rpart);
+  html += `<p class="lbl">Ejercicios con récord</p>${partDD('rc', grp.map((g) => g.p.id), 'srpart', SF.rpart)}
+    <div class="slist">${rows.map((g) => `<button class="prrow lnk" data-act="nav" data-to="${exLink(g.x)}"><span>${nm(g.x)}<small class="sub2">${cap(rel(g.e.d))} · ${pctTxt(g.e.gain)}${g.n > 1 ? ` · ${g.n} veces` : ''}</small></span><b>${setTxt(g.e.s)}</b></button>`).join('')}</div>`;
+  return html + nearHTML(near);
+}
+function vMarks() {
+  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Mejores marcas</h2>${stSeg()}${stTip('Tu marca más fuerte de siempre: por parte del cuerpo y en cada ejercicio que haces.')}`;
+  const v = vitrina();
+  if (!v.length) return html + stEmpty('Aún no tienes marcas.');
+  html += `<div class="vit">${v.map((o) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(o.s.x)}"><small>${esc(o.p)}</small><b>${setTxt(o.s)}</b><span>${esc(o.name)}</span>${o.rm ? `<em>1RM ${nf(o.rm, 0)} kg${o.xbw >= 0.5 ? ` · ${nf(o.xbw, 2)}× tu peso` : ''}</em>` : ''}</button>`).join('')}</div>`;
+  html += nearHTML(nearPRs());
+  // la mejor serie de cada ejercicio (con 2 o más días), filtrable por parte
+  const B = bodyKg(), byX = {};
+  S.logs.forEach((l) => { const k = kindOf(l.x); if (k !== 'cardio' && X(l.x)) (byX[l.x] || (byX[l.x] = [])).push(l); });
+  const list = Object.entries(byX).map(([x, ls]) => { const f = X(x), k = kindOf(x), days = new Set(ls.map((l) => l.d)).size; if (days < 2) return null; const b = ls.reduce((m, s) => (!m || score(s) > score(m) ? s : m), null); return { x, f, k, b, days, rm: k === 'kg' ? rm1(b) : 0 }; }).filter(Boolean)
+    .sort((a, b) => S.parts.indexOf(a.f.p) - S.parts.indexOf(b.f.p) || b.rm - a.rm || b.days - a.days);
+  const rows = list.filter((o) => !SF.mpart || o.f.p.id === SF.mpart), show = SF.mall ? rows : rows.slice(0, 12);
+  html += `<p class="lbl">Por ejercicio</p>${partDD('mk', list.map((o) => o.f.p.id), 'smpart', SF.mpart)}
+    <div class="slist">${show.map((o) => `<button class="prrow lnk" data-act="nav" data-to="${exLink(o.x)}"><span>${esc(o.f.e.name)}<small class="sub2">${esc(o.f.p.name)} · ${cap(fShortY(o.b.d))}${o.rm ? ` · 1RM ${nf(o.rm, 0)} kg` : ''}</small></span><b>${setTxt(o.b)}</b></button>`).join('')}</div>
+    ${rows.length > 12 ? `<button class="linkbtn" data-act="small">${SF.mall ? 'Ver menos' : `Ver los ${rows.length}`} ${ic(SF.mall ? 'up' : 'down', 16)}</button>` : ''}`;
   return html;
 }
 
@@ -3956,10 +4155,10 @@ function bwSection(days) {
     // agrupar cuando hay muchos registros
     let pts = inP, note = '';
     if (inP.length > 45) {
-      const byM = span > 300, key = byM ? (d) => d.slice(0, 7) : (d) => iso(monday(d)), g = new Map();
+      const byQ = span > 1800, byM = span > 300, key = byQ ? (d) => `${d.slice(0, 4)}-${Math.floor((Number(d.slice(5, 7)) - 1) / 3)}` : byM ? (d) => d.slice(0, 7) : (d) => iso(monday(d)), g = new Map();
       inP.forEach((p) => { const k = key(p.d); if (!g.has(k)) g.set(k, []); g.get(k).push(p); });
       pts = [...g.values()].map((a) => ({ d: a[0].d, v: a.reduce((s, p) => s + p.v, 0) / a.length, t: a[a.length - 1].t }));
-      note = `<p class="bcap">Cada punto: promedio de ${byM ? 'un mes' : 'una semana'}.</p>`;
+      note = `<p class="bcap">Cada punto: promedio de ${byQ ? 'un trimestre' : byM ? 'un mes' : 'una semana'}.</p>`;
     }
     const oldY = pd(f.d).getFullYear() !== pd(today()).getFullYear(), xf = oldY ? (d) => `${MES3[pd(d).getMonth()]} ${pd(d).getFullYear()}` : fShort;
     const mn = Math.min(...inP.map((p) => p.v)), mxv = Math.max(...inP.map((p) => p.v));
@@ -4746,6 +4945,13 @@ const A = {
   cwk: (el) => { heatW = Math.max(0, heatW + Number(el.dataset.d)); renderCal(); },
   calw: () => openCal('w'),
   fall: () => { fuerzaAll = !fuerzaAll; render(); },
+  sfopen: (el) => { SF.open = SF.open === el.dataset.k ? '' : el.dataset.k; render(); },
+  sres: (el) => { SF.rid = el.dataset.v; SF.open = ''; render(); },
+  sfdir: (el) => { SF.dir = el.dataset.v; render(); },
+  sfpart: (el) => { SF.part = el.dataset.v; SF.open = ''; render(); },
+  srpart: (el) => { SF.rpart = el.dataset.v; SF.open = ''; render(); },
+  smpart: (el) => { SF.mpart = el.dataset.v; SF.mall = false; SF.open = ''; render(); },
+  small: () => { SF.mall = !SF.mall; render(); },
   bsel: (el) => { const c = el.closest('.bch')?.nextElementSibling; if (c && c.classList.contains('bcap')) c.textContent = el.dataset.t; el.parentElement.querySelectorAll('.bc.sel').forEach((b) => b.classList.remove('sel')); el.classList.add('sel'); },
   share: (el) => openShare(el.dataset.d, el.dataset.r || null),
   sharego: async (el) => {
