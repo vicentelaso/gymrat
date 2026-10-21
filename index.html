@@ -143,6 +143,7 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none}
 .search input{width:100%;height:52px;border-radius:16px;background:var(--s1);border:1.5px solid transparent;color:var(--tx);font-size:17px;padding:0 16px 0 46px;outline:none;-webkit-appearance:none}
 .search input:focus{border-color:var(--ac)}
+.search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;width:22px;height:22px;margin-right:-4px;border-radius:50%;cursor:pointer;background:var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A39E98' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E") center/14px no-repeat}
 .fbar{display:flex;gap:8px;margin:0 0 10px}
 .fbtn{display:flex;align-items:center;gap:10px;flex:1;min-height:50px;padding:0 14px;border-radius:16px;background:var(--s1);border:1.5px dashed #4a453f;color:var(--tx);font-size:15px;font-weight:600}
 .fbtn svg:first-child{color:var(--mu)}
@@ -216,7 +217,9 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .note{background:var(--s1);border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
 .note .nl{font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--mu);text-transform:uppercase;line-height:1.25}
 .note .nd{font-size:13px;color:var(--mu)}
-.note .nv{font-family:var(--cond);font-weight:800;font-size:28px;line-height:1.1;margin:4px 0 2px;color:var(--tx);white-space:nowrap}
+.note .nv{font-family:var(--cond);font-weight:800;font-size:28px;line-height:1.1;margin:4px 0 2px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note .nv.md{font-size:25px}
+.note .nv.sm{font-size:22px}
 .note .ns{font-size:13px;color:var(--mu)}
 .note.best{box-shadow:inset 0 0 0 1.5px #3f7a48}
 .note.best .nl{color:#7BE08A}
@@ -384,11 +387,14 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .sghead .cnt{color:var(--mu);font-size:13px;margin-left:auto}
 .sghead .fig{gap:0}
 .sgitem{background:var(--s1);border-radius:20px;padding:10px 10px 12px;margin-bottom:8px}
-.sgtop{display:flex;gap:5px;align-items:center}
-.sgmain{display:flex;gap:12px;align-items:center;flex:1;min-width:0;text-align:left}
+.sgtop{position:relative}
+.sgmain{display:flex;gap:12px;align-items:flex-start;width:100%;min-width:0;text-align:left}
+.sgsub{display:block;min-height:42px;padding-right:132px}
+.sgbtns{position:absolute;right:0;bottom:0;display:flex;gap:5px;align-items:center}
 .sgtop b{display:block;font-size:16px;line-height:1.25}
 .sgtop small{display:block;color:var(--mu);font-size:13px;margin-top:2px}
 .sgtop .iconbtn{flex:none}
+.sgsub small{margin-top:1px}
 .sgwhy{display:flex;align-items:flex-start;gap:6px;margin:10px 4px 0;font-size:13px;line-height:1.35;font-weight:600}
 .sgwhy svg{flex:none;margin-top:1px}
 .sgwhy.basico{color:#FFB37A}
@@ -819,6 +825,7 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .ppgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .pptile{display:flex;align-items:center;gap:8px;background:var(--s1);border-radius:16px;padding:8px 10px 8px 8px;text-align:left;min-width:0;box-shadow:inset 0 0 0 1.5px #262626}
 .pptile.top{background:linear-gradient(135deg,#0f2414,var(--s1) 75%);box-shadow:inset 0 0 0 1.5px #24502c}
+.pptile.on{box-shadow:inset 0 0 0 2px var(--tx)}
 .pptile:active{transform:scale(.98)}
 .pptile .grow{min-width:0}
 .pptile small{display:block;font-size:13px;color:var(--tx);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -965,6 +972,8 @@ h2.pt{font-family:var(--cond);font-weight:800;font-size:44px;line-height:.95;mar
 .exhead{display:flex;gap:14px;align-items:center;margin:4px 0 14px}
 .exhead .ptag{margin:6px 0 0;background:var(--s2);color:var(--mu)}
 .exdesc{margin:0;color:var(--mu);font-size:14px;line-height:1.4}
+.exdesc.exkey{margin-top:6px}
+.exkey b{color:var(--ac);font-weight:700;margin-right:2px}
 .pickh{display:flex;align-items:center;justify-content:space-between}
 .txtbtn.sm{height:36px;padding:0 12px;font-size:14px;background:var(--s2);color:var(--tx)}
 .posegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px;max-height:330px;overflow-y:auto;padding:2px;margin-bottom:8px}
@@ -1381,7 +1390,7 @@ const POSE_LIST = Object.keys(PO);
 
 const POSE_NAMES = {
   gen: 'De pie', bench: 'Press acostado', incline: 'Press inclinado', decline: 'Press declinado', cpress: 'Press sentado', fly: 'Aperturas',
-  pushup: 'Flexión', dip: 'Fondos', pulldown: 'Jalón', pullup: 'Dominada', cpull: 'Brazos rectos', pullover: 'Pullover', row: 'Remo sentado',
+  pushup: 'Flexión', dip: 'Fondos', pulldown: 'Jalón', pullup: 'Dominada', cpull: 'Brazos rectos', cpullr: 'Brazos rectos cuerda', pullover: 'Pullover', row: 'Remo sentado',
   bentrow: 'Remo inclinado', invrow: 'Remo invertido', deadlift: 'Peso muerto', hyper: 'Hiperextensión', ohpress: 'Press arriba', frontraise: 'Elevación frontal',
   lateral: 'Elevación lateral', uprow: 'Remo al mentón', facepull: 'Face pull', shrug: 'Encogimiento', curl: 'Curl de pie', curl2c: 'Curl poleas altas',
   curl2low: 'Curl poleas bajas', preacher: 'Curl en banco', ohext: 'Extensión arriba', skull: 'Press francés', pushdown: 'Extensión abajo', tkick: 'Patada tríceps',
@@ -1454,6 +1463,7 @@ Object.assign(PO, {
   curlinc: { h: [35, 31], t: [56, 66, 41, 41], L: [['U', 41, 41, 41, 57], ['F', 41, 57, 50, 65], ['Th', 56, 66, 73, 66], ['S', 73, 66, 75, 90]], hands: [[51, 66]], eq: [['l', 49, 71, 34, 46, 4], ['l', 49, 72, 68, 72, 4], ['l', 58, 72, 58, 92, 3]] },
   hammer: { ...PO.curl, dbv: true },
   curlrope: { ...PO.curl, rope: true },
+  cpullr: { ...PO.cpull, rope: true },
   curlZ: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 38, 40], ['F', 38, 40, 44, 29], ['U', 60, 25, 62, 40], ['F', 62, 40, 56, 29], ...LEGS()], hands: [[44, 29], [56, 29]], zbar: true, eq: [] },
   curl21: { ...PO.curl, L: [['U', 51, 24, 52, 40], ['F', 52, 40, 66, 40], ...STAND], hands: [[68, 40]], eq: [['f', 96], ['t', 80, 18, '21']] },
   curlrev: { h: [50, 13], tf: [24, 56], L: [['U', 40, 25, 38, 40], ['F', 38, 40, 45, 31], ['U', 60, 25, 62, 40], ['F', 62, 40, 55, 31], ...LEGS()], hands: [[45, 31], [55, 31]], eq: [['t', 50, 50, 'inv']] },
@@ -1772,7 +1782,8 @@ const CATALOG = [
       ['Dominadas', 'pullup', 'n', 'Colgado de la barra con agarre ancho, sube hasta pasar el mentón por sobre la barra y baja completo. Clave: empieza bajando los hombros, no doblando los brazos.'],
       ['Dominadas supinas', 'chinup', 'n', 'Dominadas con las palmas hacia ti y las manos al ancho de los hombros. Clave: suelen ser más fáciles que las pronas porque ayuda el bíceps.'],
       ['Dominadas asistidas en máquina', 'pullupa', 'm', 'Dominadas con las rodillas sobre una plataforma que te empuja hacia arriba. Clave: el peso es ayuda, así que tu progreso es ir bajándolo.'],
-      ['Pullover en polea', 'cpull', 'c', 'También llamado jalón con brazos rectos: frente a la polea alta, baja la barra con los brazos estirados hasta los muslos. Clave: brazos casi rectos todo el recorrido; el movimiento es del hombro.'],
+      ['Pullover en polea con barra', 'cpull', 'c', 'También llamado jalón con brazos rectos: frente a la polea alta, baja la barra con los brazos estirados hasta los muslos. Clave: brazos casi rectos todo el recorrido; el movimiento es del hombro.', 'espalda_pullover-en-polea'],
+      ['Pullover en polea con cuerda', 'cpullr', 'c', 'Frente a la polea alta con la cuerda, baja con los brazos casi rectos hasta los muslos y separa un poco las manos al final. Clave: la cuerda deja llevar las manos más atrás que la barra; el movimiento es del hombro.'],
       ['Pullover con mancuerna', 'pullover', 'd', 'Acostado, sostén una mancuerna sobre el pecho y llévala en arco hacia atrás de la cabeza y de vuelta. Clave: codos levemente doblados y sin arquear la espalda.']]],
     ['Espalda media', 'Romboides y trapecio medio, entre los omóplatos. Dan grosor a la espalda y se trabajan con remos.', [
       ['Remo con barra', 'bentrow', 'b', 'Inclinado con la espalda recta y rodillas algo dobladas, tira la barra hacia el ombligo juntando los omóplatos. Clave: el torso no debe subir y bajar para ayudar.'],
@@ -1979,7 +1990,7 @@ const CATALOG = [
       ['Empuje de trineo', 'sled', 'm', 'Empuja el trineo con los brazos estirados y el cuerpo inclinado, dando pasos cortos y fuertes. Clave: se anota el tiempo y el peso cargado en el trineo.']]]
   ] }
 ];
-const CATALOG_V = 11;
+const CATALOG_V = 12;
 const CARDIO_X = {
   'Trotadora': 'km', 'Caminata inclinada en trotadora': 'km', 'Bicicleta estática': 'km', 'Bicicleta reclinada': 'km', 'Spinning': 'cal', 'Elíptica': 'cal',
   'Escaladora': 'floors', 'Remo ergómetro': 'km', 'Air bike': 'cal', 'Ski erg': 'km', 'Correr': 'km', 'Caminar': 'km', 'Nadar': 'km',
@@ -1994,7 +2005,7 @@ const MODES = {
   'Escaladora': 'cardio', 'Remo ergómetro': 'cardio', 'Air bike': 'cardio', 'Ski erg': 'cardio', 'Correr': 'cardio', 'Caminar': 'cardio', 'Nadar': 'cardio', 'Saco de boxeo': 'cardio', 'Saltar la cuerda': 'cardio'
 };
 /* nombres o dibujos del catálogo que cambiaron: se actualizan solo si el usuario no los había cambiado */
-const RENAMED = { 'biceps_curl-con-dos-poleas': 'Curl con dos poleas' };
+const RENAMED = { 'biceps_curl-con-dos-poleas': 'Curl con dos poleas', 'espalda_pullover-en-polea': 'Pullover en polea' };
 const TOOL_FIX = { 'abdominales_elevacion-de-piernas-en-paralelas': ['m', 'n'] };
 const POSE_FIX = { 'biceps_curl-con-dos-poleas': ['curl2c', 'curl2low'], 'abdominales_elevacion-de-piernas': ['legraise', 'legraiseL'] };
 function seedParts() {
@@ -2075,6 +2086,14 @@ function mergeCatalog(s) {
       const cardioIds = new Set(); s.parts.forEach((p) => p.ex.forEach((e) => { if (e.mode === 'cardio') cardioIds.add(e.id); }));
       s.logs.forEach((l) => { if (cardioIds.has(l.x) && !l.sec) { l.reps = l.reps * 60; l.sec = 1; } });
     }
+    if ((s.cv || 0) < 12) {
+      const PB = 'espalda_pullover-en-polea', hasPB = s.parts.some((p) => p.ex.some((e) => e.id === PB));
+      if (hasPB) s.parts.forEach((p) => p.ex.forEach((e) => {
+        if (e.id === PB || !e.custom || !/^pullover (en|con) polea$/.test(norm(e.name))) return;
+        s.logs.forEach((l) => { if (l.x === e.id) { l.x = PB; l.name = 'Pullover en polea con barra'; } });
+        e.hidden = true;
+      }));
+    }
     s.removed = [];
     s.cv = CATALOG_V;
   }
@@ -2111,7 +2130,7 @@ function legacyLocal() { try { const s = JSON.parse(localStorage.getItem(KEY)); 
 
 let dirty = false, pushT = null, pushing = false, syncState = 'ok';
 function save() {
-  bwCache = null;
+  bwCache = null; HKC = null;
   if (!S || !USER || TOUR) return;
   S.ts = Date.now();
   try { localStorage.setItem(cacheKey(), JSON.stringify(S)); localStorage.setItem(cacheKey() + ':dirty', '1'); } catch (e) { toast('No se pudo guardar en el teléfono'); }
@@ -2282,16 +2301,40 @@ const cxRate = (s) => (s.reps > 0 && cxVal(s) > 0 ? cxVal(s) / (s.reps / (s.km >
 const cxTxt = (s) => (s.km > 0 ? `${nf(s.km, 2)} km` : s.cnt > 0 ? `${s.cnt} ${(CX[cxOf(s.x)] || CX.jumps).unit}` : '');
 const hms = (sec) => { sec = Math.round(sec); const hh = Math.floor(sec / 3600), mm = Math.floor((sec % 3600) / 60), ss = sec % 60; return hh ? `${hh}:${pad(mm)}:${pad(ss)}` : `${mm}:${pad(ss)}`; };
 const fmtT = (sec) => (sec < 60 ? `${Math.round(sec)} s` : sec < 3600 ? `${hms(sec)} min` : `${hms(sec)} h`);
+/* ejercicios por tiempo: cuánta fuerza "vale" aguantar más.
+   Modelo de resistencia isométrica de Frey-Law y Avin (2010, Ergonomics 53:109-129, meta-análisis de 194 estudios):
+   aguante = b0 · (fracción de tu fuerza máxima)^b1, con un b1 propio de cada articulación. Despejando:
+   fuerza ∝ carga · tiempo^(1/|b1|). Así, aguantar 1,5 veces más equivale a ~+20 % de fuerza en el core (plancha),
+   ~+24 % en piernas (sentadilla en pared) y ~+29 % en el agarre (colgarse, granjero), siempre igual sin importar si partes de 20 s o de 2 min.
+   La carga es tu peso (+ lo que agregues) o, si sostienes un implemento (granjero, pinza, barra, trineo), el peso de ese implemento. */
+const HOLD_B1 = { trunk: 2.27, grip: 1.61, knee: 1.88, shoulder: 1.83, elbow: 2.21, ankle: 2.06, gen: 1.98 };
+const HOLD_HELD = new Set(['farmer', 'pinch', 'shrug', 'sled']);
+let HKC = null;
+function holdProf(x) {
+  if (!HKC) HKC = new Map();
+  if (HKC.has(x)) return HKC.get(x);
+  const f = X(x), e = f?.e, pid = f?.p.id || '', ps = e?.pose || '', n = norm(e?.name || '');
+  const reg = /hang|pinch|farmer/.test(ps) || (ps === 'shrug') || /colgar|pinza|granjero|agarre|sosten/.test(n) || pid === 'antebrazos' ? 'grip'
+    : /plank|hollow|superman/.test(ps) || /plancha|hollow|superman|lumbar|core|abdom/.test(n) || pid === 'abdominales' ? 'trunk'
+    : ps === 'wallsit' || ps === 'sled' || /pared|trineo/.test(n) ? 'knee'
+    : pid === 'piernas' ? (/talon|pantorr|gemel/.test(n) ? 'ankle' : 'knee')
+    : pid === 'hombros' ? 'shoulder' : pid === 'biceps' || pid === 'triceps' ? 'elbow' : 'gen';
+  const o = { reg, k: 1 / HOLD_B1[reg], held: HOLD_HELD.has(ps) || (!!e && (e.tool || 'n') !== 'n' && !/colgar|plancha/.test(n)) };
+  HKC.set(x, o);
+  return o;
+}
+/* capacidad en un ejercicio por tiempo (normalizada a 60 s) */
+const holdCap = (s, B) => { const hp = holdProf(s.x), L = hp.held && s.kg > 0 ? s.kg : B + s.kg; return L * Math.pow(Math.max(0, s.reps) / 60, hp.k); };
 /* puntaje para decidir la mejor serie:
    kg     1RM estimado
    bw     (tu peso + lastre) × (1 + reps/30)
    assist (tu peso − ayuda) × (1 + reps/30)
-   time   segundos × (tu peso + peso extra) / tu peso */
+   time   capacidad del modelo de resistencia isométrica (arriba) */
 const score = (s) => {
   const k = s.x ? kindOf(s.x) : 'kg', B = bodyKg();
   const v = k === 'bw' ? (B + s.kg) * (1 + s.reps / 30)
     : k === 'assist' ? Math.max(B - s.kg, 1) * (1 + s.reps / 30)
-    : k === 'time' ? s.reps * (B + s.kg) / B
+    : k === 'time' ? holdCap(s, B)
     : k === 'cardio' ? (cxVal(s) > 0 ? 1e6 + cxVal(s) * 100 : 0) + s.reps / 1000
     : rm1(s);
   return v + s.reps * 1e-6;
@@ -2379,7 +2422,7 @@ window.addEventListener('popstate', () => {
 });
 
 function render() {
-  bwCache = null; TGC = new Map(); RST = null; PRC = null;
+  bwCache = null; HKC = null; TGC = new Map(); RST = null; PRC = null;
   const v0 = $('#view');
   if (booting) { v0.innerHTML = `<div class="login"><div class="lg-logo">${logo(76)}</div><p class="mu" style="text-align:center">Cargando…</p></div>`; $('#dockwrap').innerHTML = ''; return; }
   if (!USER || !S) {
@@ -2617,7 +2660,7 @@ function vEx(r, xid, view = false) {
     const note = (label, s, cls = '') => {
       const [i, n] = setPos(s);
       const dd = cap(new Intl.DateTimeFormat('es-CL', { weekday: 'short', day: 'numeric', month: 'short' }).format(pd(s.d)).replace(/\./g, ''));
-      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span><b class="nv">${kd === 'kg' ? `${nf(s.kg)} kg × ${s.reps}` : kd === 'time' || kd === 'cardio' ? fmtT(s.reps) : `${s.reps} reps`}</b>${kd === 'cardio' ? (n > 1 ? `<span class="ns">${i}.º registro de ${n}</span>` : '') : `<span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>`}${
+      return `<div class="note ${cls}"><span class="nl">${label}</span><span class="nd">${dd}</span>${(() => { const vt = kd === 'kg' ? `${nf(s.kg)} kg × ${s.reps}` : kd === 'time' || kd === 'cardio' ? fmtT(s.reps) : `${s.reps} reps`; return `<b class="nv${vt.length > 11 ? ' sm' : vt.length > 9 ? ' md' : ''}">${vt}</b>`; })()}${kd === 'cardio' ? (n > 1 ? `<span class="ns">${i}.º registro de ${n}</span>` : '') : `<span class="ns">${n > 1 ? `${i}.ª serie de ${n}` : 'Única serie'}</span>`}${
         kd === 'bw' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de lastre</span>` : '<span class="ns">sin lastre</span>')
         : kd === 'time' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg extra</span>` : '<span class="ns">sin peso extra</span>')
         : kd === 'assist' ? (s.kg > 0 ? `<span class="ns">con ${nf(s.kg)} kg de ayuda</span>` : '<span class="ns">¡sin ayuda!</span>')
@@ -2648,7 +2691,7 @@ function vEx(r, xid, view = false) {
     <h2 class="pt">${esc(e.name)}</h2>
     <div class="exhead">
       <span class="exic big">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 104, e.mode)}</span>
-      <div class="grow"><p class="crumb" style="margin:0 0 4px">${esc(p.name)}${e.m ? ' › ' + esc(e.m) : ''}</p>${e.desc ? `<p class="exdesc">${esc(e.desc)}</p>` : (() => { const md = p.muscles.find((m) => m.n === e.m); return md && md.d ? `<p class="exdesc">${esc(md.d)}</p>` : ''; })()}${{ bw: '<span class="ptag">Peso corporal</span>', time: '<span class="ptag">Por tiempo</span>', assist: '<span class="ptag">Asistido</span>' }[kd] || ''}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}</div>
+      <div class="grow"><p class="crumb" style="margin:0 0 4px">${esc(p.name)}${e.m ? ' › ' + esc(e.m) : ''}</p>${(() => { const t = e.desc || p.muscles.find((m) => m.n === e.m)?.d || '', i = t.indexOf('Clave:'); return !t ? '' : i > 0 ? `<p class="exdesc">${esc(t.slice(0, i).trim())}</p><p class="exdesc exkey"><b>Clave</b> ${esc(t.slice(i + 6).trim())}</p>` : `<p class="exdesc">${esc(t)}</p>`; })()}${{ bw: '<span class="ptag">Peso corporal</span>', time: '<span class="ptag">Por tiempo</span>', assist: '<span class="ptag">Asistido</span>' }[kd] || ''}${e.custom ? '<span class="ptag">Personalizado</span>' : ''}</div>
     </div>
     ${notes}
     ${view || gate ? gate : `
@@ -2804,7 +2847,7 @@ const TOUR_STEPS = [
   { go: '/', prep: () => renderDay(iso(new Date(Date.now() - 4 * 864e5))), el: () => [document.querySelector('.dtitle'), document.querySelector('.dstats')], title: 'Resumen de un día', text: 'Tiempo, series y kilos de ese día. Aquí también editas el horario, lo compartes o lo borras.' },
   { go: '/stats', prep: () => tourStats(90), el: () => [document.querySelector('#view .seg.wide'), document.querySelector('.stcards')], title: 'Estadísticas', text: 'Elige el período. Resumen, Fuerza y Récords se abren en su propia página; lo de más abajo se despliega aquí.' },
   { go: '/stats/resumen', prep: () => tourStats(90), el: () => document.querySelector('#view .sgrid'), title: 'Resumen', text: 'Lo esencial del período comparado con el anterior. Arriba puedes verlo por rutina.' },
-  { go: '/stats/fuerza', prep: () => tourStats(90), el: () => [document.querySelector('.ppgrid') || document.querySelector('.sfseg'), document.querySelector('.sfseg')], title: 'Progreso de fuerza', text: 'Arriba, cuánto mejoró en promedio cada parte del cuerpo (tócala para ver sus ejercicios). Abajo filtras los que suben, se mantienen o bajan.' },
+  { go: '/stats/fuerza', prep: () => tourStats(90), el: () => [document.querySelector('.ppgrid') || document.querySelector('.sfseg'), document.querySelector('.sfseg')], title: 'Progreso de fuerza', text: 'Arriba, cuánto mejoró en promedio cada parte del cuerpo: tócala para ver solo sus ejercicios y de nuevo para volver a todos. Abajo filtras los que suben, se mantienen o bajan.' },
   { go: '/stats/records', prep: () => tourStats(90), el: () => [document.querySelector('.prhero'), document.querySelector('.vit')], title: 'Récords', text: 'La mayor subida de cada parte del cuerpo y cada ejercicio con récord (uno por ejercicio, el último).' },
   { go: '/stats', prep: () => tourStats(90, { constancia: 1 }), el: () => [document.querySelector('.ssec[data-sec="constancia"] .ssh'), document.querySelector('.ssec[data-sec="constancia"] .bch') || document.querySelector('.ssec[data-sec="constancia"]')], title: 'Constancia', text: 'Tu racha y cuántos días entrenas cada semana (o cada mes, en 1 año).' },
   { go: '/stats', prep: () => tourStats(90, { musculos: 1 }), el: () => [document.querySelector('.ssec[data-sec="musculos"] .ssh'), document.querySelector('.ssec[data-sec="musculos"] .heatleg')], title: 'Músculos', text: 'Las series por semana de cada músculo: en rojo intenso lo que más trabajas.' },
@@ -2964,7 +3007,7 @@ function prEvents() {
   });
   return (PRC = ev.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : b.gain - a.gain)));
 }
-const prGain = (e) => (kindOf(e.x) === 'kg' ? `+${nf(e.sc - e.prev, 1)} kg` : `+${nf(e.gain * 100, 0)} %`);
+const prGain = (e) => (kindOf(e.x) === 'kg' ? `+${nf(e.sc - e.prev, 1)} kg` : gainTxt(e.gain));
 /* los que estás a punto de romper: tu capacidad de hoy (la del motor de recomendación) contra tu récord */
 function nearPRs() {
   const cut = iso(new Date(Date.now() - 45 * 864e5)), byX = {}, out = [];
@@ -3129,16 +3172,18 @@ function dlt(a, b, fmt = (v) => nf(v, 1), good = 1) {
   const cls = good === 0 ? 'nt' : (d > 0) === (good > 0) ? 'up' : 'down';
   return `<em class="dl ${cls}">${d > 0 ? '+' : '−'}${fmt(Math.abs(d))}</em>`;
 }
-const pctTxt = (p) => (Math.abs(p) < 0.01 ? '=' : `${p > 0 ? '+' : '−'}${nf(Math.abs(p) * 100, Math.abs(p) < 0.1 ? 1 : 0)} %`);
-const pctCls = (p) => (p > 0.01 ? 'up' : p < -0.01 ? 'dn' : 'eq');
+/* "igual" si el cambio, redondeado a un decimal, es menor a 0,5 % */
+const isEq = (p) => Math.round(Math.abs(p) * 1000) < 5;
+const pctTxt = (p) => (isEq(p) ? '=' : `${p > 0 ? '+' : '−'}${nf(Math.abs(p) * 100, Math.abs(p) < 0.0995 ? 1 : 0)} %`);
+const pctCls = (p) => (isEq(p) ? 'eq' : p > 0 ? 'up' : 'dn');
+const gainTxt = (g) => `+${nf(Math.max(0.1, g * 100), g < 0.0995 ? 1 : 0)} %`; // subida de un récord (siempre positiva)
 /* para abrir el gráfico de un ejercicio desde estadísticas: la rutina donde lo hiciste por última vez */
 const exLink = (x) => { let m = null; S.logs.forEach((q) => { if (q.x === x && R(q.r) && (!m || q.ts > m.ts)) m = q; }); const r = m ? m.r : S.routines[0]?.id; return r ? `/r/${r}/v/${x}` : '/stats'; };
 const spanTxt = (a, b) => { const A = pd(a), Z = pd(b), m = (Z.getFullYear() - A.getFullYear()) * 12 + Z.getMonth() - A.getMonth(); return m < 1 ? `en ${plural(Math.max(1, Math.round((Z - A) / 864e5)), 'día', 'días')}` : m < 12 ? `en ${plural(m, 'mes', 'meses')}` : `en ${nf(m / 12, m % 12 && m < 36 ? 1 : 0)} años`; };
 /* progreso de fuerza de cada ejercicio (2 o más días): mejor serie (1RM estimado, o tu peso ± lastre/ayuda) al inicio vs. al final.
    Con 4 o más sesiones se toma la mejor de las 2 primeras y de las 2 últimas, para que un día malo no distorsione.
-   Ejercicios por tiempo (plancha, colgarse): cada 3 s cuentan como una repetición con tu peso (+ peso extra), así su % se compara
-   con el de los demás (1:00 → 1:30 es +22 %, como pasar de 20 a 30 repeticiones). */
-const stCap = (k, s, B) => (k === 'time' ? (B + s.kg) * (1 + s.reps / 90) : k === 'kg' ? capOf(k, s, B) : effKg(k, s.kg, B) * (1 + s.reps / 30));
+   Ejercicios por tiempo: según el modelo de resistencia isométrica (ver holdCap), así su % se compara con el de los demás. */
+const stCap = (k, s, B) => (k === 'time' ? holdCap(s, B) : k === 'kg' ? capOf(k, s, B) : effKg(k, s.kg, B) * (1 + s.reps / 30));
 function progList(logs) {
   const B = bodyKg(), byX = {};
   logs.forEach((l) => { const k = kindOf(l.x); if (k === 'kg' || k === 'bw' || k === 'assist' || k === 'time') (byX[l.x] || (byX[l.x] = [])).push(l); });
@@ -3172,7 +3217,7 @@ function resData(days, offset = 0, rid = '') {
   const timed = Object.values(dm).filter((m) => m >= 5);
   const str = logs.filter((l) => kindOf(l.x) !== 'cardio'), cmin = logs.filter((l) => kindOf(l.x) === 'cardio').reduce((s, l) => s + l.reps, 0) / 60;
   const ev = prEvents().filter((e) => e.d >= since && e.d <= until && (!rid || e.s.r === rid));
-  const pr = progList(logs), med = pr.length ? median(pr.map((p) => p.pct)) : 0;
+  const pr = progList(logs), med = pr.length ? pr.reduce((s, p) => s + p.pct, 0) / pr.length : 0;
   const firstOf = {}; S.logs.forEach((l) => { if (!firstOf[l.x] || l.d < firstOf[l.x]) firstOf[l.x] = l.d; });
   const exs = [...new Set(str.map((l) => l.x))];
   return { since, until, days: dates.length, weeks, perWeek: dates.length / weeks, wTrained: wk.size, wTotal, avgMin: timed.length ? timed.reduce((s, m) => s + m, 0) / timed.length : 0,
@@ -3219,15 +3264,15 @@ function vStats() {
   // las tres tarjetas que abren su página
   {
     const A = resData(statsP), Bp = statsP ? resData(statsP, 1) : null;
-    const up = st.prog.filter((p) => p.pct > 0.01).length, dn = st.prog.filter((p) => p.pct < -0.01).length, eq = st.prog.length - up - dn;
+    const up = st.prog.filter((p) => pctCls(p.pct) === 'up').length, dn = st.prog.filter((p) => pctCls(p.pct) === 'dn').length, eq = st.prog.length - up - dn;
     const grp = recGroups(st.prs), top = grp.reduce((b, g) => (!b || g.e.gain > b.e.gain ? g : b), null), pp = partProg(st.prog);
     const card = (to, icon, title, body, hot) => `<button class="stcard${hot ? ' hot' : ''}" data-act="nav" data-to="${to}"><span class="sth"><span class="ssi">${ic(icon, 20)}</span><b>${title}</b>${ic('chev', 20)}</span>${body}</button>`;
     const vit = all ? vitrina() : [];
     html += `<div class="stcards">
       ${card('/stats/resumen', 'stats', 'Resumen', `<span class="stnums"><span><b>${nf(A.days, 0)}</b><small>${A.days === 1 ? 'día' : 'días'}${dlt(A.days, Bp?.days, (v) => nf(v, 0))}</small></span><span><b>${nf(A.perWeek, 1)}</b><small>por semana${dlt(A.perWeek, Bp?.perWeek)}</small></span><span><b>${fmtDur(A.avgMin)}</b><small>promedio</small></span></span>`, true)}
-      ${card('/stats/fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `<span class="stdir"><em class="up">${ic('up', 14)}${up}</em><em class="eq">= ${eq}</em><em class="dn">${ic('down', 14)}${dn}</em></span>${pp.top && pp.top.pct > 0.01 ? `<span class="stx">${pIco([pp.top.pid], 46)}<small class="stsub">Más mejoró: <b>${esc(pp.top.name)}</b> <b class="pctu">${pctTxt(pp.top.pct)}</b><br>promedio de ${plural(pp.top.n, 'ejercicio', 'ejercicios')}</small></span>` : '<small class="stsub">Ninguna parte del cuerpo subió en promedio</small>'}` : '<small class="stsub">Con dos sesiones de un mismo ejercicio verás cuánto sube.</small>')}
+      ${card('/stats/fuerza', 'up', 'Progreso de fuerza', st.prog.length ? `<span class="stdir"><em class="up">${ic('up', 14)}${up}</em><em class="eq">= ${eq}</em><em class="dn">${ic('down', 14)}${dn}</em></span>${pp.top && pctCls(pp.top.pct) === 'up' ? `<span class="stx">${pIco([pp.top.pid], 46)}<small class="stsub">Más mejoró: <b>${esc(pp.top.name)}</b> <b class="pctu">${pctTxt(pp.top.pct)}</b><br>promedio de ${plural(pp.top.n, 'ejercicio', 'ejercicios')}</small></span>` : '<small class="stsub">Ninguna parte del cuerpo subió en promedio</small>'}` : '<small class="stsub">Con dos sesiones de un mismo ejercicio verás cuánto sube.</small>')}
       ${all ? card('/stats/records', 'starf', 'Mejores marcas', `<small class="stsub">${vit.length ? vit.slice(0, 2).map((o) => `${esc(o.p)}: <b>${setTxt(o.s)}</b>`).join(' · ') : 'Lo más fuerte de cada parte del cuerpo'}</small>`)
-        : card('/stats/records', 'starf', 'Récords', grp.length ? `<span class="stnums one"><span><b>${grp.length}</b><small>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</small></span></span><span class="stx">${xIco(top.x, 36)}<small class="stsub">Mayor subida: <b>${esc(X(top.x).e.name)}</b> <b class="pctu">${pctTxt(top.e.gain)}</b></small></span>` : '<small class="stsub">Sin récords en este período</small>')}
+        : card('/stats/records', 'starf', 'Récords', grp.length ? `<span class="stnums one"><span><b>${grp.length}</b><small>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</small></span></span><span class="stx">${xIco(top.x, 36)}<small class="stsub">Mayor subida: <b>${esc(X(top.x).e.name)}</b> <b class="pctu">${gainTxt(top.e.gain)}</b></small></span>` : '<small class="stsub">Sin récords en este período</small>')}
     </div>`;
   }
   // constancia
@@ -3318,7 +3363,7 @@ function vStatsS() {
     T.push(tile(nf(A.setsPer, 0), 'series por entrenamiento', dlt(A.setsPer, B?.setsPer, (v) => nf(v, 0))));
     T.push(tile(`${nf(A.volW / 1000, 1)} t`, 'volumen por semana', dlt(A.volW / 1000, B ? B.volW / 1000 : null, (v) => nf(v, 1) + ' t')));
     T.push(tile(nf(A.prEx, 0), A.prEx === 1 ? 'ejercicio con récord' : 'ejercicios con récord', dlt(A.prEx, B?.prEx, (v) => nf(v, 0))));
-    if (A.fN >= 2) T.push(tile(pctTxt(A.fMed), `fuerza: mediana de ${A.fN} ejercicios`, '', A.fMed > 0.01 ? 'pos' : A.fMed < -0.01 ? 'neg' : ''));
+    if (A.fN >= 2) T.push(tile(pctTxt(A.fMed), `fuerza: promedio de ${A.fN} ejercicios`, '', { up: 'pos', dn: 'neg' }[pctCls(A.fMed)] || ''));
     if (A.cardioW > 0.5) T.push(tile(fmtDur(A.cardioW), 'cardio por semana', dlt(A.cardioW, B?.cardioW, (v) => fmtDur(v))));
     if (!rid) { const bw = (S.bw || []).slice().sort((a, b) => (a.d < b.d ? -1 : 1)), tr = bwTrend(bw).filter((x) => x.d >= since); if (tr.length >= 2) { const c = tr[tr.length - 1].t - tr[0].t; T.push(tile(Math.abs(c) < 0.05 ? '=' : `${c > 0 ? '+' : '−'}${nf(Math.abs(c))} kg`, 'peso corporal (tendencia)')); } }
     T.push(tile(nf(A.nEx, 0), 'ejercicios distintos', A.newEx ? `<em class="dl nt">${plural(A.newEx, 'nuevo', 'nuevos')}</em>` : ''));
@@ -3336,7 +3381,7 @@ function vStatsS() {
   T.push(tile(fmtDur(A.avgMin), 'duración promedio'));
   if (!rid) T.push(tile(nf(st.best, 0), st.best === 1 ? 'semana: tu mejor racha' : 'semanas: tu mejor racha'));
   if (bm) T.push(tile(plural(bm[1], 'día', 'días'), `mejor mes: ${MES3[Number(bm[0].slice(5)) - 1]} ${bm[0].slice(0, 4)}`, '', 'mdv'));
-  if (A.fN >= 2) T.push(tile(pctTxt(A.fMed), `fuerza desde que empezaste (mediana de ${A.fN})`, '', A.fMed > 0.01 ? 'pos' : ''));
+  if (A.fN >= 2) T.push(tile(pctTxt(A.fMed), `fuerza desde que empezaste (promedio de ${A.fN})`, '', { up: 'pos', dn: 'neg' }[pctCls(A.fMed)] || ''));
   T.push(tile(nf(A.nEx, 0), 'ejercicios distintos'));
   html += `<div class="sgrid">${T.join('')}</div>
     <p class="lbl">Año a año</p>
@@ -3349,18 +3394,18 @@ function vStatsS() {
 /* ---------- Progreso de fuerza ---------- */
 function vStatsF() {
   const all = !statsP, st = statsData(statsP), list = st ? st.prog : [];
-  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Progreso de fuerza</h2>${stSeg()}${stTip(`${all ? 'Tu mejor serie (1RM estimado) en tus primeras sesiones vs. las últimas.' : 'Tu mejor serie (1RM estimado) al inicio vs. al final del período, en ejercicios con 2 o más días.'} En los por tiempo, cada 3 s cuentan como una repetición.`)}`;
+  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Progreso de fuerza</h2>${stSeg()}${stTip(`${all ? 'Tus primeras sesiones vs. las últimas' : 'Inicio vs. final del período'}, según tu mejor serie (1RM estimado; en los por tiempo, lo que aguantas).`)}`;
   if (!list.length) return html + stEmpty('Con dos días de un mismo ejercicio verás aquí cuánto sube.');
   if (SF.part && !list.some((p) => p.pid === SF.part)) SF.part = '';
   const byPart = list.filter((p) => !SF.part || p.pid === SF.part);
   const cnt = { all: byPart.length, up: byPart.filter((p) => pctCls(p.pct) === 'up').length, eq: byPart.filter((p) => pctCls(p.pct) === 'eq').length, dn: byPart.filter((p) => pctCls(p.pct) === 'dn').length };
   // promedio de cada parte del cuerpo (tócala para ver sus ejercicios)
   const pp = partProg(list);
-  if (!SF.part && pp.list.length > 1) html += `<div class="ppgrid">${pp.list.map((g) => `<button class="pptile${g === pp.top && g.pct > 0.01 ? ' top' : ''}" data-act="sfpart" data-v="${g.pid}">${pIco([g.pid], 34)}<span class="grow"><small>${esc(g.name)}</small><b class="${pctCls(g.pct)}">${pctTxt(g.pct)}<em>${g.n} ej.</em></b></span></button>`).join('')}</div>`;
+  if (pp.list.length > 1) html += `<div class="ppgrid">${pp.list.map((g) => `<button class="pptile${g === pp.top && pctCls(g.pct) === 'up' ? ' top' : ''}${SF.part === g.pid ? ' on' : ''}" data-act="sfpart" data-v="${SF.part === g.pid ? '' : g.pid}" aria-pressed="${SF.part === g.pid}">${pIco([g.pid], 34)}<span class="grow"><small>${esc(g.name)}</small><b class="${pctCls(g.pct)}">${pctTxt(g.pct)}<em>${g.n} ej.</em></b></span></button>`).join('')}</div>`;
   html += `<div class="seg hseg sfseg" role="group" aria-label="Filtrar">${[['all', 'Todos'], ['up', 'Suben'], ['eq', 'Igual'], ['dn', 'Bajan']].map(([k, l]) => `<button data-act="sfdir" data-v="${k}" class="${SF.dir === k ? 'on' : ''}" aria-pressed="${SF.dir === k}">${l}<i>${cnt[k]}</i></button>`).join('')}</div>`;
   html += partDD('fz', list.map((p) => p.pid), 'sfpart', SF.part);
   const rows = byPart.filter((p) => SF.dir === 'all' || pctCls(p.pct) === SF.dir);
-  if (rows.length >= 2) { const av = rows.reduce((s, p) => s + p.pct, 0) / rows.length; html += `<p class="fsum">Promedio: <b class="${pctCls(av)}">${pctTxt(av)}</b> en ${plural(rows.length, 'ejercicio', 'ejercicios')}</p>`; }
+  if (rows.length >= 2) { const av = rows.reduce((s, p) => s + p.pct, 0) / rows.length; html += `<p class="fsum">Promedio de ${plural(rows.length, 'ejercicio', 'ejercicios')}: <b class="${pctCls(av)}">${isEq(av) ? 'igual' : pctTxt(av)}</b></p>`; }
   html += `<div class="slist">${rows.map((p) => `<button class="frow lnk" data-act="nav" data-to="${exLink(p.x)}">${xIco(p.x)}<span class="grow">${esc(p.name)}<small class="sub2">${esc(p.pname)} · ${p.k === 'kg' ? `1RM ${nf(p.a, 0)} → ${nf(p.b, 0)} kg` : `${setTxt(p.s0, true)} → ${setTxt(p.s1, true)}`}${all ? ` · ${spanTxt(p.d0, p.d1)}` : ''}</small></span><span class="frr"><b class="pct ${pctCls(p.pct)}">${pctTxt(p.pct)}</b>${all ? '' : spark(p.sp, 72, 22)}</span></button>`).join('') || '<p class="mu" style="margin:14px 0">Ningún ejercicio con este filtro.</p>'}</div>`;
   return html;
 }
@@ -3369,19 +3414,19 @@ function vStatsF() {
 function vStatsR() {
   if (!statsP) return vMarks();
   const st = statsData(statsP), pv = statsData(statsP, 1), grp = st ? recGroups(st.prs) : [], near = nearPRs();
-  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Récords</h2>${stSeg()}${stTip('Uno por ejercicio: cuando tu mejor serie supera a todas las anteriores. Si lo rompiste varias veces, se muestra el último.')}`;
+  let html = `${hdr('/stats', 'Estadísticas')}<h2 class="pt">Récords</h2>${stSeg()}${stTip('Uno por ejercicio: el último día en que superaste tu mejor serie.')}`;
   if (!grp.length) return html + stEmpty('Aún no hay récords en este período.') + nearHTML(near);
   const top = grp.reduce((b, g) => (!b || g.e.gain > b.e.gain ? g : b), null), nm = (x) => esc(X(x)?.e.name || 'Ejercicio');
-  html += `<div class="prhero"><div><b>${grp.length}</b><span>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord</span>${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</div><div class="prtop"><small>Mayor subida</small><span class="prx">${xIco(top.x, 36)}<b>${nm(top.x)}</b></span><em>${pctTxt(top.e.gain)}</em></div></div>`;
+  html += `<div class="prhero"><div><b>${grp.length}</b><span>${grp.length === 1 ? 'ejercicio' : 'ejercicios'} con récord</span>${pv ? dlt(grp.length, recGroups(pv.prs).length, (v) => nf(v, 0)) : ''}</div><div class="prtop"><small>Mayor subida</small><span class="prx">${xIco(top.x, 36)}<b>${nm(top.x)}</b></span><em>${gainTxt(top.e.gain)}</em></div></div>`;
   // la mayor subida de cada parte del cuerpo (último récord vs. la marca anterior)
   const byP = new Map(); grp.forEach((g) => { const b = byP.get(g.p.id); if (!b || g.e.gain > b.e.gain) byP.set(g.p.id, g); });
   const pl = S.parts.filter((p) => byP.has(p.id)).map((p) => byP.get(p.id));
-  html += `<p class="lbl">${ic('up', 15)} Mayor subida por parte del cuerpo</p><div class="vit">${pl.map((g) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(g.x)}"><span class="vch"><small>${esc(g.p.name)}</small>${pIco([g.p.id], 40)}</span><b class="up">${pctTxt(g.e.gain)}</b><span class="vcx">${xIco(g.x, 36)}<span>${nm(g.x)}</span></span><em>${setTxt(g.e.s, true)}${g.e.ps ? ` · antes ${setTxt(g.e.ps, true)}` : ''}</em></button>`).join('')}</div>`;
+  html += `<p class="lbl">${ic('up', 15)} Mayor subida por parte del cuerpo</p><div class="vit">${pl.map((g) => `<button class="vcard lnk" data-act="nav" data-to="${exLink(g.x)}"><span class="vch"><small>${esc(g.p.name)}</small>${pIco([g.p.id], 40)}</span><b class="up">${gainTxt(g.e.gain)}</b><span class="vcx">${xIco(g.x, 36)}<span>${nm(g.x)}</span></span><em>${setTxt(g.e.s, true)}${g.e.ps ? ` · antes ${setTxt(g.e.ps, true)}` : ''}</em></button>`).join('')}</div>`;
   // cada ejercicio con récord (el último)
   if (SF.rpart && !grp.some((g) => g.p.id === SF.rpart)) SF.rpart = '';
   const rows = grp.filter((g) => !SF.rpart || g.p.id === SF.rpart);
   html += `<p class="lbl">Ejercicios con récord</p>${partDD('rc', grp.map((g) => g.p.id), 'srpart', SF.rpart)}
-    <div class="slist">${rows.map((g) => `<button class="prrow lnk xrow" data-act="nav" data-to="${exLink(g.x)}">${xIco(g.x)}<span class="grow">${nm(g.x)}<small class="sub2">${cap(rel(g.e.d))} · ${pctTxt(g.e.gain)}${g.n > 1 ? ` · ${g.n} veces` : ''}</small></span><b>${setTxt(g.e.s)}</b></button>`).join('')}</div>`;
+    <div class="slist">${rows.map((g) => `<button class="prrow lnk xrow" data-act="nav" data-to="${exLink(g.x)}">${xIco(g.x)}<span class="grow">${nm(g.x)}<small class="sub2">${cap(rel(g.e.d))} · ${gainTxt(g.e.gain)}${g.n > 1 ? ` · ${g.n} veces` : ''}</small></span><b>${setTxt(g.e.s)}</b></button>`).join('')}</div>`;
   return html + nearHTML(near);
 }
 function vMarks() {
@@ -4127,8 +4172,8 @@ function vPlan(r) {
     return `<section class="sgpart"><div class="sghead">${body(regsFor([p.id]), TH.dk, 40)}<b>${esc(p.name)}</b><span class="cnt">${picks.length}</span></div>
       ${picks.map((x, i) => { const e = X(x)?.e; if (!e) return ''; const fn = fnOf(e, p.id), ro = sugRole(x, p.id), t = exTarget(x);
         return `<div class="sgitem">
-          <div class="sgtop"><button class="sgmain" data-act="xsinfo" data-p="${p.id}" data-i="${i}" aria-label="Ver cómo se hace ${esc(e.name)}"><span class="xinfo"><span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 48, e.mode)}</span><i class="ibdg">${ic('info', 13)}</i></span><span class="grow"><b>${esc(e.name)}</b><small>${esc(e.m || '')}${fn ? ` · ${FN_LABEL[fn]}` : ''}</small></span></button>
-            <button class="iconbtn sm ed sgsw" data-act="pkswap" data-p="${p.id}" data-i="${i}" aria-label="Cambiar ${esc(e.name)}">${ic('swap', 20)}</button><button class="iconbtn sm" data-act="sghide" data-p="${p.id}" data-i="${i}" aria-label="Ocultar ${esc(e.name)}">${ic('eyeoff', 17)}</button><button class="iconbtn sm rm" data-act="sgdel" data-p="${p.id}" data-i="${i}" aria-label="Quitar ${esc(e.name)}">${ic('x', 17)}</button></div>
+          <div class="sgtop"><button class="sgmain" data-act="xsinfo" data-p="${p.id}" data-i="${i}" aria-label="Ver cómo se hace ${esc(e.name)}"><span class="xinfo"><span class="exic">${exIcon(e.pose || 'gen', e.tool || 'n', regsForMuscle(e.m, p.id), 48, e.mode)}</span><i class="ibdg">${ic('info', 13)}</i></span><span class="grow"><b>${esc(e.name)}</b><span class="sgsub">${e.m ? `<small>${esc(e.m)}</small>` : ''}${fn ? `<small>${FN_LABEL[fn]}</small>` : ''}</span></span></button>
+            <div class="sgbtns"><button class="iconbtn sm ed sgsw" data-act="pkswap" data-p="${p.id}" data-i="${i}" aria-label="Cambiar ${esc(e.name)}">${ic('swap', 20)}</button><button class="iconbtn sm" data-act="sghide" data-p="${p.id}" data-i="${i}" aria-label="Ocultar ${esc(e.name)}">${ic('eyeoff', 17)}</button><button class="iconbtn sm rm" data-act="sgdel" data-p="${p.id}" data-i="${i}" aria-label="Quitar ${esc(e.name)}">${ic('x', 17)}</button></div></div>
           <div class="sgmeta"><span class="sgwhy ${ro.r}">${ic(ROLE_IC[ro.r] || 'spark', 13)}${esc(ro.t)}</span>${t && !t.first ? `<span class="sgtgt">${ic('target', 13)}<b>${tgtTxt(t)}</b>${tgtChip(t)}</span>` : ''}</div>
         </div>`; }).join('')}
       <button class="sgadd" data-act="padd" data-p="${p.id}">${ic('plus', 16)} Agregar</button>
@@ -4599,7 +4644,7 @@ function suggestEx(name, pid) {
     [/extension/, () => has(/cuadricep|pierna|rodilla/) ? 'legext' : has(/cabeza|nuca|sobre/) ? 'ohext' : 'pushdown'],
     [/patada|kickback/, () => (pid === 'triceps' || has(/tricep/)) ? 'tkick' : 'kickback'],
     [/jalon/, () => has(/recto|rigido/) ? 'cpull' : 'pulldown'],
-    [/dominada|chin/, 'pullup'], [/pullover/, () => has(/polea/) ? 'cpull' : 'pullover'],
+    [/dominada|chin/, 'pullup'], [/pullover/, () => has(/polea/) ? (has(/cuerda/) ? 'cpullr' : 'cpull') : 'pullover'],
     [/remo/, () => has(/menton|alto/) ? 'uprow' : has(/invertid|australian/) ? 'invrow' : has(/polea|sentad|maquina|gironda/) ? 'row' : 'bentrow'],
     [/peso muerto|rack pull|buenos dias/, 'deadlift'], [/hiperext|lumbar/, 'hyper'],
     [/apertura|peck|mariposa|cruce|crossover|fly/, 'fly'], [/flexion|push ?up/, 'pushup'], [/fondo|dip/, 'dip'],
